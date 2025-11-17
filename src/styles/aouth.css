@@ -22,6 +22,15 @@
   text-align: center;
 }
 
+/* Small screens: center and scale auth forms */
+@media (max-width: 576px) {
+  .login-container,
+  .signup-container {
+    width: 95%;
+    padding: 20px;
+  }
+}
+
 .logo {
   width: 120px;
   margin-bottom: 30px;

@@ -10,7 +10,7 @@ import Login from "./pages/login";
 import Signup from "./pages/signup";
 import Categories from "./pages/categories";
 import CategoryPage from "./pages/CategoryPage";
-
+import CartPage from "./pages/CartPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,7 +35,14 @@ const router = createBrowserRouter([
   {
   path: "/category/:categoryName",
   element: <CategoryPage />,
-}
+},
+
+{
+  path: "/cart",
+  element: <CartPage />,
+},
+
+
 
 ]);
 

@@ -14,6 +14,26 @@
   background-color: #f9f9f9;
 }
 
+/* Responsive: make product cards smaller on phones */
+@media (max-width: 576px) {
+  .product-card .card-img-top {
+    height: 120px;
+  }
+
+  .product-card .card-body {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  .product-card .price { font-size: 0.95rem; }
+  .product-card .rating { font-size: 0.85rem; }
+}
+
+@media (min-width: 577px) and (max-width: 992px) {
+  /* Small tablets: slightly smaller images */
+  .product-card .card-img-top { height: 160px; }
+}
+
 .product-card .price {
   color: #1db954;
   font-weight: bold;

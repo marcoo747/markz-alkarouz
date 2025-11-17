@@ -17,3 +17,8 @@ code {
   object-fit: cover;  /* يخلي الصورة تغطي المساحة بدون تشويه */
   width: 100%;       /* عشان تمتد طول الكاروسيل */
 }
+
+@media (max-width: 576px) {
+  .carousel img { max-height: 280px; }
+  .logo { width: 80px; }
+}

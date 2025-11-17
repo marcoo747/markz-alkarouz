@@ -48,26 +48,6 @@ const Signup = () => {
       <div className="signup-container">
         <img src="/imgs/AlkaroozCom.png" alt="Spotify" className="logo" />
 
-        {/* Social Buttons */}
-        <button className="btn facebook" onClick={() => mockLogin("Facebook")}>
-          <img src="../imgs/facebook.svg" alt="Facebook" className="icon" />
-          Continue with Facebook
-        </button>
-
-        <button className="btn apple" onClick={() => mockLogin("Apple")}>
-          <img src="../imgs/apple.png" alt="Apple" className="icon" />
-          Continue with Apple
-        </button>
-
-        <button className="btn google" onClick={() => mockLogin("Google")}>
-          <img src="../imgs/google.svg" alt="Google" className="icon" />
-          Continue with Google
-        </button>
-
-        <div className="divider">
-          <span>OR</span>
-        </div>
-
         {/* Sign Up Form */}
         <form className="signup-form" onSubmit={handleSubmit}>
           <input

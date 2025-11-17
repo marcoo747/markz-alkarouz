@@ -1,5 +1,6 @@
 import React from "react";
 import { link, NavLink } from "react-router-dom";
+import "../styles/NavBar.css";
 
 const NavBar = () => {
   return (
@@ -43,9 +44,9 @@ const NavBar = () => {
 
               <li className="nav-item">
                 <NavLink
-                  className="nav-link disabled"
+                  className="nav-link"
                   aria-disabled="true"
-                  to="/cart"
+                  to="/Cart"
                 >
                   Cart
                 </NavLink>

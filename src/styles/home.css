@@ -15,7 +15,6 @@
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.2); /* خلفية شفافة */
   padding: 15px 25px;
   border-radius: 10px;
   max-width: 90%;
@@ -87,11 +86,7 @@
   }
 }
 
-h2 {
-  margin-left: 1%;
-  font-size: 1.8rem;
-  color: #333;
-}
+
 
 .cards-row{
   margin-left: 1.5%;
@@ -104,4 +99,46 @@ h2 {
 
 #link-dropdown {
   color: #121212a6 !important;
+}
+
+/* Carousel responsiveness: cap carousel height on small screens */
+.carousel-wrapper .carousel img {
+  max-height: 320px;
+}
+
+/* Smaller heading for mobile */
+.item-pack h2 {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 576px) {
+  .item-pack h2 { font-size: 1.2rem; }
+
+  /* Mobile phones: 2 cards per row (smaller) */
+  .cards-row > * {
+    flex: 0 1 calc(50% - 0.5rem);
+  }
+}
+
+@media (max-width: 360px) {
+  /* Very small devices: one card per row */
+  .cards-row > * {
+    flex: 0 1 100%;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .cards-row > * { flex: 0 1 calc(50% - 0.5rem); }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  .cards-row > * { flex: 0 1 calc(33.33% - 0.75rem); }
+}
+
+.category_name {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-left: 1.5%;
 }

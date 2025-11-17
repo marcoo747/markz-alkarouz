@@ -23,8 +23,8 @@ const Home = () => {
         {/* الكاروسل نفسه */}
         <Carousel images={images} />
       </div>
-      <ItemPack category_name={"recent added"}/>
-      <ItemPack category_name={"speackers"}/>
+      <ItemPack category_name={"recent added >"}/>
+      <ItemPack category_name={"speackers >"}/>
 
     </div>
   );
