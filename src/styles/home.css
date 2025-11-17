@@ -45,3 +45,54 @@
     max-width: 70%;
   }
 }
+
+/* Cards layout: keep cards side-by-side and wrap on small screens */
+.cards-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.cards-row > * {
+  /* let each card wrapper size itself but provide a preferred base width */
+  display: block;
+  flex: 0 1 18rem; /* base card size: ~288px */
+}
+
+.cards-row .card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 992px) {
+  /* medium screens: allow two cards per row */
+  .cards-row > * {
+    flex: 0 1 calc(50% - 0.75rem);
+  }
+}
+
+@media (max-width: 576px) {
+  /* small phones: make cards smaller (two-per-row) */
+  .cards-row > * {
+    flex: 0 1 calc(50% - 0.5rem);
+  }
+  .cards-row {
+    gap: 0.5rem;
+  }
+  .cards-row .card {
+    font-size: 0.95rem;
+  }
+}
+
+h2 {
+  margin-left: 1%;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.cards-row{
+  margin-left: 1.5%;
+}

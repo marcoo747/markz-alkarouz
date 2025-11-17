@@ -2,6 +2,7 @@ import React from "react";
 import NavBar from "../Components/NavBar";
 import Carousel from "../Components/Carousel";
 import "../styles/home.css";
+import ItemPack from "../Components/item-pack";
 
 const images = ["/imgs/img1.jpg", "/imgs/img1.jpg", "/imgs/img1.jpg"];
 
@@ -22,6 +23,9 @@ const Home = () => {
         {/* الكاروسل نفسه */}
         <Carousel images={images} />
       </div>
+      <ItemPack category_name={"recent added"}/>
+      <ItemPack category_name={"speackers"}/>
+
     </div>
   );
 };
