@@ -4,7 +4,7 @@ import ProductCard from "./card";
 const ItemPack = ({ category_name }) => {
   return (
     <div className="item-pack">
-      <h2>{category_name}</h2>
+      <h1 className="category_name">{category_name}</h1>
       <div className="cards-row">
         <ProductCard
           title="Samsung Galaxy S22 Ultra"

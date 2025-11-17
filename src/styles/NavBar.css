@@ -1,0 +1,63 @@
+@media (max-width: 576px) {
+  /* قلل الـ padding العمودي للـ navbar بالكامل */
+  .navbar {
+    --bs-navbar-padding-y: 0.25rem; /* الافتراضي ~0.5rem */
+  }
+
+  /* قلل الـ padding للـ navbar-brand */
+  .navbar-brand {
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
+  }
+
+  /* صغر اللوجو فعليًا */
+  .navbar-brand .logo {
+    height: 45px;
+    width: auto;
+    margin-bottom: 0px;
+  }
+
+  /* قلل padding الروابط عشان الارتفاع يقل */
+  .navbar .nav-link {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    font-size: 0.85rem;
+  }
+
+  /* صغر زر الـ toggler فعليًا */
+  .navbar-toggler {
+    --bs-navbar-toggler-padding-y: 0.2rem;
+    --bs-navbar-toggler-padding-x: 0.4rem;
+    --bs-navbar-toggler-font-size: 0.9rem;
+  }
+
+  /* قلل padding الحاوية الداخلية */
+  .navbar .container-fluid {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  /* قلل ارتفاع عناصر الـ search */
+  .navbar .form-control {
+    height: 30px;
+    padding: 4px 6px;
+    font-size: 0.8rem;
+  }
+
+  .navbar .btn {
+    height: 30px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+  }
+
+  /* شيل أي padding إضافي جوة الـ collapse */
+  .navbar-collapse {
+    padding: 0;
+  }
+}
+
+  .navbar-brand .logo {
+    height: 45px;
+    width: auto;
+    margin-bottom: 0px;
+  }

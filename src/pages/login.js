@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";   // ✅ استخدم Link بدل a
+import { Link } from "react-router-dom";
 import "../styles/aouth.css";
 
 const Login = () => {
@@ -28,25 +28,6 @@ const Login = () => {
     <div className="auth-page">
       <div className="login-container">
         <img src="/imgs/AlkaroozCom.png" alt="rannim" className="logo" />
-
-        <button className="btn facebook" onClick={() => mockLogin("Facebook")}>
-          <img src="/imgs/facebook.svg" alt="Facebook" className="icon" />
-          Continue with Facebook
-        </button>
-
-        <button className="btn apple" onClick={() => mockLogin("Apple")}>
-          <img src="/imgs/apple.png" alt="Apple" className="icon" />
-          Continue with Apple
-        </button>
-
-        <button className="btn google" onClick={() => mockLogin("Google")}>
-          <img src="/imgs/google.svg" alt="Google" className="icon" />
-          Continue with Google
-        </button>
-
-        <div className="divider">
-          <span>OR</span>
-        </div>
 
         <form className="login-form" onSubmit={handleSubmit}>
           <label>Email address or username</label>
@@ -90,7 +71,7 @@ const Login = () => {
           <p>Don't have an account?</p>
           {/* ✅ استخدم Link بدل a */}
           <Link to="/signup" className="signup-btn">
-            Sign up for Spotify
+            Sign up
           </Link>
         </div>
       </div>
