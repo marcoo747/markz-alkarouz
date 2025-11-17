@@ -1,0 +1,14 @@
+.category-page {
+  padding: 20px;
+}
+
+.category-page h2 {
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}

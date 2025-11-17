@@ -96,3 +96,12 @@ h2 {
 .cards-row{
   margin-left: 1.5%;
 }
+
+.nav-link.active {
+  font-weight: bold;
+  color: #b09520 !important;
+}
+
+#link-dropdown {
+  color: #121212a6 !important;
+}

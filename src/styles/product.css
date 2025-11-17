@@ -1,0 +1,27 @@
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 10px;
+}
+
+.product-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.product-card .card-img-top {
+  height: 180px;
+  object-fit: contain;
+  background-color: #f9f9f9;
+}
+
+.product-card .price {
+  color: #1db954;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.product-card .rating {
+  font-size: 0.9rem;
+  color: #f39c12;
+  margin-bottom: 10px;
+}

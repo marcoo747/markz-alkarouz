@@ -7,7 +7,7 @@ const NavBar = () => {
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <NavLink className="navbar-brand" to="/">
-            Navbar scroll
+            <img className="logo" src="/imgs/AlkaroozCom.png" alt="" />
           </NavLink>
 
           <button
@@ -28,13 +28,13 @@ const NavBar = () => {
               style={{ "--bs-scroll-height": "100px" }}
             >
               <li className="nav-item">
-                <NavLink className="nav-link" to="/">
+                <NavLink className="nav-link" to="/home">
                   Home
                 </NavLink>
               </li>
 
               <li className="nav-item">
-                <NavLink className="nav-link" to="/">
+                <NavLink className="nav-link" to="/Categories">
                   Categories
                 </NavLink>
               </li>
@@ -45,13 +45,14 @@ const NavBar = () => {
                 <NavLink
                   className="nav-link disabled"
                   aria-disabled="true"
-                  to="#"
+                  to="/cart"
                 >
                   Cart
                 </NavLink>
               </li>
               <li className="nav-item dropdown">
                 <NavLink
+                  id="link-dropdown"
                   className="nav-link dropdown-toggle"
                   to="#"
                   role="button"

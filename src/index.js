@@ -8,13 +8,15 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
+import Categories from "./pages/categories";
+import CategoryPage from "./pages/CategoryPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Login />,
   },
-  
+
   {
     path: "/signup",
     element: <Signup />,
@@ -24,6 +26,16 @@ const router = createBrowserRouter([
     path: "/Home",
     element: <Home />,
   },
+
+  {
+    path: "/categories",
+    element: <Categories />,
+  },
+
+  {
+  path: "/category/:categoryName",
+  element: <CategoryPage />,
+}
 
 ]);
 
