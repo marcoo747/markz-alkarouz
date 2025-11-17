@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.carousel img {
+  max-height: 500px; /* أو أي ارتفاع تحبه */
+  object-fit: cover;  /* يخلي الصورة تغطي المساحة بدون تشويه */
+  width: 100%;       /* عشان تمتد طول الكاروسيل */
+}
