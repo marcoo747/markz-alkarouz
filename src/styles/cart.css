@@ -30,3 +30,8 @@
 .cart-summary h4 {
   font-size: 1.2rem;
 }
+
+.btn.btn-success.mt-3 {
+  background-color: #0d6efd;
+  border-color: #0e4392;
+}

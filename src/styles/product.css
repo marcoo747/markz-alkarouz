@@ -1,11 +1,13 @@
 .product-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   border-radius: 10px;
 }
 
 .product-card:hover {
   transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .product-card .card-img-top {
@@ -25,13 +27,19 @@
     font-size: 0.95rem;
   }
 
-  .product-card .price { font-size: 0.95rem; }
-  .product-card .rating { font-size: 0.85rem; }
+  .product-card .price {
+    font-size: 0.95rem;
+  }
+  .product-card .rating {
+    font-size: 0.85rem;
+  }
 }
 
 @media (min-width: 577px) and (max-width: 992px) {
   /* Small tablets: slightly smaller images */
-  .product-card .card-img-top { height: 160px; }
+  .product-card .card-img-top {
+    height: 160px;
+  }
 }
 
 .product-card .price {

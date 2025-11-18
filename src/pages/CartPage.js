@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import NavBar from "../Components/NavBar";
 import CheckoutModal from "../Components/CheckoutModal";
+import Container from "../Components/Container";
+import Button from "../Components/Button";
+import Card from "../Components/card";
 import "../styles/cart.css";
 
 const CartPage = () => {
@@ -25,36 +28,44 @@ const CartPage = () => {
 
   const total = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
-    0
+    0,
   );
 
   return (
     <>
       <NavBar />
-      <div className="container cart-page mt-4">
-        <h2>Your Cart</h2>
+      <Container>
+        <h2 style={{ marginTop: 24 }}>Your Cart</h2>
 
-        <div className="cart-items">
+        <div className="grid grid-cols-1" style={{ marginTop: 16 }}>
           {cartItems.map((item) => (
-            <div className="cart-item" key={item.id}>
-              <img src={item.image} alt={item.title} />
-              <div className="item-details">
-                <h5>{item.title}</h5>
-                <p>Price: ₹{item.price}</p>
-                <p>Quantity: {item.quantity}</p>
-                <button className="btn btn-danger btn-sm">Remove</button>
-              </div>
+            <div
+              key={item.id}
+              style={{ display: "flex", gap: 16, alignItems: "center" }}
+            >
+              <Card
+                className=""
+                image={item.image}
+                title={item.title}
+                description={`Price: ₹${item.price} • Qty: ${item.quantity}`}
+              >
+                <div style={{ display: "flex", gap: 8 }}>
+                  <Button variant="outline" onClick={() => {}}>
+                    Remove
+                  </Button>
+                </div>
+              </Card>
             </div>
           ))}
         </div>
 
-        <div className="cart-summary text-end mt-4">
+        <div style={{ textAlign: "right", marginTop: 24 }}>
           <h4>Total: ₹{total}</h4>
-          <button className="btn btn-success" onClick={() => setShowModal(true)}>
+          <Button variant="primary" onClick={() => setShowModal(true)}>
             Proceed to Checkout
-          </button>
+          </Button>
         </div>
-      </div>
+      </Container>
 
       {showModal && <CheckoutModal onClose={() => setShowModal(false)} />}
     </>

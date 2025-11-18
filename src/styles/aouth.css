@@ -6,7 +6,7 @@
 }
 
 .auth-page {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   background: #fff;
   display: flex;
   justify-content: center;
@@ -51,15 +51,28 @@
   gap: 10px;
 }
 
-.btn-outline-success{
-    width: 40%;
+.btn-outline-success {
+  width: 40%;
 }
 
-.facebook { background: #1877f2; color: #fff; }
-.apple { background: #000; color: #fff; }
-.google { background: #fff; border: 1px solid #ccc; color: #444; }
+.facebook {
+  background: #1877f2;
+  color: #fff;
+}
+.apple {
+  background: #000;
+  color: #fff;
+}
+.google {
+  background: #fff;
+  border: 1px solid #ccc;
+  color: #444;
+}
 
-.icon { width: 18px; height: 18px; }
+.icon {
+  width: 18px;
+  height: 18px;
+}
 
 /* Divider */
 .divider {
@@ -70,11 +83,13 @@
 }
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 1px solid #ccc;
 }
-.divider span { margin: 0 10px; }
+.divider span {
+  margin: 0 10px;
+}
 
 /* Forms */
 .login-form,
@@ -117,7 +132,9 @@
   font-size: 18px;
   color: #666;
 }
-.toggle-password:hover { color: #1db954; }
+.toggle-password:hover {
+  color: #1db954;
+}
 
 /* Forgot + Remember */
 .forgot {
@@ -133,7 +150,9 @@
   margin-top: 15px;
   font-size: 13px;
 }
-.remember input { margin-right: 5px; }
+.remember input {
+  margin-right: 5px;
+}
 
 /* Action buttons */
 .login-btn,
@@ -149,7 +168,9 @@
   cursor: pointer;
 }
 .login-btn:hover,
-.signup-btn:hover { background: #1ed760; }
+.signup-btn:hover {
+  background: #1ed760;
+}
 
 /* Sections */
 .signup-section,
@@ -172,14 +193,18 @@
   border: none;
   padding: 0;
 }
-.login-btn-link:hover { text-decoration: underline; }
+.login-btn-link:hover {
+  text-decoration: underline;
+}
 
 /* File input (Signup only) */
 .file-input-wrapper {
   position: relative;
   width: 100%;
 }
-input[type="file"] { display: none; }
+input[type="file"] {
+  display: none;
+}
 .file-input-text {
   display: block;
   background: #f1f1f1;
@@ -192,5 +217,6 @@ input[type="file"] { display: none; }
   cursor: pointer;
   font-weight: bold;
 }
-.file-input-text:hover { background: #f0f0f0; }
-
+.file-input-text:hover {
+  background: #f0f0f0;
+}

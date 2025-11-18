@@ -1,106 +1,148 @@
-import React from "react";
-import { link, NavLink } from "react-router-dom";
-import "../styles/NavBar.css";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import Container from "./Container";
+import Button from "./Button";
 
 const NavBar = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
-        <div className="container-fluid">
-          <NavLink className="navbar-brand" to="/">
-            <img className="logo" src="/imgs/AlkaroozCom.png" alt="" />
+    <header className="site-header">
+      <Container>
+        <nav className="site-nav" aria-label="Main navigation">
+          <NavLink to="/" className="site-logo">
+            <img
+              src="/imgs/AlkaroozCom.png"
+              alt="Alkarooz"
+              style={{ height: 60 }}
+            />
           </NavLink>
 
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarScroll"
-            aria-controls="navbarScroll"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+          <div
+            style={{ display: "flex", alignItems: "center", gap: 12 }}
+            className="nav-actions"
           >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          <div className="collapse navbar-collapse" id="navbarScroll">
-            <ul
-              className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
-              style={{ "--bs-scroll-height": "100px" }}
+            <button
+              className={`nav-toggle ${open ? "open" : ""}`}
+              aria-controls="main-navigation"
+              aria-expanded={open}
+              aria-label={open ? "Close menu" : "Open menu"}
+              onClick={() => setOpen((s) => !s)}
             >
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/home">
-                  Home
-                </NavLink>
-              </li>
+              <svg
+                className="hamburger"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+              >
+                <rect
+                  className="bar bar1"
+                  x="3"
+                  y="6"
+                  width="18"
+                  height="2"
+                  rx="1"
+                  fill="currentColor"
+                />
+                <rect
+                  className="bar bar2"
+                  x="3"
+                  y="11"
+                  width="18"
+                  height="2"
+                  rx="1"
+                  fill="currentColor"
+                />
+                <rect
+                  className="bar bar3"
+                  x="3"
+                  y="16"
+                  width="18"
+                  height="2"
+                  rx="1"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
 
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/Categories">
-                  Categories
-                </NavLink>
-              </li>
+            <div
+              id="main-navigation"
+              className={`nav-links ${open ? "open" : ""}`}
+              role="menu"
+            >
+              <NavLink
+                to="/Home"
+                className="nav-link"
+                onClick={() => setOpen(false)}
+              >
+                Home
+              </NavLink>
+              <NavLink
+                to="/categories"
+                className="nav-link"
+                onClick={() => setOpen(false)}
+              >
+                Categories
+              </NavLink>
+              <NavLink
+                to="/cart"
+                className="nav-link"
+                onClick={() => setOpen(false)}
+              >
+                Cart
+              </NavLink>
 
-              
+              <div
+                className="nav-search"
+                role="search"
+                style={{ marginTop: 6 }}
+              >
+                <label className="visually-hidden" htmlFor="site-search">
+                  Search
+                </label>
+                <input
+                  id="site-search"
+                  type="search"
+                  placeholder="Search"
+                  aria-label="Search"
+                  style={{
+                    padding: 8,
+                    borderRadius: 8,
+                    border: "1px solid rgba(15,23,42,0.06)",
+                  }}
+                />
+              </div>
 
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link"
-                  aria-disabled="true"
-                  to="/Cart"
+              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                <Button
+                  className="btn-sm"
+                  variant="outline"
+                  aria-label="Sign in"
+                  onClick={() => {
+                    setOpen(false);
+                    window.location = "/login";
+                  }}
                 >
-                  Cart
-                </NavLink>
-              </li>
-              <li className="nav-item dropdown">
-                <NavLink
-                  id="link-dropdown"
-                  className="nav-link dropdown-toggle"
-                  to="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+                  Sign in
+                </Button>
+                <Button
+                  className="btn-sm"
+                  variant="primary"
+                  onClick={() => {
+                    setOpen(false);
+                    window.location = "/signup";
+                  }}
                 >
-                  More
-                </NavLink>
-
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      about Us
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      about developers
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      profile
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-
-            <form className="d-flex" role="search">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
+                  Sign up
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </nav>
-    </div>
+        </nav>
+      </Container>
+    </header>
   );
 };
 

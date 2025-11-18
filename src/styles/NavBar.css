@@ -56,8 +56,8 @@
   }
 }
 
-  .navbar-brand .logo {
-    height: 45px;
-    width: auto;
-    margin-bottom: 0px;
-  }
+.navbar-brand .logo {
+  height: 45px;
+  width: auto;
+  margin-bottom: 0px;
+}

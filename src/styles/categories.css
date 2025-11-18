@@ -7,7 +7,9 @@
 }
 
 @media (max-width: 768px) {
-  .grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
 }
 
 /* category.css */
@@ -43,7 +45,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
 }
 
 .card-title {

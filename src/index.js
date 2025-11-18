@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "./styles/theme.css";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -33,24 +34,21 @@ const router = createBrowserRouter([
   },
 
   {
-  path: "/category/:categoryName",
-  element: <CategoryPage />,
-},
+    path: "/category/:categoryName",
+    element: <CategoryPage />,
+  },
 
-{
-  path: "/cart",
-  element: <CartPage />,
-},
-
-
-
+  {
+    path: "/cart",
+    element: <CartPage />,
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
