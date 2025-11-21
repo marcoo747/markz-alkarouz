@@ -6,8 +6,7 @@
   padding: 20px;
 }
 
-@media (max-width: 768px) {
-  .grid {
+@media (max-width: 7  .grid {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }
 }
@@ -46,6 +45,7 @@
   flex-direction: column;
   justify-content: flex-end;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+dient(to top, rgba(0,0,0,0.6), transparent);
 }
 
 .card-title {

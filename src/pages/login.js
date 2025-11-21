@@ -1,25 +1,58 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Container from "../Components/Container";
 import Button from "../Components/Button";
-import "../styles/aouth.css";
+import Message from "../Components/Message";
+import { useAuth } from "../contexts/AuthContext";
+// auth styles moved to theme.css
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState("");
+  const [serverError, setServerError] = useState("");
 
   const togglePassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const auth = useAuth();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username.trim() === "" || password.trim() === "") {
-      alert("Please enter both username/email and password.");
+    const newErrors = {};
+
+    if (!phone) {
+      newErrors.phone = "Please enter your phone number.";
+    } else {
+      const digits = phone.replace(/\D/g, "");
+      if (digits.length !== 11)
+        newErrors.phone = "Phone number must be exactly 11 digits.";
+    }
+
+    if (!password) {
+      newErrors.password = "Please enter your password.";
+    }
+
+    if (Object.keys(newErrors).length) {
+      setErrors(newErrors);
       return;
     }
-    alert("Logging in...");
+
+    setErrors({});
+    setServerError("");
+    setSuccess("");
+
+    try {
+      await auth.login({ phone, password });
+      setSuccess("Logged in successfully.");
+      setTimeout(() => navigate("/home"), 700);
+    } catch (err) {
+      setServerError(err?.message || "Server error");
+    }
   };
 
   return (
@@ -29,25 +62,44 @@ const Login = () => {
           <img src="/imgs/AlkaroozCom.png" alt="Alkarooz" className="logo" />
 
           <form className="login-form" onSubmit={handleSubmit}>
-            <label htmlFor="user">Email address or username</label>
-            <input
-              id="user"
-              type="text"
-              placeholder="Email address or username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+            <div>
+              <input
+                id="phone"
+                type="tel"
+                placeholder="Phone number"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  setErrors((prev) => ({ ...prev, phone: undefined }));
+                }}
+                required
+                pattern="[0-9]{11}"
+                title="Enter exactly 11 digits (numbers only)"
+                aria-invalid={errors.phone ? "true" : "false"}
+                aria-describedby={errors.phone ? "err-phone" : undefined}
+                className={errors.phone ? "input-error" : undefined}
+              />
+              {errors.phone && (
+                <div id="err-phone" className="error-text">
+                  {errors.phone}
+                </div>
+              )}
+            </div>
 
-            <label htmlFor="pwd">Password</label>
             <div className="password-wrapper">
               <input
-                id="pwd"
+                id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setErrors((prev) => ({ ...prev, password: undefined }));
+                }}
                 required
+                aria-invalid={errors.password ? "true" : "false"}
+                aria-describedby={errors.password ? "err-password" : undefined}
+                className={errors.password ? "input-error" : undefined}
               />
               <button
                 type="button"
@@ -57,25 +109,30 @@ const Login = () => {
               >
                 {showPassword ? "🙈" : "👁️"}
               </button>
+              {errors.password && (
+                <div id="err-password" className="error-text">
+                  {errors.password}
+                </div>
+              )}
             </div>
 
             <button
               type="button"
               className="forgot"
-              onClick={() => alert("Password reset flow not implemented")}
+              onClick={() =>
+                setServerError("Please contact support to reset your password.")
+              }
             >
               Forgot your password?
             </button>
-
-            <div className="remember">
-              <input type="checkbox" defaultChecked id="remember" />
-              <label htmlFor="remember">Remember me</label>
-            </div>
 
             <Button variant="primary" type="submit">
               LOG IN
             </Button>
           </form>
+
+          {serverError && <Message type="error">{serverError}</Message>}
+          {success && <Message type="success">{success}</Message>}
 
           <div className="signup-section" style={{ marginTop: 12 }}>
             <p>Don't have an account?</p>

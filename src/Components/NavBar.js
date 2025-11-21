@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Container from "./Container";
 import Button from "./Button";
 
 const NavBar = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   return (
     <header className="site-header">
       <Container>
@@ -122,7 +123,7 @@ const NavBar = () => {
                   aria-label="Sign in"
                   onClick={() => {
                     setOpen(false);
-                    window.location = "/login";
+                    navigate("/login");
                   }}
                 >
                   Sign in
@@ -132,7 +133,7 @@ const NavBar = () => {
                   variant="primary"
                   onClick={() => {
                     setOpen(false);
-                    window.location = "/signup";
+                    navigate("/signup");
                   }}
                 >
                   Sign up

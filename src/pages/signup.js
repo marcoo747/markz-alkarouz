@@ -2,42 +2,93 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "../Components/Container";
 import Button from "../Components/Button";
-import "../styles/aouth.css";
+import Message from "../Components/Message";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import PasswordChecklist from "../Components/PasswordChecklist";
+// auth styles moved to theme.css
 
 const Signup = () => {
   const [formData, setFormData] = useState({
     fullName: "",
-    username: "",
-    email: "",
     phone: "",
-    dob: "",
-    country: "",
     password: "",
     confirmPassword: "",
-    photo: null,
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [fileName, setFileName] = useState("Profile Photo (Optional)");
+  // fileName removed (not used); keep photo in formData if provided
+  const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState("");
+  const [serverError, setServerError] = useState("");
+  const auth = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { id, value, files } = e.target;
     if (id === "photo") {
       setFormData({ ...formData, photo: files[0] });
-      setFileName(files[0] ? files[0].name : "No file chosen");
     } else {
       setFormData({ ...formData, [id]: value });
+      // clear existing error for this field
+      setErrors((prev) => ({ ...prev, [id]: undefined }));
     }
   };
 
-  const handleSubmit = (e) => {
+  const validateField = (field, value) => {
+    switch (field) {
+      case "fullName":
+        if (!value || value.trim().length < 2)
+          return "Please enter your full name.";
+        return;
+      case "phone":
+        if (!value) return "Please enter your phone number.";
+        // count only digits to validate length
+        const digits = value.replace(/\D/g, "");
+        if (digits.length !== 11)
+          return "Phone number must be exactly 11 digits.";
+        return;
+      case "password":
+        if (!value || value.length < 8)
+          return "Password must be at least 8 characters.";
+        // require at least one lowercase, one uppercase and one number
+        if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value))
+          return "Password must include uppercase, lowercase letters and a number.";
+        return;
+      case "confirmPassword":
+        if (value !== formData.password) return "Passwords do not match.";
+        return;
+      default:
+        return;
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+    const newErrors = {};
+    // validate all fields
+    ["fullName", "phone", "password", "confirmPassword"].forEach((f) => {
+      const msg = validateField(f, formData[f]);
+      if (msg) newErrors[f] = msg;
+    });
+
+    if (Object.keys(newErrors).length) {
+      setErrors(newErrors);
       return;
     }
-    alert("Signed up successfully!");
+
+    setErrors({});
+    setServerError("");
+    setSuccess("");
+
+    try {
+      await auth.signup(formData);
+      setSuccess("Signed up successfully.");
+      setTimeout(() => navigate("/home"), 700);
+    } catch (err) {
+      setServerError(err?.message || "Server error");
+    }
   };
 
   return (
@@ -47,59 +98,47 @@ const Signup = () => {
           <img src="/imgs/AlkaroozCom.png" alt="Alkarooz" className="logo" />
 
           <form className="signup-form" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              id="fullName"
-              placeholder="Full Name"
-              value={formData.fullName}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="text"
-              id="username"
-              placeholder="Username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="email"
-              id="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="tel"
-              id="phone"
-              placeholder="Phone Number (Optional)"
-              value={formData.phone}
-              onChange={handleChange}
-            />
-            <input
-              type="date"
-              id="dob"
-              value={formData.dob}
-              onChange={handleChange}
-              required
-            />
+            <div>
+              <input
+                type="text"
+                id="fullName"
+                placeholder="Full Name"
+                value={formData.fullName}
+                onChange={handleChange}
+                required
+                aria-required="true"
+                aria-invalid={errors.fullName ? "true" : "false"}
+                aria-describedby={errors.fullName ? "err-fullName" : undefined}
+                className={errors.fullName ? "input-error" : undefined}
+              />
+              {errors.fullName && (
+                <div id="err-fullName" className="error-text">
+                  {errors.fullName}
+                </div>
+              )}
+            </div>
 
-            <select
-              id="country"
-              value={formData.country}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select your country</option>
-              <option value="USA">United States</option>
-              <option value="UK">United Kingdom</option>
-              <option value="Canada">Canada</option>
-              <option value="India">India</option>
-              <option value="Australia">Australia</option>
-              <option value="Egypt">Egypt</option>
-            </select>
+            <div>
+              <input
+                type="tel"
+                id="phone"
+                placeholder="Phone Number"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                aria-required="true"
+                pattern="[0-9]{11}"
+                title="Enter exactly 11 digits (numbers only)"
+                aria-invalid={errors.phone ? "true" : "false"}
+                aria-describedby={errors.phone ? "err-phone" : undefined}
+                className={errors.phone ? "input-error" : undefined}
+              />
+              {errors.phone && (
+                <div id="err-phone" className="error-text">
+                  {errors.phone}
+                </div>
+              )}
+            </div>
 
             <div className="password-wrapper">
               <input
@@ -109,6 +148,10 @@ const Signup = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                title="Password must be at least 8 characters and include uppercase, lowercase and a number"
+                aria-invalid={errors.password ? "true" : "false"}
+                aria-describedby={errors.password ? "err-password" : undefined}
+                className={errors.password ? "input-error" : undefined}
               />
               <span
                 className="toggle-password"
@@ -116,7 +159,16 @@ const Signup = () => {
               >
                 {showPassword ? "🙈" : "👁️"}
               </span>
+              {errors.password && (
+                <div id="err-password" className="error-text">
+                  {errors.password}
+                </div>
+              )}
             </div>
+            <PasswordChecklist
+              password={formData.password}
+              confirmPassword={formData.confirmPassword}
+            />
 
             <div className="password-wrapper">
               <input
@@ -126,6 +178,11 @@ const Signup = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
+                aria-invalid={errors.confirmPassword ? "true" : "false"}
+                aria-describedby={
+                  errors.confirmPassword ? "err-confirmPassword" : undefined
+                }
+                className={errors.confirmPassword ? "input-error" : undefined}
               />
               <span
                 className="toggle-password"
@@ -133,6 +190,11 @@ const Signup = () => {
               >
                 {showConfirmPassword ? "🙈" : "👁️"}
               </span>
+              {errors.confirmPassword && (
+                <div id="err-confirmPassword" className="error-text">
+                  {errors.confirmPassword}
+                </div>
+              )}
             </div>
 
             <div className="file-input-wrapper">
@@ -142,23 +204,24 @@ const Signup = () => {
                 accept="image/*"
                 onChange={handleChange}
               />
-              <span
-                className="file-input-text"
-                onClick={() => document.getElementById("photo").click()}
-              >
-                {fileName}
-              </span>
             </div>
 
             <div style={{ display: "flex", gap: 12 }}>
               <Button variant="primary" type="submit">
                 Sign Up
               </Button>
-              <Link to="/" style={{ alignSelf: "center" }}>
-                Already have an account?
-              </Link>
             </div>
           </form>
+
+          {serverError && <Message type="error">{serverError}</Message>}
+          {success && <Message type="success">{success}</Message>}
+
+          <div className="login-section" style={{ marginTop: 12 }}>
+            <p>Already have an account?</p>
+            <Link to="/" className="login-btn">
+              Log in
+            </Link>
+          </div>
         </div>
       </div>
     </Container>
