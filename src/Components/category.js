@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Card from "./card";
+import CategoryCard from "./CategoryCard";
 
 const Category = ({ title, description, image }) => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const Category = ({ title, description, image }) => {
 
   return (
     <div onClick={handleClick} style={{ cursor: "pointer" }}>
-      <Card image={image} title={title} description={description} />
+      <CategoryCard image={image} title={title} description={description} />
     </div>
   );
 };

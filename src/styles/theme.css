@@ -178,6 +178,16 @@ p {
   display: grid;
   gap: 16px;
 }
+
+/* Responsive grid utilities */
+.grid-cols-2 {
+  grid-template-columns: 1fr;
+}
+
+.grid-cols-3 {
+  grid-template-columns: 1fr;
+}
+
 @media (min-width: 640px) {
   .nav-toggle {
     display: inline-flex;
@@ -186,6 +196,13 @@ p {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+@media (min-width: 768px) {
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (min-width: 992px) {
   .grid-cols-3 {
     grid-template-columns: repeat(3, 1fr);
@@ -287,6 +304,7 @@ p {
   padding: 6px 10px;
   font-size: 14px;
   border-radius: 8px;
+  white-space: nowrap;
 }
 
 @media (max-width: 880px) {
@@ -435,6 +453,14 @@ p {
 .logo {
   width: 120px;
   margin-bottom: 30px;
+}
+
+/* Make logo larger on auth pages for small phones */
+@media (max-width: 576px) {
+  .auth-page .logo {
+    width: 140px;
+    margin-bottom: 18px;
+  }
 }
 
 /* Buttons (auth) */

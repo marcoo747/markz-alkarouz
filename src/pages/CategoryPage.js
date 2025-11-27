@@ -46,7 +46,7 @@ const CategoryPage = () => {
         <h2 style={{ marginTop: 24 }}>
           {categoryName ? categoryName.toUpperCase() : "Category"} Products
         </h2>
-        <div className="grid grid-cols-3 mt-8">
+        <div className="product-grid" style={{ marginTop: 24 }}>
           {products.map((p, idx) => (
             <ProductCard key={idx} {...p} />
           ))}

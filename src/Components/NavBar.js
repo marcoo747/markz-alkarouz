@@ -123,7 +123,7 @@ const NavBar = () => {
                   aria-label="Sign in"
                   onClick={() => {
                     setOpen(false);
-                    navigate("/login");
+                    navigate("/");
                   }}
                 >
                   Sign in
