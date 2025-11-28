@@ -12,7 +12,14 @@ const ItemPack = ({ category_name }) => {
           image="/imgs/shopping.webp"
           price="59500.00"
           rating={4}
-        />{" "}
+        />
+        <ProductCard
+          title="Samsung Galaxy S22 Ultra"
+          description="12GB RAM, 256GB Storage, Blush Gold"
+          image="/imgs/shopping.webp"
+          price="59500.00"
+          rating={4}
+        />
         <ProductCard
           title="Samsung Galaxy S22 Ultra"
           description="12GB RAM, 256GB Storage, Blush Gold"
@@ -27,7 +34,7 @@ const ItemPack = ({ category_name }) => {
           price="59500.00"
           rating={4}
         />
-        <ProductCard
+                <ProductCard
           title="Samsung Galaxy S22 Ultra"
           description="12GB RAM, 256GB Storage, Blush Gold"
           image="/imgs/shopping.webp"

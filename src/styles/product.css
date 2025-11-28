@@ -1,8 +1,10 @@
-.product-card {  transition:
+.product-card {
+  transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
   border-radius: 10px;
 }
+
 
 .product-card:hover {
   transform: scale(1.02);
@@ -39,7 +41,9 @@
   .product-card .card-img-top {
     height: 160px;
   }
-.card-img-top { height: 160px; }
+  .card-img-top {
+    height: 160px;
+  }
 }
 
 .product-card .price {

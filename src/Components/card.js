@@ -1,9 +1,9 @@
 import React from "react";
 import "../styles/product.css";
 
-const ProductCard = ({ title, description, image, price, rating }) => {
+const ProductCard = ({ title, description, image, price, rating, onClick }) => {
   return (
-    <article className="card product-card" aria-label={title}>
+    <article className="card product-card" aria-label={title} onClick={onClick} style={onClick ? { cursor: 'pointer' } : {}}>
       {image && <img src={image} alt={title} loading="lazy" />}
       <div className="card-body">
         <h3 className="card-title">{title}</h3>

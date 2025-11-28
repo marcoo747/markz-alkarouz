@@ -12,6 +12,7 @@ import Signup from "./pages/signup";
 import Categories from "./pages/categories";
 import CategoryPage from "./pages/CategoryPage";
 import CartPage from "./pages/CartPage";
+import Requests from "./pages/requests";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -46,6 +47,11 @@ const router = createBrowserRouter([
     path: "/cart",
     element: <CartPage />,
   },
+
+  {
+    path: "/requests",
+    element: <Requests />,
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -54,7 +60,7 @@ root.render(
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -2,11 +2,15 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import CategoryCard from "./CategoryCard";
 
-const Category = ({ title, description, image }) => {
+const Category = ({ title, description, image, onClick }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/category/${title.toLowerCase()}`);
+    if (onClick) {
+      onClick(title);
+    } else {
+      navigate(`/category/${title.toLowerCase()}`);
+    }
   };
 
   return (

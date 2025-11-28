@@ -94,6 +94,15 @@ const NavBar = () => {
               >
                 Cart
               </NavLink>
+              <NavLink
+                to="/requests"
+                className="nav-link"
+                onClick={() => setOpen(false)}
+              >
+                requests
+              </NavLink>
+
+
 
               <div
                 className="nav-search"

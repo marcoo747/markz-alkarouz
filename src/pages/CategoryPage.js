@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductCard from "../Components/card";
 import Container from "../Components/Container";
 import "../styles/categoryPage.css";
 import NavBar from "../Components/NavBar";
+import EditCategoryModal from "../Components/EditCategoryModal";
+import DeleteCategoryModal from "../Components/DeleteCategoryModal";
+import AddItemModal from "../Components/AddItemModal";
+import EditItemModal from "../Components/EditCategoryModal";
+import DeleteItemModal from "../Components/DeleteItemModal";
 
 const products = [
   {
@@ -38,6 +43,65 @@ const products = [
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
+  const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
+  const [showDeleteCategoryModal, setShowDeleteCategoryModal] = useState(false);
+  const [showAddItemModal, setShowAddItemModal] = useState(false);
+  const [showEditItemModal, setShowEditItemModal] = useState(false);
+  const [showDeleteItemModal, setShowDeleteItemModal] = useState(false);
+  const [itemMode, setItemMode] = useState(null); // 'edit' or 'delete'
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const handleEditCategory = () => {
+    setShowEditCategoryModal(true);
+  };
+
+  const handleDeleteCategory = () => {
+    setShowDeleteCategoryModal(true);
+  };
+
+  const handleAddItem = () => {
+    setShowAddItemModal(true);
+  };
+
+  const handleEditItem = () => {
+    setItemMode("edit");
+  };
+
+  const handleDeleteItem = () => {
+    setItemMode("delete");
+  };
+
+  const handleItemClick = (item) => {
+    if (itemMode === "edit") {
+      setSelectedItem(item);
+      setShowEditItemModal(true);
+      setItemMode(null);
+    } else if (itemMode === "delete") {
+      setSelectedItem(item);
+      setShowDeleteItemModal(true);
+      setItemMode(null);
+    }
+  };
+
+  const handleEditCategoryConfirm = (newName) => {
+    // Nothing happens
+  };
+
+  const handleDeleteCategoryConfirm = () => {
+    // Nothing happens
+  };
+
+  const handleAddItemConfirm = (itemData) => {
+    // Nothing happens
+  };
+
+  const handleEditItemConfirm = (itemData) => {
+    // Nothing happens
+  };
+
+  const handleDeleteItemConfirm = () => {
+    // Nothing happens
+  };
 
   return (
     <div>
@@ -46,10 +110,75 @@ const CategoryPage = () => {
         <h2 style={{ marginTop: 24 }}>
           {categoryName ? categoryName.toUpperCase() : "Category"} Products
         </h2>
+        <div className="action-btns"
+            
+          
+        >
+          <button className="btn btn-primary" onClick={handleAddItem}>
+            Add Item
+          </button>
+          <button className="btn btn-info" onClick={handleEditItem}>
+            Edit Item
+          </button>
+          <button className="btn btn-warning" onClick={handleDeleteItem}>
+            Delete Item
+          </button>
+          <button className="btn btn-secondary" onClick={handleEditCategory}>
+            Edit Category
+          </button>
+          <button className="btn btn-dark" onClick={handleDeleteCategory}>
+            Delete Category
+          </button>
+        </div>
+        {itemMode && (
+          <p style={{ color: "blue", marginBottom: "16px" }}>
+            Click on an item to {itemMode} it.
+          </p>
+        )}
+        <div className="items">
         <div className="product-grid" style={{ marginTop: 24 }}>
           {products.map((p, idx) => (
-            <ProductCard key={idx} {...p} />
+            <ProductCard
+              key={idx}
+              {...p}
+              onClick={itemMode ? () => handleItemClick(p) : null}
+            />
           ))}
+        </div>
+        {showAddItemModal && (
+          <AddItemModal
+            onClose={() => setShowAddItemModal(false)}
+            onConfirm={handleAddItemConfirm}
+          />
+        )}
+        {showEditItemModal && (
+          <EditItemModal
+            onClose={() => setShowEditItemModal(false)}
+            onConfirm={handleEditItemConfirm}
+            currentItem={selectedItem}
+          />
+        )}
+        {showDeleteItemModal && (
+          <DeleteItemModal
+            onClose={() => setShowDeleteItemModal(false)}
+            onConfirm={handleDeleteItemConfirm}
+            itemName={selectedItem?.title}
+          />
+        )}
+        {showEditCategoryModal && (
+          <EditCategoryModal
+            onClose={() => setShowEditCategoryModal(false)}
+            onConfirm={handleEditCategoryConfirm}
+            currentName={categoryName}
+          />
+        )}
+        {showDeleteCategoryModal && (
+          <DeleteCategoryModal
+            onClose={() => setShowDeleteCategoryModal(false)}
+            onConfirm={handleDeleteCategoryConfirm}
+            categoryName={categoryName}
+          />
+        )}
         </div>
       </Container>
     </div>
