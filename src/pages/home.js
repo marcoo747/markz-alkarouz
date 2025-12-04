@@ -6,6 +6,44 @@ import Container from "../Components/Container";
 import Button from "../Components/Button";
 import "../styles/home.css";
 
+const dummyProducts = [
+  {
+    title: "Sample Product 1",
+    description: "Description for sample product 1",
+    image: "/imgs/shopping.webp",
+    price: "100",
+    rating: 4,
+  },
+  {
+    title: "Sample Product 2",
+    description: "Description for sample product 2",
+    image: "/imgs/shopping.webp",
+    price: "200",
+    rating: 5,
+  },
+  {
+    title: "Sample Product 2",
+    description: "Description for sample product 2",
+    image: "/imgs/shopping.webp",
+    price: "200",
+    rating: 5,
+  },
+  {
+    title: "Sample Product 2",
+    description: "Description for sample product 2",
+    image: "/imgs/shopping.webp",
+    price: "200",
+    rating: 5,
+  },
+  {
+    title: "Sample Product 2",
+    description: "Description for sample product 2",
+    image: "/imgs/shopping.webp",
+    price: "200",
+    rating: 5,
+  },
+];
+
 const Home = () => {
   return (
     <div>
@@ -48,11 +86,21 @@ const Home = () => {
         </div>
 
         <div className="mt-8">
-          <ItemPack category_name={"recent added >"} />
+          <ItemPack
+            category_name={"recent added >"}
+            products={dummyProducts}
+            onEdit={() => {}}
+            onDelete={() => {}}
+          />
         </div>
 
         <div className="mt-8">
-          <ItemPack category_name={"speackers >"} />
+          <ItemPack
+            category_name={"speackers >"}
+            products={dummyProducts}
+            onEdit={() => {}}
+            onDelete={() => {}}
+          />
         </div>
       </Container>
     </div>

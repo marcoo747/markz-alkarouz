@@ -1,7 +1,7 @@
 import React from "react";
 import ProductCard from "./card";
 
-const ItemPack = ({ category_name, products, onEdit, onDelete }) => {
+const ItemPack = ({ category_name, products = [], onEdit, onDelete }) => {
   return (
     <div className="item-pack">
       <h1 className="category_name">{category_name}</h1>
