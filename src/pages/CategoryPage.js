@@ -117,18 +117,6 @@ const CategoryPage = () => {
           <button className="btn btn-primary" onClick={handleAddItem}>
             Add Item
           </button>
-          <button className="btn btn-info" onClick={handleEditItem}>
-            Edit Item
-          </button>
-          <button className="btn btn-warning" onClick={handleDeleteItem}>
-            Delete Item
-          </button>
-          <button className="btn btn-secondary" onClick={handleEditCategory}>
-            Edit Category
-          </button>
-          <button className="btn btn-dark" onClick={handleDeleteCategory}>
-            Delete Category
-          </button>
         </div>
         {itemMode && (
           <p style={{ color: "blue", marginBottom: "16px" }}>

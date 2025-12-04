@@ -47,7 +47,6 @@ const categoryData = [
 ];
 
 const Categories = () => {
-  const [mode, setMode] = useState(null); // 'edit' or 'delete'
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -57,24 +56,14 @@ const Categories = () => {
     setShowAddModal(true);
   };
 
-  const handleEdit = () => {
-    setMode('edit');
+  const handleEdit = (cat) => {
+    setSelectedCategory(cat);
+    setShowEditModal(true);
   };
 
-  const handleDelete = () => {
-    setMode('delete');
-  };
-
-  const handleCategoryClick = (title) => {
-    if (mode === 'edit') {
-      setSelectedCategory(title);
-      setShowEditModal(true);
-      setMode(null);
-    } else if (mode === 'delete') {
-      setSelectedCategory(title);
-      setShowDeleteModal(true);
-      setMode(null);
-    }
+  const handleDelete = (cat) => {
+    setSelectedCategory(cat);
+    setShowDeleteModal(true);
   };
 
   const handleAddConfirm = (name) => {
@@ -98,16 +87,7 @@ const Categories = () => {
           <button className="btn btn-primary" onClick={handleAdd}>
             Add Category
           </button>
-          <button className="btn btn-secondary" onClick={handleEdit}>
-            Edit Category
-          </button>
-          <button className="btn btn-danger" onClick={handleDelete}>
-            Delete Category
-          </button>
         </div>
-        {mode && (
-          <p style={{ color: 'blue', marginBottom: '16px' }}>Click on a category to {mode} it.</p>
-        )}
         <div className="grid grid-cols-3 mt-8">
           {categoryData.map((cat, index) => (
             <Category
@@ -115,7 +95,8 @@ const Categories = () => {
               title={cat.title}
               description={cat.description}
               image={cat.image}
-              onClick={mode ? handleCategoryClick : null}
+              onEdit={() => handleEdit(cat)}
+              onDelete={() => handleDelete(cat)}
             />
           ))}
         </div>
@@ -129,14 +110,14 @@ const Categories = () => {
           <EditCategoryModal
             onClose={() => setShowEditModal(false)}
             onConfirm={handleEditConfirm}
-            currentName={selectedCategory}
+            currentName={selectedCategory?.title}
           />
         )}
         {showDeleteModal && (
           <DeleteCategoryModal
             onClose={() => setShowDeleteModal(false)}
             onConfirm={handleDeleteConfirm}
-            categoryName={selectedCategory}
+            categoryName={selectedCategory?.title}
           />
         )}
       </Container>
