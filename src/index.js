@@ -14,6 +14,8 @@ import CategoryPage from "./pages/CategoryPage";
 import ProductPage from "./pages/ProductPage";
 import CartPage from "./pages/CartPage";
 import Requests from "./pages/requests";
+import ProfilePage from "./pages/ProfilePage";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -59,6 +61,10 @@ const router = createBrowserRouter([
   {
     path: "/requests",
     element: <Requests />,
+  },
+  {
+    path: "/profile",
+    element: <ProfilePage />,
   },
 ]);
 

@@ -101,6 +101,13 @@ const NavBar = () => {
               >
                 requests
               </NavLink>
+              <NavLink
+                to="/profile"
+                className="nav-link"
+                onClick={() => setOpen(false)}
+              >
+                Profile
+              </NavLink>
 
 
 
