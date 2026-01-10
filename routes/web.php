@@ -10,10 +10,15 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\OsraController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
 
+// Serve React build at root
+Route::get('/{any?}', function () {
+    return File::get(public_path('build/index.html'));
+})->where('any', '.*');
+
 // All users even guests
-Route::get('/', [Home_controller::class, 'index'])->name('home');
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 Route::get('/categories/{category}', [CategoriesController::class, 'show'])->name('categories.show');
 Route::get('/items/{id}', [ProductController::class, 'show'])->name('items.show');
@@ -28,7 +33,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/sign_up', [RegisteredUserController::class, 'sign_up'])->name('sign_up.store');
 });
 
-// Public routes
+// Public routes for authenticated users
 Route::middleware('role:user,admin,manager')->group(function () {
     // Cart
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
@@ -49,6 +54,7 @@ Route::middleware('role:user,admin,manager')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
+// Admin & Manager routes
 Route::middleware('role:admin,manager')->group(function () {
     // Requests
     Route::get('/requests', [RequestController::class, 'index'])->name('requests');
@@ -57,6 +63,7 @@ Route::middleware('role:admin,manager')->group(function () {
     Route::get('/requests/{request}', [RequestController::class, 'show'])->name('requests.show');
 });
 
+// Manager-only routes
 Route::middleware(['auth', 'role:manager'])->group(function () {
     // Categories
     Route::post('/categories', [CategoriesController::class, 'store'])->name('categories.store');
@@ -87,7 +94,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::delete('/users/{user}', [ProfileController::class, 'destroy'])->name('users.destroy');
 });
 
-// Fallback
+// Fallback (any undefined route goes to 404)
 Route::fallback(function () {
     return Inertia::render('Errors/404');
 });
