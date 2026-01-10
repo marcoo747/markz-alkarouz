@@ -1,0 +1,249 @@
+/* NavBar.css */
+
+/* الهيدر العام */
+.site-header {
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 800;
+}
+
+/* الحاوية الداخلية للـ nav */
+.site-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  color: #0d6efd !important;
+}
+
+/* اللوجو */
+.site-logo img {
+  width: 10%;
+  height: auto;
+  display: block;
+  position: absolute;
+  left: 2%;
+  margin-top: -2.2%;
+}
+
+@media (max-width: 1200px) {
+  .site-logo img {
+    position: relative  ;
+    width: 25%;
+    margin-top: 0.5%;
+  }
+}
+
+/* أزرار التصفح والبحث */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-actions .btn-primary {
+  padding: 6px 16px; /* عرض داخلي متساوي */
+  min-width: 100px;
+}
+
+/* الروابط */
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #1f2937;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+  background-color: rgba(31, 41, 55, 0.05);
+}
+
+/* مربع البحث */
+.nav-search input {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+
+/* أزرار Sign in / Sign up */
+.btn-sm {
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Responsive: موبايل */
+@media (max-width: 1200px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+    background-color: #ffffff;
+    flex-direction: column;
+    align-items: stretch;
+    width: clamp(220px, 90vw, 360px);
+    max-width: calc(100% - 2rem);
+    padding: 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+  }
+
+  .nav-links.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .nav-link {
+    width: 100%;
+    padding: 0.5rem 0;
+  }
+
+  .nav-search {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .nav-search input {
+    width: 100%;
+  }
+
+  .nav-actions > div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Very small screens use full-width mobile menu */
+@media (max-width: 420px) {
+  .nav-links {
+    right: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 0;
+    padding: 0.75rem;
+  }
+}
+
+.nav-actions .btn-sm {
+  padding: 6px 16px;   /* padding داخلي ثابت */
+  min-width: 100px;    /* نفس العرض لكل الأزرار */
+  text-align: center;  /* يحافظ على النص في المنتصف */
+  border-radius: 6px;  /* حواف مدورة خفيفة */
+  font-size: 0.9rem;   /* حجم خط مناسب */
+  transition: background-color 0.2s, color 0.2s; /* تأثير عند hover */
+}
+
+.nav-actions .btn-sm.btn-outline {
+  background-color: transparent;
+  border: 1px solid #0B5ED7; /* لون الحدود */
+  color: #0B5ED7;
+}
+
+.nav-actions .btn-sm.btn-outline:hover {
+  background-color: #0B5ED7;
+  color: #fff;
+}
+
+.nav-actions .btn-sm.btn-primary {
+  color: #fff;
+  border: none;
+}
+
+.nav-actions .btn-sm.btn-primary:hover {
+  background-color: #0B5ED7; /* لون أغمق عند hover */
+}
+
+/* زر القائمة (هامبرجر) */
+.nav-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex; /* نعرضه دائمًا، ثم نخفيه على الديسكتوب بالـ media query */
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  padding: clamp(6px, 1.5vw, 10px);
+  min-width: 40px; /* ensures accessible touch target */
+  min-height: 40px;
+  border-radius: 6px;
+}
+
+.hamburger {
+  width: clamp(18px, 3vw, 24px);
+  height: clamp(18px, 3vw, 24px);
+  display: block;
+}
+
+.nav-toggle .bar {
+  width: clamp(16px, 3.5vw, 22px);
+  height: 2px;
+  background-color: #0f172a; /* لون الخط */
+  border-radius: 1px;
+  transition: transform 0.3s ease, opacity 0.2s ease;
+  transform-origin: center;
+}
+
+.nav-toggle.open .bar1 {
+  transform: translateY(0px) rotate(45deg);
+}
+
+.nav-toggle.open .bar2 {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.nav-toggle.open .bar3 {
+  transform: translateY(0px) rotate(-45deg);
+}
+
+.nav-toggle:focus {
+  outline: 2px solid rgba(11,94,215,0.25);
+  outline-offset: 2px;
+}
+
+/* نخبّي الزر على الديسكتوب */
+@media (min-width: 1200px) {
+  .nav-toggle {
+    display: none;
+  }
+}
+
+@media (max-width: 1200px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+}

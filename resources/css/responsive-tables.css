@@ -1,0 +1,252 @@
+/* =======================================
+   RESPONSIVE TABLE UTILITIES
+   ======================================= */
+
+/* Users Table Container - Horizontal scroll on mobile, normal on desktop */
+.users-table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+}
+
+.users-table {
+  width: 100%;
+  min-width: 600px;
+  margin-bottom: 0;
+}
+
+.user-avatar {
+  width: 2.625rem;
+  height: 2.625rem;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.user-avatar-icon {
+  width: 2.625rem;
+  height: 2.625rem;
+  flex-shrink: 0;
+}
+
+/* Responsive action buttons */
+.action-buttons {
+  gap: 0.5rem;
+}
+
+.user-actions {
+  white-space: nowrap;
+}
+
+/* Responsive: stack action buttons on extra small screens */
+@media (max-width: 480px) {
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.25rem;
+  }
+
+  .action-buttons .btn {
+    width: 100%;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .user-row td {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  .user-row td:first-child {
+    min-width: 24px;
+  }
+}
+
+/* Tablet screens: make table more compact */
+@media (max-width: 768px) {
+  .users-table {
+    min-width: 500px;
+  }
+
+  .users-table thead th {
+    padding: 0.5rem 0.35rem;
+    font-size: 0.85rem;
+  }
+
+  .user-row td {
+    padding: 0.5rem 0.35rem;
+    font-size: 0.9rem;
+  }
+
+  .action-buttons {
+    gap: 0.25rem;
+  }
+
+  .action-buttons .btn {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.5rem;
+  }
+}
+
+/* =======================================
+   PRODUCT DETAIL RESPONSIVE UTILITIES
+   ======================================= */
+
+.add-photo-section {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.add-photo-section .btn-sm {
+  flex: 1;
+  min-width: 100px;
+}
+
+@media (max-width: 576px) {
+  .add-photo-section {
+    gap: 0.35rem;
+  }
+
+  .add-photo-section .btn-sm {
+    min-width: 80px;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.5rem;
+  }
+}
+
+.product-description {
+  margin-top: 0.75rem;
+}
+
+.product-description h6 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.product-description p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.materials {
+  margin-top: 0.75rem;
+}
+
+.materials strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.material-option {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.35rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.material-option:hover {
+  border-color: #0d6efd;
+  background: rgba(13, 110, 253, 0.05);
+}
+
+.material-option.selected {
+  background: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+}
+
+/* Quantity selector */
+.quantity-selector {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.qty-display-box {
+  min-width: 2.5rem;
+  text-align: center;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f8f9fa;
+  font-weight: 600;
+  display: inline-block;
+}
+
+@media (max-width: 576px) {
+  .quantity-selector {
+    gap: 0.35rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .quantity-selector .btn {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .qty-display-box {
+    padding: 0.25rem 0.35rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Make buttons in product actions stack on mobile */
+.product-actions {
+  margin-top: 0.75rem;
+}
+
+.product-actions .btn {
+  margin-top: auto;
+}
+
+@media (max-width: 576px) {
+  .product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .product-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Product page action buttons */
+.action-btns {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.action-btns .btn {
+  flex: 1;
+  min-width: 150px;
+}
+
+@media (max-width: 576px) {
+  .action-btns {
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .action-btns .btn {
+    flex: 1;
+    min-width: 100px;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+}

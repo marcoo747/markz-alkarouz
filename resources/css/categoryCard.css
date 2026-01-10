@@ -1,0 +1,59 @@
+/* Category card styling (no price, rating, or add-to-cart) */
+.category-card-item {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #fff;
+}
+
+.category-card-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.category-card-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  aspect-ratio: 4 / 3;
+}
+
+.category-card-body {
+  padding: 16px;
+  text-align: center;
+}
+
+.category-card-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.category-card-text {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Responsive: smaller images on mobile */
+@media (max-width: 576px) {
+  .category-card-img {
+    aspect-ratio: 4 / 3;
+    max-height: 140px;
+  }
+
+  .category-card-title {
+    font-size: 1rem;
+  }
+
+  .category-card-text {
+    font-size: 0.85rem;
+  }
+
+  .category-card-body {
+    padding: 12px;
+  }
+}
