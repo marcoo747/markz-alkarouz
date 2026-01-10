@@ -2,7 +2,7 @@ import React from "react";
 import { usePage, Head } from "@inertiajs/react";
 import NavBar from "@/Components/NavBar";
 import Container from "@/Components/Container";
-import ItemPack from "@/Components/item-pack";
+import ItemPack from "@/Components/Item-pack";
 
 const SearchResult = () => {
   const { props } = usePage();
