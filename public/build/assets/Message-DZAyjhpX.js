@@ -1,0 +1,1 @@
+import{j as t}from"./app-StHp4lGL.js";const a=({type:s="info",children:r})=>{const e=s==="success"?"success-text":s==="error"?"error-text":"";return t.jsx("div",{className:e,role:s==="error"?"alert":"status",children:r})};export{a as M};
