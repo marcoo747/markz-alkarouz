@@ -76,7 +76,7 @@ const Home = () => {
 
         <div className="mt-8">
           <ItemPack
-            category_name="Recently Added >"
+            category_name="Recently Added"
             products={products}
             setAlertMessage={setAlertMessage}
           />

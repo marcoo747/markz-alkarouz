@@ -36,7 +36,7 @@ const ProductPage = () => {
     );
   };
 
-  // دالة تأكيد الحذف
+  // Delete confirmation handler
   const handleDeleteItem = () => {
     if (!selectedItem) return;
 

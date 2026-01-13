@@ -21,7 +21,7 @@ const OsraPage = ({ osras: initialOsras }) => {
     formData.append("osra_place", data.osra_place);
     formData.append("osra_time", data.osra_time);
 
-    router.post(route("osras.store"), formData, { onSuccess: () => router.reload() });
+    router.post(route("osra.store"), formData, { onSuccess: () => router.reload() });
   };
 
   // Edit Osra
@@ -33,12 +33,12 @@ const OsraPage = ({ osras: initialOsras }) => {
     formData.append("osra_time", data.osra_time);
     formData.append("_method", "PUT");
 
-    router.post(route("osras.update", data.osra_id), formData, { onSuccess: () => router.reload() });
+    router.post(route("osra.update", data.osra_id), formData, { onSuccess: () => router.reload() });
   };
 
   // Delete Osra
   const handleDelete = (osra) => {
-    router.delete(route("osras.destroy", osra.osra_id), { onSuccess: () => router.reload() });
+    router.delete(route("osra.destroy", osra.osra_id), { onSuccess: () => router.reload() });
   };
 
   return (
@@ -48,7 +48,7 @@ const OsraPage = ({ osras: initialOsras }) => {
 
       <div className="container mt-4">
         <h2>Osra List</h2>
-        
+
         <button className="btn btn-success mt-2 mb-3" onClick={() => setShowAdd(true)}>Add Family</button>
 
         <div className="row">

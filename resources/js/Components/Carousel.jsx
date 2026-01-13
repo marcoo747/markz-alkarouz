@@ -24,7 +24,7 @@ const Carousel = ({ images, interval = 3000 }) => {
         ))}
       </div>
 
-      {/* الأسهم لو حابب تخليها موجودة */}
+      {/* The arrows (keep if you want them visible) */}
       <button
         className="carousel-control-prev"
         type="button"

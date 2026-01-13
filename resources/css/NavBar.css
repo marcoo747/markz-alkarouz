@@ -1,6 +1,6 @@
 /* NavBar.css */
 
-/* الهيدر العام */
+/* Site header */
 .site-header {
   width: 100%;
   background-color: #ffffff;
@@ -10,7 +10,7 @@
   z-index: 800;
 }
 
-/* الحاوية الداخلية للـ nav */
+/* Inner nav container */
 .site-nav {
   display: flex;
   justify-content: space-between;
@@ -23,7 +23,7 @@
   color: #0d6efd !important;
 }
 
-/* اللوجو */
+/* Logo */
 .site-logo img {
   width: 10%;
   height: auto;
@@ -41,7 +41,7 @@
   }
 }
 
-/* أزرار التصفح والبحث */
+/* Navigation & search buttons */
 .nav-actions {
   display: flex;
   align-items: center;
@@ -49,11 +49,11 @@
 }
 
 .nav-actions .btn-primary {
-  padding: 6px 16px; /* عرض داخلي متساوي */
+  padding: 6px 16px; /* consistent inner padding */
   min-width: 100px;
 }
 
-/* الروابط */
+/* Links */
 .nav-links {
   display: flex;
   gap: 1rem;
@@ -74,7 +74,7 @@
   background-color: rgba(31, 41, 55, 0.05);
 }
 
-/* مربع البحث */
+/* Search box */
 .nav-search input {
   border: 1px solid rgba(15, 23, 42, 0.1);
   border-radius: 8px;
@@ -82,7 +82,7 @@
   font-size: 0.9rem;
 }
 
-/* أزرار Sign in / Sign up */
+/* Sign in / Sign up buttons */
 .btn-sm {
   font-size: 0.85rem;
   padding: 6px 12px;
@@ -90,7 +90,7 @@
   cursor: pointer;
 }
 
-/* Responsive: موبايل */
+/* Responsive: mobile */
 @media (max-width: 1200px) {
   .nav-toggle {
     display: block;
@@ -153,17 +153,17 @@
 }
 
 .nav-actions .btn-sm {
-  padding: 6px 16px;   /* padding داخلي ثابت */
-  min-width: 100px;    /* نفس العرض لكل الأزرار */
-  text-align: center;  /* يحافظ على النص في المنتصف */
-  border-radius: 6px;  /* حواف مدورة خفيفة */
-  font-size: 0.9rem;   /* حجم خط مناسب */
-  transition: background-color 0.2s, color 0.2s; /* تأثير عند hover */
+  padding: 6px 16px;   /* consistent inner padding */
+  min-width: 100px;    /* same width for all buttons */
+  text-align: center;  /* keeps text centered */
+  border-radius: 6px;  /* slight rounded corners */
+  font-size: 0.9rem;   /* appropriate font size */
+  transition: background-color 0.2s, color 0.2s; /* hover effect */
 }
 
 .nav-actions .btn-sm.btn-outline {
   background-color: transparent;
-  border: 1px solid #0B5ED7; /* لون الحدود */
+  border: 1px solid #0B5ED7; /* border color */
   color: #0B5ED7;
 }
 
@@ -178,15 +178,15 @@
 }
 
 .nav-actions .btn-sm.btn-primary:hover {
-  background-color: #0B5ED7; /* لون أغمق عند hover */
+  background-color: #0B5ED7; /* darker color on hover */
 }
 
-/* زر القائمة (هامبرجر) */
+/* Menu button (hamburger) */
 .nav-toggle {
   background: none;
   border: none;
   cursor: pointer;
-  display: flex; /* نعرضه دائمًا، ثم نخفيه على الديسكتوب بالـ media query */
+  display: flex; /* shown by default, hidden on desktop via media query */
   align-items: center;
   justify-content: center;
   width: auto;
@@ -206,7 +206,7 @@
 .nav-toggle .bar {
   width: clamp(16px, 3.5vw, 22px);
   height: 2px;
-  background-color: #0f172a; /* لون الخط */
+  background-color: #0f172a; /* text color */
   border-radius: 1px;
   transition: transform 0.3s ease, opacity 0.2s ease;
   transform-origin: center;
@@ -230,7 +230,7 @@
   outline-offset: 2px;
 }
 
-/* نخبّي الزر على الديسكتوب */
+/* Hide the button on desktop */
 @media (min-width: 1200px) {
   .nav-toggle {
     display: none;

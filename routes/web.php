@@ -10,21 +10,28 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\OsraController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
 
-// Serve React build at root
-Route::get('/{any?}', function () {
-    return File::get(public_path('build/index.html'));
-})->where('any', '.*');
+/*
+|--------------------------------------------------------------------------
+| Public routes (guests + users)
+|--------------------------------------------------------------------------
+*/
 
-// All users even guests
+Route::get('/', [Home_controller::class, 'index'])->name('home');
+
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 Route::get('/categories/{category}', [CategoriesController::class, 'show'])->name('categories.show');
+
 Route::get('/items/{id}', [ProductController::class, 'show'])->name('items.show');
 Route::get('/search', [ProductController::class, 'search'])->name('search');
 
-// Guest-only routes
+/*
+|--------------------------------------------------------------------------
+| Guest only
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'login'])->name('login.store');
@@ -33,8 +40,14 @@ Route::middleware('guest')->group(function () {
     Route::post('/sign_up', [RegisteredUserController::class, 'sign_up'])->name('sign_up.store');
 });
 
-// Public routes for authenticated users
+/*
+|--------------------------------------------------------------------------
+| Authenticated users
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('role:user,admin,manager')->group(function () {
+
     // Cart
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -42,29 +55,38 @@ Route::middleware('role:user,admin,manager')->group(function () {
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('password.change');
 
     // Requests
-    Route::post('/requests/create-from-cart', [RequestController::class, 'createFromCart'])->name('requests.createFromCart');
-
-    // Profile
-    Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/requests/create-from-cart', [RequestController::class, 'createFromCart'])
+        ->name('requests.createFromCart');
 
     // Logout
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
-// Admin & Manager routes
+/*
+|--------------------------------------------------------------------------
+| Admin & Manager
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('role:admin,manager')->group(function () {
-    // Requests
     Route::get('/requests', [RequestController::class, 'index'])->name('requests');
+    Route::get('/requests/{request}', [RequestController::class, 'show'])->name('requests.show');
     Route::post('/requests/{request}/accept', [RequestController::class, 'accept'])->name('requests.accept');
     Route::post('/requests/{request}/done', [RequestController::class, 'done'])->name('requests.done');
-    Route::get('/requests/{request}', [RequestController::class, 'show'])->name('requests.show');
 });
 
-// Manager-only routes
+/*
+|--------------------------------------------------------------------------
+| Manager only
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware(['auth', 'role:manager'])->group(function () {
+
     // Categories
     Route::post('/categories', [CategoriesController::class, 'store'])->name('categories.store');
     Route::put('/categories/{category}', [CategoriesController::class, 'update'])->name('categories.update');
@@ -94,7 +116,12 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::delete('/users/{user}', [ProfileController::class, 'destroy'])->name('users.destroy');
 });
 
-// Fallback (any undefined route goes to 404)
+/*
+|--------------------------------------------------------------------------
+| Fallback
+|--------------------------------------------------------------------------
+*/
+
 Route::fallback(function () {
     return Inertia::render('Errors/404');
 });
