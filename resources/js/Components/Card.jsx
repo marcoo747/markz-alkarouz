@@ -54,8 +54,7 @@ const ProductCard = ({
     return (
         <>
             <article
-                className="card product-card"
-                style={{ cursor: inCart ? "default" : "pointer" }}
+                className={`card product-card ${inCart ? "cursor-default" : "cursor-pointer"}`}
             >
                 {image && (
                     <img

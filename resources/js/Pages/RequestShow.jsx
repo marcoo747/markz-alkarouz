@@ -32,8 +32,7 @@ const RequestShow = () => {
                     <div className="card-body">
                         <h5 className="card-title">
                             <p
-                                className="text-decoration-none text-dark"
-                                style={{ fontSize: "20px" }}
+                                className="text-decoration-none text-dark text-xl"
                             >
                                 {request.user.full_name}
                             </p>
@@ -104,23 +103,13 @@ const RequestShow = () => {
                                         <img
                                             src={p.images[0].url}
                                             alt={p.pr_name}
-                                            className="me-3"
-                                            style={{
-                                                width: "150px",
-                                                height: "150px",
-                                                objectFit: "cover",
-                                            }}
+                                            className="me-3 w-36 h-36 object-cover"
                                         />
                                     ) : (
                                         <img
                                             src={shopping_image}
                                             alt="placeholder"
-                                            className="me-3"
-                                            style={{
-                                                width: "150px",
-                                                height: "150px",
-                                                objectFit: "cover",
-                                            }}
+                                            className="me-3 w-36 h-36 object-cover"
                                         />
                                     )}
 

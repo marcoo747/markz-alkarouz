@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import styles from "../../css/TopAlert.module.css";
 
 const TopAlert = ({ message, onClose }) => {
   useEffect(() => {
@@ -13,23 +14,7 @@ const TopAlert = ({ message, onClose }) => {
   return (
     <div
       onClick={onClose}
-      style={{
-        position: "fixed",
-        top: "16px",
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 9999,
-        backgroundColor: "#d4edda",
-        color: "#155724",
-        border: "1px solid #c3e6cb",
-        borderRadius: "6px",
-        padding: "12px 24px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-        fontWeight: "500",
-        minWidth: "200px",
-        textAlign: "center",
-        cursor: "pointer",
-      }}
+      className={styles.topAlert}
     >
       {message}
     </div>

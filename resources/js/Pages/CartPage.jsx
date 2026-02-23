@@ -34,7 +34,7 @@ console.log(products);
       <Head title="مركز وسائل الإيضاح" />
       <NavBar page_name="cart" />
       <Container>
-        <h2 style={{ marginTop: 24 }}>Your Cart</h2>
+        <h2 className="mt-6">Your Cart</h2>
 
         {products.length === 0 && <p>Your cart is empty.</p>}
 
@@ -64,7 +64,7 @@ console.log(products);
         </div>
 
         {products.length > 0 && (
-          <div style={{ textAlign: "right", marginTop: 24 }}>
+          <div className="text-right mt-6">
             <h4>Total: EGP {total}</h4>
             <button className="btn btn-success" onClick={() => setShowCheckout(true)}>
               Checkout

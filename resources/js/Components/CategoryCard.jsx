@@ -1,6 +1,5 @@
 import React from "react";
 import { usePage, router } from "@inertiajs/react";
-import "../../css/categoryCard.css";
 
 const CategoryCard = ({ id, title, description, image, onEdit, onDelete }) => {
   const { auth } = usePage().props;
@@ -11,15 +10,20 @@ const CategoryCard = ({ id, title, description, image, onEdit, onDelete }) => {
   };
 
   return (
-    <div className="category-card-item">
-      <img src={image} className="category-card-img" alt={title} onClick={handleClick}/>
-      <div className="category-card-body">
+    <div className="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow hover:scale-105 bg-white cursor-pointer">
+      <img
+        src={image}
+        className="w-full object-cover aspect-[4/3] max-h-32 sm:max-h-none"
+        alt={title}
+        onClick={handleClick}
+      />
+      <div className="p-4 sm:p-3 text-center">
         <div onClick={handleClick}>
-          <h5 className="category-card-title">{title}</h5>
-          <p className="category-card-text">{description}</p>
+          <h5 className="text-lg sm:text-base font-bold mb-2 text-gray-800">{title}</h5>
+          <p className="text-sm sm:text-xs text-gray-600">{description}</p>
         </div>
         {manager ? (
-          <div className="category-card-actions" style={{ marginTop: '10px', display: 'flex', gap: '5px' }}>
+          <div className="mt-2.5 flex gap-1 justify-center">
             <button
               className="btn btn-primary btn-sm"
               onClick={(e) => {

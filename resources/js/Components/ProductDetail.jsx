@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import ImageUploadModal from "./ImageUploadModal";
 import AddOptionModal from "./AddOptionModal";
 import TopAlert from "./TopAlert";
-import "../../css/product-detail.css";
 
 export default function ProductDetail({ product }) {
   const { auth, flash, cartItems = [] } = usePage().props || {};
@@ -18,7 +17,7 @@ export default function ProductDetail({ product }) {
   const user = auth.user;
 
   const manager = user?.user_type === "manager";
-    
+
   const [alertMessage, setAlertMessage] = useState("");
   const [inCart, setInCart] = useState(false);
 
@@ -73,16 +72,16 @@ const handleAddToCart = () => {
 
   return (
     <>
-      <div className="product-page">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-4">
         {/* LEFT: Gallery */}
-        <div className="product-gallery">
+        <div className="flex flex-col gap-4">
           {manager ? (
-            <div className="add-photo-section">
+            <div className="flex flex-wrap gap-2">
               <button className="btn btn-success btn-sm" onClick={() => setShowUploadModal(true)}>Add Photo</button>
               <button className="btn btn-success btn-sm" onClick={() => setShowOptionModal({ show: true, type: "material" })}>Add Material</button>
               <button className="btn btn-success btn-sm" onClick={() => setShowOptionModal({ show: true, type: "color" })}>Add Color</button>
               <button className="btn btn-success btn-sm" onClick={() => setShowOptionModal({ show: true, type: "size" })}>Add Size</button>
-            </div>  
+            </div>
           ) : null}
 
           {showOptionModal.show && (
@@ -102,70 +101,72 @@ const handleAddToCart = () => {
             />
           )}
 
-          <div className="main-image">
-            <img src={images[selectedImage]} alt={product?.title} className="rounded" />
+          <div className="w-full">
+            <img src={images[selectedImage]} alt={product?.title} className="rounded w-full object-cover" />
           </div>
 
-          <div className="thumbs">
+          <div className="flex gap-2 flex-wrap">
             {images.map((img, idx) => (
               <button
                 key={idx}
-                className={`thumb-btn ${selectedImage === idx ? "active" : ""}`}
+                className={`w-12 h-12 rounded border-2 overflow-hidden ${selectedImage === idx ? "border-blue-500" : "border-gray-300"}`}
                 onClick={() => setSelectedImage(idx)}
               >
-                <img src={img} alt={`thumb-${idx}`} />
+                <img src={img} alt={`thumb-${idx}`} className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
         </div>
 
         {/* CENTER: Details */}
-        <div className="product-details">
-          <h1 className="product-title">{product?.pr_name}</h1>
-          <hr className="divider" />
-          <div className="product-price-section">
-            <span className="currency">EGP</span>
-            <span>{Math.floor(Number(product?.pr_price || 0))}</span>
-            <span className="superscript">{String(product?.price || "0.00").split(".")[1] || "00"}</span>
+        <div className="flex flex-col gap-4">
+          <h1 className="text-2xl font-bold text-[#12263f]">{product?.pr_name}</h1>
+          <hr className="border-gray-300" />
+          <div className="flex gap-1 items-baseline">
+            <span className="font-bold">EGP</span>
+            <span className="text-xl font-bold">{Math.floor(Number(product?.pr_price || 0))}</span>
+            <span className="text-sm">.{String(product?.price || "0.00").split(".")[1] || "00"}</span>
           </div>
 
-          {product?.brand && <div className="product-description"><h6>{product.brand}</h6></div>}
-          {product?.pr_description && <div className="product-description"><p>{product.pr_description}</p></div>}
+          {product?.brand && <div className="text-gray-700"><h6 className="font-bold">{product.brand}</h6></div>}
+          {product?.pr_description && <div className="text-gray-600"><p>{product.pr_description}</p></div>}
 
-          <div className="materials">
-            <strong>Materials:</strong>{" "}
-            {product.materials?.map((mat, idx) => (
-              <span
-                key={mat.material_id}
-                className={`material-option ${selectedMaterial === mat.material_name ? "selected" : ""}`}
-                onClick={() => setSelectedMaterial(mat.material_name)}
-              >
-                {mat.material_name}{idx < product.materials.length - 1 ? ", " : ""}
-              </span>
-            ))}
+          <div className="flex gap-2 flex-wrap items-start">
+            <strong>Materials:</strong>
+            <div className="flex flex-wrap gap-2">
+              {product.materials?.map((mat, idx) => (
+                <span
+                  key={mat.material_id}
+                  className={`px-2 py-1 rounded cursor-pointer transition ${selectedMaterial === mat.material_name ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+                  onClick={() => setSelectedMaterial(mat.material_name)}
+                >
+                  {mat.material_name}
+                </span>
+              ))}
+            </div>
           </div>
 
-          <div className="product-actions">
+          <div className="flex flex-col gap-4">
             {/* Conditionally show Add to Cart button or "already in cart" message */}
             {user && (
               !inCart ? (
                 <>
                   {/* Quantity selector */}
-                  <div className="quantity-selector">
+                  <div className="flex gap-2 items-center">
                     <button className="btn btn-outline-secondary" onClick={() => setQuantity(prev => Math.max(1, prev - 1))}>
                       -
                     </button>
-                    <span className="qty-display-box">{quantity}</span>
+                    <span className="px-4 py-2 border border-gray-300 rounded text-center min-w-12">{quantity}</span>
                     <button className="btn btn-outline-secondary" onClick={() => setQuantity(prev => prev + 1)}>
                       +
                     </button>
                   </div>
-                  <button className="btn btn-success w-100" onClick={handleAddToCart}>
+                  <button className="btn btn-success w-full" onClick={handleAddToCart}>
                     Add to Cart
                   </button>
                 </>
               ) : (
-                <div className="alert alert-info mt-2 text-center cursor-text">
+                <div className="alert alert-info mt-2 text-center cursor-text p-3 bg-blue-100 border border-blue-400 rounded">
                   Already in cart
                 </div>
               )
@@ -173,37 +174,39 @@ const handleAddToCart = () => {
           </div>
         </div>
 
-        {/* RIGHT: Colors */}
-        <div className="product-info-box">
-          <span className="section-title">Discover the Colors:</span>
-
-          <div className="colors">
-            {product.colors?.map((color) => (
-              <span
-                key={color.color_id}
-                className={`color-circle ${
-                  selectedColor === color.color ? "selected" : ""
-                }`}
-                onClick={() => setSelectedColor(color.color)}
-                style={{ backgroundColor: color.color }}
-              />
-            ))}
+        {/* RIGHT: Colors & Sizes */}
+        <div className="flex flex-col gap-6">
+          <div>
+            <span className="font-bold text-lg block mb-3">Discover the Colors:</span>
+            <div className="flex flex-wrap gap-3">
+              {product.colors?.map((color) => (
+                <button
+                  key={color.color_id}
+                  className={`w-12 h-12 rounded-full border-4 transition ${
+                    selectedColor === color.color ? "border-gray-800" : "border-gray-300"
+                  }`}
+                  onClick={() => setSelectedColor(color.color)}
+                  style={{ backgroundColor: color.color }}
+                  title={color.color}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Sizes */}
-          <div className="sizes">
-            <span className="section-title">Discover the Sizes:</span>
-            <div className="size-options">
+          <div>
+            <span className="font-bold text-lg block mb-3">Discover the Sizes:</span>
+            <div className="flex flex-wrap gap-2">
               {product.sizes?.map((size) => (
-                <span
+                <button
                   key={size.size_id}
-                  className={`size-option ${
-                    selectedSize === size.size ? "selected" : ""
+                  className={`px-3 py-2 rounded border-2 transition font-semibold ${
+                    selectedSize === size.size ? "bg-blue-500 text-white border-blue-500" : "border-gray-300 text-gray-700"
                   }`}
                   onClick={() => setSelectedSize(size.size)}
                 >
                   {size.size}
-                </span>
+                </button>
               ))}
             </div>
           </div>

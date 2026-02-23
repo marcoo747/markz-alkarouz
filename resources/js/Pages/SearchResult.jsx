@@ -16,17 +16,12 @@ const SearchResult = () => {
 
       <Container>
         {/* 🔹 Top heading */}
-        <h2 style={{ marginTop: "20px", marginBottom: "10px" }}>
+        <h2 className="mt-5 mb-2.5">
           Search results for "<strong>{query}</strong>"
         </h2>
         <div className="mt-0">
           {results.length > 0 ? (
-            <div
-              style={{
-                display: "grid",
-                gap: "20px",
-              }}
-            >
+            <div className="grid gap-5">
               {results.map((p) => (
                 <ItemPack
                   key={p.product_id}
@@ -50,7 +45,7 @@ const SearchResult = () => {
               ))}
             </div>
           ) : (
-            <p style={{ marginTop: 40 }}>
+            <p className="mt-10">
               No results found for "<strong>{query}</strong>"
             </p>
           )}

@@ -4,7 +4,6 @@ import NavBar from "@/Components/NavBar";
 import EditOsraModal from "@/Components/EditOsraModal";
 import DeleteOsraModal from "@/Components/DeleteOsraModal";
 import AddOsraModal from "@/Components/AddOsraModal";
-import "../../css/checkoutModal.css";
 
 const OsraPage = ({ osras: initialOsras }) => {
   const [osras, setOsras] = useState(initialOsras || []);
@@ -53,7 +52,7 @@ const OsraPage = ({ osras: initialOsras }) => {
 
         <div className="row">
           {osras.map((osra) => (
-            <div key={osra.osra_id} className="col-lg-3 col-md-4 col-sm-6" style={{ marginTop: 24 }}>
+            <div key={osra.osra_id} className="col-lg-3 col-md-4 col-sm-6 mt-6">
               <div className="card shadow-sm">
                 <div className="card-body">
                   <h5 className="card-title">{osra.osra_name}</h5>

@@ -1,0 +1,1 @@
+import{r as o,j as c}from"./app-F9mGVywk.js";const i="_topAlert_1cgbc_1",l={topAlert:i},p=({message:t,onClose:r})=>(o.useEffect(()=>{if(t){const e=setTimeout(r,3e3);return()=>clearTimeout(e)}},[t,r]),t?c.jsx("div",{onClick:r,className:l.topAlert,children:t}):null);export{p as T};
