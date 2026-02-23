@@ -42,7 +42,7 @@ export default function Login() {
     <>
       <Head title="مركز وسائل الإيضاح" />
       <Container className="container--center">
-        <div className="auth-page" style={{ maxWidth: 520, width: "100%" }}>
+        <div className="auth-page max-w-[520px] w-full">
           <div className="login-container">
             <img src="imgs/AlkaroozCom.png" alt="Alkarooz" className="logo" />
 

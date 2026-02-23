@@ -5,12 +5,7 @@ const Category = ({ id, title, description, image, isSelected, selectable, onEdi
 
   return (
     <div
-      style={{
-        cursor: "pointer",
-        border: selectable ? (isSelected ? "2px solid #0d6efd" : "2px dashed transparent") : "none",
-        borderRadius: 8,
-        padding: selectable ? 4 : 0,
-      }}
+      className={`cursor-pointer rounded ${selectable ? (isSelected ? "border-2 border-blue-600" : "border-2 border-dashed border-transparent") : "border-none"} ${selectable ? "p-1" : ""}`}
     >
       <CategoryCard
         id={id}

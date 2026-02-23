@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { route } from "ziggy-js";
 import axios from "axios";
+import styles from "../../css/ImageUploadModal.module.css";
 
 const ImageUploadModal = ({ product, onClose, onUploaded }) => {
   const [photo, setPhoto] = useState(null);
@@ -29,21 +30,21 @@ const ImageUploadModal = ({ product, onClose, onUploaded }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content green-modal">
-        <div className="modal-header">
+    <div className={styles.modalOverlay}>
+      <div className={styles.greenModal}>
+        <div className={styles.modalHeader}>
           <h3>Upload Photo</h3>
-          <button className="close-btn fs-2" onClick={onClose}>×</button>
+          <button className={`${styles.closeBtn} fs-2`} onClick={onClose}>×</button>
         </div>
 
-        <div className="modal-body">
+        <div className={styles.modalBody}>
           <form onSubmit={handleUpload}>
-            <label className="upload-btn">
+            <label className={styles.uploadBtn}>
               {photo ? photo.name : "Choose Photo"}
               <input type="file" accept="image/*" hidden onChange={(e) => setPhoto(e.target.files[0])} required />
             </label>
 
-            <div className="modal-footer">
+            <div className={styles.modalFooter}>
               <button type="submit" className="btn btn-success" disabled={loading}>
                 {loading ? "Uploading..." : "Upload"}
               </button>
@@ -51,16 +52,6 @@ const ImageUploadModal = ({ product, onClose, onUploaded }) => {
             </div>
           </form>
         </div>
-
-        <style>{`
-          .green-modal { width: 420px; background: #f0fff4; border-radius: 14px; box-shadow: 0 20px 40px rgba(0,128,0,0.2); animation: scaleIn 0.2s ease; }
-          .green-modal .modal-header { background: linear-gradient(135deg, #28a745, #218838); color: white; padding: 16px 20px; border-radius: 14px 14px 0 0; display:flex; justify-content:space-between; align-items:center; }
-          .close-btn { background:transparent; border:none; color:white; font-size:22px; cursor:pointer; }
-          .modal-body { padding:20px; }
-          .upload-btn { background-color:#28a745; color:white; padding:8px 14px; border-radius:8px; cursor:pointer; font-weight:500; display:inline-block; }
-          .modal-footer { padding:16px 0 0; display:flex; justify-content:flex-end; gap:10px; }
-          @keyframes scaleIn { from { transform:scale(0.9); opacity:0; } to { transform:scale(1); opacity:1; } }
-        `}</style>
       </div>
     </div>
   );

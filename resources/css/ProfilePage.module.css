@@ -1,0 +1,108 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.modalDialogCentered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.editModal {
+  padding: 20px;
+  width: 420px;
+  background: #f0f5ff;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(13, 110, 253, 0.2);
+  animation: scaleIn 0.2s ease;
+}
+
+.editModal .modalHeader {
+  background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+  color: white;
+  padding: 16px 20px;
+  border-radius: 14px 14px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.modalBody {
+  padding: 20px;
+}
+
+.modalBody label {
+  font-weight: 600;
+  margin-top: 12px;
+  display: block;
+}
+
+.modalBody input,
+.modalBody textarea {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+}
+
+.modalBody input:focus,
+.modalBody textarea:focus {
+  outline: none;
+  border-color: #0d6efd;
+}
+
+.fileUpload {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.uploadBtn {
+  background-color: #0d6efd;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.fileName {
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.modalFooter {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #dee2e6;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

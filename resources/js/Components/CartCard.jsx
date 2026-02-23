@@ -2,16 +2,16 @@ import React from "react";
 import { router } from "@inertiajs/react";
 import namer from "color-namer";
 
-const ProductCard = ({ 
-  id, 
-  title, 
-  brand, 
-  description, 
-  image, 
-  onRemove, 
-  color, 
-  size, 
-  quantity 
+const ProductCard = ({
+  id,
+  title,
+  brand,
+  description,
+  image,
+  onRemove,
+  color,
+  size,
+  quantity
 }) => {
 
   const handleOpen = () => {
@@ -19,9 +19,8 @@ const ProductCard = ({
   };
 
   return (
-    <article 
-      className="card product-card h-100 p-1" 
-      style={{ cursor: "pointer" }}
+    <article
+      className="card product-card h-100 p-1 cursor-pointer"
     >
       {image && (
         <img
@@ -29,12 +28,7 @@ const ProductCard = ({
           alt={title}
           loading="lazy"
           onClick={handleOpen}
-          style={{
-            borderRadius: "7px", 
-            width: "100%", 
-            height: "200px", 
-            objectFit: "cover"
-          }}
+          className="rounded w-full h-48 object-cover"
         />
       )}
 

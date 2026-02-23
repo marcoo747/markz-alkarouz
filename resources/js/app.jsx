@@ -1,8 +1,8 @@
 import '../css/app.css';
 import '../css/theme.css';
 import '../css/responsive-tables.css';
-import "../css/bootstrap.min.css";
-import "./bootstrap.bundle.min.js";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './bootstrap';
 
 import { createInertiaApp } from '@inertiajs/react';

@@ -6,7 +6,6 @@ import Container from "@/Components/Container";
 import AddCategoryModal from "@/Components/AddCategoryModal";
 import EditCategoryModal from "@/Components/EditCategoryModal";
 import DeleteCategoryModal from "@/Components/DeleteCategoryModal";
-import "../../css/categories.css";
 
 const Categories = () => {
   const { categories } = usePage().props;
@@ -62,16 +61,16 @@ const Categories = () => {
       <Head title="مركز وسائل الإيضاح" />
       <NavBar page_name="categories" />
       <Container>
-        <h2 style={{ marginTop: 24 }}>Categories</h2>
+        <h2 className="mt-6">Categories</h2>
         {manager ? (
-          <div style={{ marginTop: '16px', marginBottom: '32px', display: 'flex', gap: '10px' }}>
+          <div className="mt-4 mb-8 flex gap-2.5">
             <button className="btn btn-success" onClick={handleAdd}>Add Category</button>
           </div>
         ) : null}
 
-        <div className="row">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {categories.map((cat) => (
-          <div className="col-6 col-md-4 col-lg-3 mb-4" key={cat.category_id}>
+          <div key={cat.category_id}>
             <Category
               key={cat.category_id}
               id={cat.category_id}

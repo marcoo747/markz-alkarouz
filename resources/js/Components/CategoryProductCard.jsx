@@ -63,9 +63,8 @@ const ProductCard = ({
   return (
     <>
       <article
-        className="card product-card h-100"
+        className="card product-card h-100 cursor-pointer"
         aria-label={title}
-        style={{ cursor: "pointer" }}
       >
         <Link
           href={route("items.show", id)}
@@ -149,7 +148,7 @@ const ProductCard = ({
 
           {manager && (onEdit || onDelete) && (
             <div
-              style={{ display: "flex", gap: "8px", marginTop: "8px" }}
+              className="flex gap-2 mt-2"
               onClick={(e) => e.stopPropagation()}
             >
               {onEdit && (

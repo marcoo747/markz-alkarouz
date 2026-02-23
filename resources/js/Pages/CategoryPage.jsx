@@ -94,13 +94,12 @@ const CategoryPage = () => {
       <NavBar page_name="categories" />
 
       <Container>
-        <h2 style={{ marginTop: 24 }}>
+        <h2 className="mt-6">
           {category.category_name?.toUpperCase()} Products
         </h2>
         {manager ? (
           <div
-            className="action-btns"
-            style={{ marginTop: '16px', marginBottom: '32px', display: 'flex', gap: '10px' }}
+            className="action-btns mt-4 mb-8 flex gap-2.5"
           >
             <button
               className="btn btn-success"
@@ -115,8 +114,7 @@ const CategoryPage = () => {
           {products.map((product) => (
             <div
               key={product.id}
-              className="col-6 col-md-4 col-lg-3 mb-4"
-              style={{ marginTop: 24 }}
+              className="col-6 col-md-4 col-lg-3 mb-4 mt-6"
             >
               <ProductCard
                 key={product.id}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { usePage, router, Head } from "@inertiajs/react";
 import NavBar from "@/Components/NavBar";
 import Container from "@/Components/Container";
+import styles from "../../css/ProfilePage.module.css";
 
 const ProfilePage = () => {
   const { user, requests = [] } = usePage().props; // requests from backend
@@ -95,8 +96,7 @@ const ProfilePage = () => {
             <div className="card shadow-sm text-center p-4">
               <img
                 src={user.profilePhoto}
-                className="rounded-circle mx-auto"
-                style={{ width: 120, height: 120, objectFit: "cover" }}
+                className="rounded-circle mx-auto w-32 h-32 object-cover"
                 alt="Profile"
               />
               <h5 className="mb-1">{user.name}</h5>
@@ -230,22 +230,22 @@ const ProfilePage = () => {
 
       {/* --- Edit Profile Modal --- */}
       {showEditModal && (
-        <div className="modal-overlay">
-          <div className="modal-dialog-centered">
-            <div className="modal-content edit-modal">
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalDialogCentered}>
+            <div className={styles.editModal}>
               <form onSubmit={handleEditSubmit}>
-                <div className="modal-header">
+                <div className={styles.modalHeader}>
                   <h3 className="modal-title">Edit Profile</h3>
                   <button
                     type="button"
-                    className="close-btn fs-2"
+                    className={`${styles.closeBtn} fs-2`}
                     onClick={() => setShowEditModal(false)}
                   >
                     ×
                   </button>
                 </div>
 
-                <div className="modal-body">
+                <div className={styles.modalBody}>
                   <div className="mb-3">
                     <label className="form-label">Full Name</label>
                     <input
@@ -309,8 +309,8 @@ const ProfilePage = () => {
                   <div className="mb-3">
                     <label className="form-label">Profile Photo</label>
 
-                    <div className="file-upload">
-                      <label className="upload-btn mt-0">
+                    <div className={styles.fileUpload}>
+                      <label className={`${styles.uploadBtn} mt-0`}>
                         Upload Photo
                         <input
                           type="file"
@@ -329,7 +329,7 @@ const ProfilePage = () => {
                         />
                       </label>
 
-                      {fileName && <span className="file-name">{fileName}</span>}
+                      {fileName && <span className={styles.fileName}>{fileName}</span>}
                     </div>
 
                     {editErrors.profilePhoto && (
@@ -340,7 +340,7 @@ const ProfilePage = () => {
                   </div>
                 </div>
 
-                <div className="modal-footer">
+                <div className={styles.modalFooter}>
                   <button type="submit" className="btn btn-primary">
                     Save Changes
                   </button>
@@ -360,22 +360,22 @@ const ProfilePage = () => {
 
       {/* --- Password Modal --- */}
       {showPasswordModal && (
-        <div className="modal-overlay">
-          <div className="modal-dialog-centered">
-            <div className="modal-content edit-modal">
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalDialogCentered}>
+            <div className={styles.editModal}>
               <form onSubmit={handlePasswordSubmit}>
-                <div className="modal-header">
+                <div className={styles.modalHeader}>
                   <h3 className="modal-title">Change Password</h3>
                   <button
                     type="button"
-                    className="close-btn fs-2"
+                    className={`${styles.closeBtn} fs-2`}
                     onClick={() => setShowPasswordModal(false)}
                   >
                     ×
                   </button>
                 </div>
 
-                <div className="modal-body">
+                <div className={styles.modalBody}>
                   <div className="mb-3">
                     <label className="form-label">Current Password</label>
                     <input
@@ -419,7 +419,7 @@ const ProfilePage = () => {
                   </div>
                 </div>
 
-                <div className="modal-footer">
+                <div className={styles.modalFooter}>
                   <button type="submit" className="btn btn-primary">
                     Save Changes
                   </button>
@@ -436,126 +436,6 @@ const ProfilePage = () => {
           </div>
         </div>
       )}
-
-      <style>{`
-        /* ===== Modal Overlay (page background) ===== */
-        .modal-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.6); /* page background when modal is open */
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 1050;
-        }
-
-        /* ===== Centering Wrapper ===== */
-        .modal-dialog-centered {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-        }
-
-        /* ===== Modal Box ===== */
-        .edit-modal {
-          padding: 20px;
-          width: 420px;
-          background: #f0f5ff;
-          border-radius: 14px;
-          box-shadow: 0 20px 40px rgba(13, 110, 253, 0.2);
-          animation: scaleIn 0.2s ease;
-        }
-
-        /* ===== Header ===== */
-        .edit-modal .modal-header {
-          background: linear-gradient(135deg, #0d6efd, #0b5ed7);
-          color: white;
-          padding: 16px 20px;
-          border-radius: 14px 14px 0 0;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        /* ===== Close Button ===== */
-        .close-btn {
-          background: transparent;
-          border: none;
-          color: white;
-          font-size: 22px;
-          cursor: pointer;
-        }
-
-        /* ===== Body ===== */
-        .modal-body {
-          padding: 20px;
-        }
-
-        .modal-body label {
-          font-weight: 600;
-          margin-top: 12px;
-          display: block;
-        }
-
-        .modal-body input,
-        .modal-body textarea {
-          width: 100%;
-          margin-top: 6px;
-          padding: 10px 12px;
-          border-radius: 8px;
-          border: 1px solid #ced4da;
-        }
-
-        .modal-body input:focus,
-        .modal-body textarea:focus {
-          outline: none;
-          border-color: #0d6efd;
-        }
-
-        /* ===== File Upload ===== */
-        .file-upload {
-          margin-top: 16px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-
-        .upload-btn {
-          background-color: #0d6efd;
-          color: white;
-          padding: 8px 14px;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: 500;
-        }
-
-        .file-name {
-          font-size: 0.9rem;
-          color: #495057;
-        }
-
-        /* ===== Footer ===== */
-        .modal-footer {
-          padding: 16px 20px;
-          display: flex;
-          justify-content: flex-end;
-          gap: 10px;
-          border-top: 1px solid #dee2e6;
-        }
-
-        /* ===== Animation ===== */
-        @keyframes scaleIn {
-          from {
-            transform: scale(0.9);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </>
   );
 };

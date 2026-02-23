@@ -6,7 +6,6 @@ import Container from "@/Components/Container";
 import ProductDetail from "@/Components/ProductDetail";
 import EditItemModal from "@/Components/EditItemModal";
 import DeleteItemModal from "@/Components/DeleteItemModal";
-import "../../css/productPage.css";
 
 const ProductPage = () => {
   const { product, relatedProducts } = usePage().props;
@@ -62,7 +61,7 @@ const ProductPage = () => {
         {manager ? (
           <>
             {/* Action Buttons */}
-            <div className="action-btns">
+            <div className="flex gap-2 mb-4 mt-4">
               <button
                 className="btn btn-primary"
                 onClick={(e) => {
