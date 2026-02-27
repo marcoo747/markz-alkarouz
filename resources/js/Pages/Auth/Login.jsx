@@ -98,10 +98,10 @@ export default function Login() {
               </button>
             </form>
 
-            <p className="mt-3 mb-0">Do not have an account?</p>
+            {/* <p className="mt-3 mb-0">Do not have an account?</p>
             <Link href={route("sign_up")} className="btn btn-primary mt-0">
               Sign Up
-            </Link>
+            </Link> */}
 
             {/* Optional server messages */}
             {errors.general && <Message type="error">{errors.general}</Message>}
