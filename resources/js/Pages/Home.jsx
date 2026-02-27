@@ -53,7 +53,7 @@ const Home = () => {
                 </button>
 
                 <button
-                  className="btn btn-outline"
+                  className="btn btn-outline "
                   onClick={() =>
                     window.scrollTo({ top: 600, behavior: "smooth" })
                   }
