@@ -4,6 +4,8 @@ import Container from "./Container";
 import Button from "./Button";
 import logo from "../../imgs/AlkaroozCom.png";
 import searchIcon from "../../imgs/search.svg";
+import "../../css/NavBar.css";
+import cartIcon from "../../imgs/cart.svg";
 
 const NavBar = ({ page_name }) => {
     const { auth } = usePage().props;
@@ -165,7 +167,11 @@ const NavBar = ({ page_name }) => {
                                     className={`${linkBase} ${page_name === "cart" ? linkActive : ""} max-xl:w-full max-xl:px-0 max-xl:py-2 max-xl:rounded-none`}
                                     onClick={() => setOpen(false)}
                                 >
-                                    Cart
+                                    <img
+                                        src={cartIcon}
+                                        alt="Search"
+                                        className="h- w-12 mx-auto text-white"
+                                    />
                                 </Link>
                             ) : null}
 
