@@ -14,7 +14,8 @@ class CategoriesController extends Controller
     {
         $categories = Category::all();
         return Inertia::render('Categories', [
-            'categories' => $categories
+            'categories' => $categories,
+            'linkBase' => '/markaz_alkarouz/public',
         ]);
     }
 
@@ -64,6 +65,7 @@ class CategoriesController extends Controller
             'products'      => $products,
             'default_image' => $defaultImage,
             'cartItems'     => $cartItems,
+            'linkBase' => '/markaz_alkarouz/public',
         ]);
     }
 

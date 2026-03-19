@@ -6,7 +6,6 @@ import Button from "./Button";
 import logo from "../../imgs/AlkaroozCom.png";
 import "../../css/NavBar.css";
 import searchIcon from "../../imgs/search.svg";
-import "../../css/NavBar.css";
 import cartIcon from "../../imgs/cart.svg";
 
 const NavBar = ({ page_name, linkBase }) => {
@@ -19,7 +18,7 @@ const NavBar = ({ page_name, linkBase }) => {
         e.preventDefault();
         if (!searchTerm) return;
 
-        router.get(`${linkBase}/search`, { query: searchTerm });
+        router.get(route('search'), { query: searchTerm });
         setOpen(false);
     };
 
@@ -30,7 +29,7 @@ const NavBar = ({ page_name, linkBase }) => {
         <header className="site-header">
             <Container>
                 <nav className="site-nav" aria-label="Main navigation">
-                    <Link href={linkBase || "/"} className="site-logo">
+                    <Link href={route('home')} className="site-logo">
                         <img src={logo} alt="Alkarooz" />
                     </Link>
 
@@ -94,7 +93,7 @@ const NavBar = ({ page_name, linkBase }) => {
                             role="menu"
                         >
                             <Link
-                                href={linkBase || "/"}
+                                href={route('home')}
                                 className={`nav-link ${page_name === "home" ? "active" : ""}`}
                                 onClick={() => setOpen(false)}
                             >
@@ -102,18 +101,17 @@ const NavBar = ({ page_name, linkBase }) => {
                             </Link>
 
                             <Link
-                                href={`${linkBase}/categories`}
+                                href={route('categories')}
                                 className={`nav-link ${page_name === "categories" ? "active" : ""}`}
                                 onClick={() => setOpen(false)}
                             >
                                 Categories
                             </Link>
 
-
                             {manager ? (
                                 <>
                                     <Link
-                                        href={`${linkBase}/osras`}
+                                        href={route('osra.index')}
                                         className={`nav-link ${page_name === "osras" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                     >
@@ -121,7 +119,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                     </Link>
 
                                     <Link
-                                        href={`${linkBase}/users`}
+                                        href={route('users.index')}
                                         className={`nav-link ${page_name === "users" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                     >
@@ -132,7 +130,7 @@ const NavBar = ({ page_name, linkBase }) => {
 
                             {admin || manager ? (
                                 <Link
-                                    href={`${linkBase}/requests`}
+                                    href={route('requests')}
                                     className={`nav-link ${page_name === "requests" ? "active" : ""}`}
                                     onClick={() => setOpen(false)}
                                 >
@@ -142,7 +140,7 @@ const NavBar = ({ page_name, linkBase }) => {
 
                             {user ? (
                                 <Link
-                                    href={`${linkBase}/profile`}
+                                    href={route('profile')}
                                     className={`nav-link ${page_name === "profile" ? "active" : ""}`}
                                     onClick={() => setOpen(false)}
                                 >
@@ -208,7 +206,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                         className="btn btn-outline-danger btn-sm"
                                         onClick={() => {
                                             setOpen(false);
-                                            router.post(`${linkBase}/logout`);
+                                            router.post(route('logout'));
                                         }}
                                     >
                                         Log Out
@@ -216,14 +214,14 @@ const NavBar = ({ page_name, linkBase }) => {
                                 ) : (
                                     <>
                                         <Link
-                                            href={`${linkBase}/login`}
+                                            href={route('login')}
                                             className="btn btn-outline-primary btn-sm"
                                             onClick={() => setOpen(false)}
                                         >
                                             Login
                                         </Link>
                                         {/* <Link
-                                            href={`${linkBase}/sign_up`}
+                                            href={route('sign_up')}
                                             className="btn btn-outline-success btn-sm"
                                             onClick={() => setOpen(false)}
                                         >
@@ -235,7 +233,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                 {user ? (
                                     <Link
                                         id="cart-icon"
-                                        href={`${linkBase}/cart`}
+                                        href={route('cart')}
                                         className={`nav-link ${page_name === "cart" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                     >
@@ -257,7 +255,7 @@ const NavBar = ({ page_name, linkBase }) => {
 
 NavBar.propTypes = {
     page_name: PropTypes.string,
-    linkBase: PropTypes.string.isRequired,
+    linkBase: PropTypes.string,
 };
 
 export default NavBar;
