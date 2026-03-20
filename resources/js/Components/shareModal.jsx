@@ -58,7 +58,7 @@ export default function ShareModal() {
         src={shareIcon}
         alt="share"
         onClick={() => setIsOpen(true)}
-        className="h-[30px] w-[30px] cursor-pointer transition duration-200 hover:scale-105 hover:brightness-110"
+        className="h-[30px] w-[30px] cursor-pointer transition duration-200 hover:scale-105 hover:brightness-110 invert"
       />
 
       {/* Modal */}
@@ -69,12 +69,12 @@ export default function ShareModal() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-[400px] rounded-xl bg-[#181818] p-[30px] text-center text-white shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+            className="relative w-full max-w-[400px] rounded-xl bg-white p-[30px] text-center text-gray-900 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
           >
             {/* Close Button */}
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute right-[15px] top-[15px] text-2xl text-gray-400 transition hover:text-white"
+              className="absolute right-[15px] top-[15px] text-2xl text-gray-500 transition hover:text-black"
             >
               &times;
             </button>
@@ -87,12 +87,12 @@ export default function ShareModal() {
                 href={shareLinks.whatsapp}
                 target="_blank"
                 rel="noreferrer"
-                className="flex flex-col items-center text-[12px] text-white transition hover:scale-110 hover:text-[#7e56f1]"
+                className="flex flex-col items-center text-[12px] text-gray-700 transition hover:scale-110 hover:text-[#7e56f1]"
               >
                 <img
                   src={whatsappIcon}
                   alt="WhatsApp"
-                  className="mb-2.5 w-10 invert"
+                  className="mb-2.5 w-10 text-gray-800"
                 />
                 {t('share.whatsapp')}
               </a>
@@ -101,12 +101,12 @@ export default function ShareModal() {
                 href={shareLinks.facebook}
                 target="_blank"
                 rel="noreferrer"
-                className="flex flex-col items-center text-[12px] text-white transition hover:scale-110 hover:text-[#7e56f1]"
+                className="flex flex-col items-center text-[12px] text-gray-700 transition hover:scale-110 hover:text-[#7e56f1]"
               >
                 <img
                   src={facebookIcon}
                   alt="Facebook"
-                  className="mb-2.5 w-10 invert"
+                  className="mb-2.5 w-10 text-gray-800"
                 />
                 {t('share.facebook')}
               </a>
@@ -115,12 +115,12 @@ export default function ShareModal() {
                 href={shareLinks.twitter}
                 target="_blank"
                 rel="noreferrer"
-                className="flex flex-col items-center text-[12px] text-white transition hover:scale-110 hover:text-[#7e56f1]"
+                className="flex flex-col items-center text-[12px] text-gray-700 transition hover:scale-110 hover:text-[#7e56f1]"
               >
                 <img
                   src={twitterXIcon}
                   alt="Twitter"
-                  className="mb-2.5 w-10 invert"
+                  className="mb-2.5 w-10 text-gray-800"
                 />
                 {t('share.twitter')}
               </a>
@@ -129,28 +129,28 @@ export default function ShareModal() {
                 href={shareLinks.telegram}
                 target="_blank"
                 rel="noreferrer"
-                className="flex flex-col items-center text-[12px] text-white transition hover:scale-110 hover:text-[#7e56f1]"
+                className="flex flex-col items-center text-[12px] text-gray-700 transition hover:scale-110 hover:text-[#7e56f1]"
               >
                 <img
                   src={telegramIcon}
                   alt="Telegram"
-                  className="mb-2.5 w-10 invert"
+                  className="mb-2.5 w-10 text-gray-800"
                 />
                 {t('share.telegram')}
               </a>
             </div>
 
             {/* Copy URL */}
-            <div className="flex items-center justify-between rounded-lg bg-[#2c2c2c] px-[10px] py-[6px]">
+            <div className="flex items-center justify-between rounded-lg bg-gray-100 px-[10px] py-[6px] border border-gray-200">
               <input
                 type="text"
                 readOnly
                 value={currentUrl}
-                className="flex-1 bg-transparent text-sm text-white outline-none"
+                className="flex-1 bg-transparent text-sm text-gray-800 outline-none"
               />
               <button
                 onClick={handleCopy}
-                className="rounded-md bg-[#7e56f1] px-3 py-1.5 font-bold text-white transition hover:bg-[#a28bfa]"
+                className="rounded-md bg-[#0D6EFD] px-3 py-1.5 font-bold text-white transition hover:bg-[#a28bfa]"
               >
                 {copied ? t('share.copied') : t('share.copy')}
               </button>

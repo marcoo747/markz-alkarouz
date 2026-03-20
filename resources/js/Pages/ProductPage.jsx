@@ -7,7 +7,6 @@ import Container from "@/Components/Container";
 import ProductDetail from "@/Components/ProductDetail";
 import EditItemModal from "@/Components/EditItemModal";
 import DeleteItemModal from "@/Components/DeleteItemModal";
-import ShareModal from "@/Components/shareModal";
 
 const ProductPage = () => {
     const { t } = useTranslation();
@@ -57,7 +56,7 @@ const ProductPage = () => {
 
     return (
         <>
-            <Head title={t('product.page_title')} />
+            <Head title={t("product.page_title")} />
             <NavBar page_name="categories" />
 
             <Container>
@@ -73,7 +72,7 @@ const ProductPage = () => {
                                     setShowEditItemModal(true);
                                 }}
                             >
-                                {t('product.edit_product')}
+                                {t("product.edit_product")}
                             </button>
                             <button
                                 className="btn btn-danger"
@@ -83,7 +82,7 @@ const ProductPage = () => {
                                     setShowDeleteItemModal(true);
                                 }}
                             >
-                                {t('product.delete_product')}
+                                {t("product.delete_product")}
                             </button>
                         </div>
                     </>
@@ -94,7 +93,7 @@ const ProductPage = () => {
 
                 {/* Related Items */}
                 <ItemPack
-                    category_name={t('product.you_might_also_like')}
+                    category_name={t("product.you_might_also_like")}
                     products={relatedProducts}
                     onEdit={handleEditItem}
                     onDelete={handleDeleteItem}

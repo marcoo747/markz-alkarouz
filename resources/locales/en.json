@@ -37,7 +37,8 @@
     "page_title": "Markaz Alkarooz",
     "edit_product": "Edit Product",
     "delete_product": "Delete Product",
-    "you_might_also_like": "You might also like"
+    "you_might_also_like": "You might also like",
+    "only_5_left": "there is only 5 items in stock"
   },
   "cart": {
     "title": "Your Cart",

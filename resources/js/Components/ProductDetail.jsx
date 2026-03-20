@@ -4,8 +4,11 @@ import PropTypes from "prop-types";
 import ImageUploadModal from "./ImageUploadModal";
 import AddOptionModal from "./AddOptionModal";
 import TopAlert from "./TopAlert";
+import ShareModal from "./shareModal";
+import { useTranslation } from "react-i18next";
 
 export default function ProductDetail({ product }) {
+  const { t } = useTranslation();
   const { auth, flash, cartItems = [] } = usePage().props || {};
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -120,7 +123,10 @@ const handleAddToCart = () => {
 
         {/* CENTER: Details */}
         <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-bold text-[#12263f]">{product?.pr_name}</h1>
+          <div className="flex justify-between items-start">
+            <h1 className="text-2xl font-bold text-[#12263f]">{product?.pr_name}</h1>
+            <ShareModal />
+          </div>
           <hr className="border-gray-300" />
           <div className="flex gap-1 items-baseline">
             <span className="font-bold">EGP</span>
@@ -151,6 +157,9 @@ const handleAddToCart = () => {
             {user && (
               !inCart ? (
                 <>
+                  <div className="text-red-600 font-bold text-sm mb-1">
+                    {t('product.only_5_left')}
+                  </div>
                   {/* Quantity selector */}
                   <div className="flex gap-2 items-center">
                     <button className="btn btn-outline-secondary" onClick={() => setQuantity(prev => Math.max(1, prev - 1))}>
