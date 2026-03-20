@@ -4,8 +4,10 @@ import Container from "@/Components/Container";
 import Button from "@/Components/Button";
 import Message from "@/Components/Message";
 import PasswordChecklist from "@/Components/PasswordChecklist";
+import { useTranslation } from "react-i18next";
 
 export default function Register({ osras }) {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -48,7 +50,7 @@ export default function Register({ osras }) {
 
   return (
     <>
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('home.page_title')} />
       <Container className="container--center">
         <div className="auth-page">
           <div className="signup-container">
@@ -60,7 +62,7 @@ export default function Register({ osras }) {
                 id="full_name"
                 value={data.full_name}
                 onChange={handleChange}
-                placeholder="Full Name"
+                placeholder={t('auth.full_name_placeholder')}
                 className={errors.full_name && "input-error"}
               />
               {errors.name && <Message type="error">{errors.name}</Message>}
@@ -71,7 +73,7 @@ export default function Register({ osras }) {
                 type="email"
                 value={data.email}
                 onChange={handleChange}
-                placeholder="Email Address"
+                placeholder={t('auth.email_placeholder')}
                 className={errors.email && "input-error"}
                 name="email"
               />
@@ -82,7 +84,7 @@ export default function Register({ osras }) {
                 id="mobile"
                 value={data.mobile}
                 onChange={handleChange}
-                placeholder="Mobile Number"
+                placeholder={t('auth.mobile_placeholder')}
                 className={errors.mobile && "input-error"}
               />
 
@@ -93,7 +95,7 @@ export default function Register({ osras }) {
                 id="osra_code"
                 value={data.osra_code}
                 onChange={handleChange}
-                placeholder="Osra Code"
+                placeholder={t('auth.osra_code_shorter')}
                 className={errors.osra_code ? "input-error" : ""}
               />
               {errors.osra_code && <Message type="error">{errors.osra_code}</Message>}
@@ -105,7 +107,7 @@ export default function Register({ osras }) {
                   type={showPassword ? "text" : "password"}
                   value={data.password}
                   onChange={handleChange}
-                  placeholder="Password"
+                  placeholder={t('auth.password_placeholder')}
                 />
                 <span
                   className="toggle-password"
@@ -130,7 +132,7 @@ export default function Register({ osras }) {
                   type={showConfirmPassword ? "text" : "password"}
                   value={data.password_confirmation}
                   onChange={handleChange}
-                  placeholder="Confirm Password"
+                  placeholder={t('auth.confirm_password_placeholder')}
                 />
                 <span
                   className="toggle-password"
@@ -143,7 +145,7 @@ export default function Register({ osras }) {
               {/* Photo */}
               <div className="file-input-wrapper">
                 <label htmlFor="user_photo" className="file-input-text">
-                  {data.user_photo ? data.user_photo.name : "Upload Photo"}
+                  {data.user_photo ? data.user_photo.name : t('auth.upload_photo')}
                 </label>
                 <input
                   type="file"
@@ -155,13 +157,13 @@ export default function Register({ osras }) {
               {errors.user_photo && <Message type="error">{errors.user_photo}</Message>}
 
               <button disabled={processing} type="submit" className="btn btn-success">
-                Add User
+                {t('auth.add_user_btn')}
               </button>
             </form>
             
-            <p className="mt-3 mb-0">Already have an account?</p>
+            <p className="mt-3 mb-0">{t('auth.already_have_account')}</p>
             <Link href={route('login')} className="btn btn-primary mt-0">
-              Log In
+              {t('auth.login_link')}
             </Link>
           </div>
         </div>

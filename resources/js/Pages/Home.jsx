@@ -7,12 +7,14 @@ import Button from "@/Components/Button";
 import { router, usePage, Head } from "@inertiajs/react";
 import TopAlert from "@/Components/TopAlert";
 import LoginMessage from "@/Components/LoginMessage";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
+  const { t } = useTranslation();
   const { flash, products } = usePage().props;
   const [alertMessage, setAlertMessage] = useState("");
 
-  const [alerLogintMessage, setAlertLoginMessage] = useState( "Welcome! Please log in first to use this website." );
+  const [showLoginAlert, setShowLoginAlert] = useState(true);
 
   useEffect(() => {
     if (flash?.success) {
@@ -25,11 +27,11 @@ const Home = () => {
   return (
     <>
       {/* Top Login Alert */}
-      {alerLogintMessage && <LoginMessage message={alerLogintMessage} onClose={() => setAlertLoginMessage("")} />}
+      {showLoginAlert && <LoginMessage message={t('home.login_alert')} onClose={() => setShowLoginAlert(false)} />}
       {/* Top Alert */}
       {alertMessage && <TopAlert message={alertMessage} onClose={() => setAlertMessage("")} />}
 
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('home.page_title')} />
 
       <NavBar page_name="home" />
 
@@ -37,11 +39,10 @@ const Home = () => {
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-start-2 md:col-span-1 text-center">
-              <p className="text-sm font-semibold text-blue-600 mb-2">مرحباً بكم</p>
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">مركز وسائل الإيضاح - كنيسة مار مرقس الرسول</h1>
+              <p className="text-sm font-semibold text-blue-600 mb-2">{t('home.welcome')}</p>
+              <h1 className="text-3xl md:text-4xl font-bold mb-4">{t('home.hero_title')}</h1>
               <p className="text-gray-600 mb-8">
-                منصة تعرض الموارد والمنتجات الخاصة بالمركز. اكتشف الإضافات الأخيرة
-                وتصفح التصنيفات بسهولة.
+                {t('home.hero_desc')}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -49,7 +50,7 @@ const Home = () => {
                   className="btn btn-primary"
                   onClick={() => router.visit(route("categories"))}
                 >
-                  Get Started
+                  {t('home.get_started')}
                 </button>
 
                 <button
@@ -58,7 +59,7 @@ const Home = () => {
                     window.scrollTo({ top: 600, behavior: "smooth" })
                   }
                 >
-                  Learn More
+                  {t('home.learn_more')}
                 </button>
               </div>
             </div>
@@ -75,7 +76,7 @@ const Home = () => {
 
         <div className="mt-8">
           <ItemPack
-            category_name="Recently Added"
+            category_name={t('home.recently_added')}
             products={products}
             setAlertMessage={setAlertMessage}
           />

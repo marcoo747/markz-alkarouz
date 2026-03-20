@@ -3,8 +3,10 @@ import { usePage, router, Head } from "@inertiajs/react";
 import NavBar from "@/Components/NavBar";
 import Container from "@/Components/Container";
 import styles from "../../css/ProfilePage.module.css";
+import { useTranslation } from "react-i18next";
 
 const ProfilePage = () => {
+  const { t } = useTranslation();
   const { user, requests = [] } = usePage().props; // requests from backend
 
   // --- Edit Profile ---
@@ -86,7 +88,7 @@ const ProfilePage = () => {
 
   return (
     <>
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('home.page_title')} />
       <NavBar page_name="profile" />
 
       <Container>
@@ -106,24 +108,24 @@ const ProfilePage = () => {
               <div className="profile-osra mt-3 p-3 border rounded bg-light text-start mb-4">
                 {user.osra ? (
                   <>
-                    <h6 className="mb-2">🧑‍👩‍👧 Family Details</h6>
+                    <h6 className="mb-2">🧑‍👩‍👧 {t('profile.family_details')}</h6>
                     <div className="d-flex flex-column gap-1">
                       <span>
-                        <strong>Name:</strong> {user.osra.osra_name}
+                        <strong>{t('profile.name_label')}</strong> {user.osra.osra_name}
                       </span>
                       <span>
-                        <strong>Place:</strong> {user.osra.osra_place}
+                        <strong>{t('profile.place_label')}</strong> {user.osra.osra_place}
                       </span>
                       <span>
-                        <strong>Time:</strong> {user.osra.osra_time}
+                        <strong>{t('profile.time_label')}</strong> {user.osra.osra_time}
                       </span>
                       <span>
-                        <strong>Code:</strong> <span className="badge bg-primary">{user.osra.osra_code}</span>
+                        <strong>{t('profile.code_label')}</strong> <span className="badge bg-primary">{user.osra.osra_code}</span>
                       </span>
                     </div>
                   </>
                 ) : (
-                  <p className="text-muted mb-0">No Family assigned</p>
+                  <p className="text-muted mb-0">{t('profile.no_family')}</p>
                 )}
               </div>
 
@@ -131,24 +133,24 @@ const ProfilePage = () => {
                 className="btn btn-outline-primary w-100 mb-2"
                 onClick={() => setShowEditModal(true)}
               >
-                Edit Profile
+                {t('profile.edit_profile')}
               </button>
 
               <button
                 className="btn btn-primary w-100"
                 onClick={() => setShowPasswordModal(true)}
               >
-                Change Password
+                {t('profile.change_password')}
               </button>
             </div>
           </div>
 
           {/* Requests */}
           <div className="col-12 col-md-8">
-            <h5 className="mb-3">Latest Requests</h5>
+            <h5 className="mb-3">{t('profile.latest_requests')}</h5>
 
             {requests.length === 0 && (
-              <div className="alert alert-info">No requests yet.</div>
+              <div className="alert alert-info">{t('profile.no_requests')}</div>
             )}
 
             {requests.map((request, index) => (
@@ -156,7 +158,7 @@ const ProfilePage = () => {
                 <div className="card-body">
                   {/* Header */}
                   <div className="d-flex justify-content-between align-items-center mb-2">
-                    <strong>Request #{++index}</strong>
+                    <strong>{t('profile.request_hash')}{++index}</strong>
                     <span
                       className={`badge ${
                         request.request_status === "accepted"
@@ -181,7 +183,7 @@ const ProfilePage = () => {
                   <div className="mb-2 text-muted small">
                     {request.start_date && request.start_time ? (
                       <>
-                        <strong>Start:</strong>{" "}
+                        <strong>{t('profile.start')}</strong>{" "}
                         {new Date(request.start_date + "T" + request.start_time).toLocaleString("en-US", {
                           weekday: "short",
                           year: "numeric",
@@ -192,12 +194,12 @@ const ProfilePage = () => {
                         })}
                       </>
                     ) : (
-                      request.osra_time && <><strong>Time:</strong> {request.osra_time}</>
+                      request.osra_time && <><strong>{t('profile.time_label')}</strong> {request.osra_time}</>
                     )}
                     <br />
                     {request.end_date && request.end_time && (
                       <>
-                        <strong>End:</strong>{" "}
+                        <strong>{t('profile.end')}</strong>{" "}
                         {new Date(request.end_date + "T" + request.end_time).toLocaleString("en-US", {
                           weekday: "short",
                           year: "numeric",
@@ -212,7 +214,7 @@ const ProfilePage = () => {
 
                   {/* Metadata */}
                   <div className="text-muted small">
-                    <strong>Ordered at:</strong>{" "}
+                    <strong>{t('profile.ordered_at')}</strong>{" "}
                     {new Date(request.created_at).toLocaleString("en-US", {
                       year: "numeric",
                       month: "short",
@@ -235,7 +237,7 @@ const ProfilePage = () => {
             <div className={styles.editModal}>
               <form onSubmit={handleEditSubmit}>
                 <div className={styles.modalHeader}>
-                  <h3 className="modal-title">Edit Profile</h3>
+                  <h3 className="modal-title">{t('profile.edit_profile')}</h3>
                   <button
                     type="button"
                     className={`${styles.closeBtn} fs-2`}
@@ -247,7 +249,7 @@ const ProfilePage = () => {
 
                 <div className={styles.modalBody}>
                   <div className="mb-3">
-                    <label className="form-label">Full Name</label>
+                    <label className="form-label">{t('profile.full_name')}</label>
                     <input
                       type="text"
                       name="name"
@@ -259,7 +261,7 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Email</label>
+                    <label className="form-label">{t('profile.email')}</label>
                     <input
                       type="email"
                       name="email"
@@ -273,7 +275,7 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Mobile</label>
+                    <label className="form-label">{t('profile.mobile')}</label>
                     <input
                       type="tel"
                       name="phone"
@@ -292,14 +294,14 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Family Code</label>
+                    <label className="form-label">{t('profile.family_code')}</label>
                     <input
                       type="text"
                       name="osra_code"
                       value={editData.osra_code}
                       onChange={handleEditChange}
                       className={`form-control ${editErrors.osra_code ? "is-invalid" : ""}`}
-                      placeholder="Enter family code"
+                      placeholder={t('profile.enter_family_code')}
                     />
                     {editErrors.osra_code && (
                       <div className="invalid-feedback">{editErrors.osra_code}</div>
@@ -307,11 +309,11 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Profile Photo</label>
+                    <label className="form-label">{t('profile.profile_photo')}</label>
 
                     <div className={styles.fileUpload}>
                       <label className={`${styles.uploadBtn} mt-0`}>
-                        Upload Photo
+                        {t('profile.upload_photo')}
                         <input
                           type="file"
                           name="profilePhoto"
@@ -342,14 +344,14 @@ const ProfilePage = () => {
 
                 <div className={styles.modalFooter}>
                   <button type="submit" className="btn btn-primary">
-                    Save Changes
+                    {t('profile.save_changes')}
                   </button>
                   <button
                     type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => setShowEditModal(false)}
                   >
-                    Cancel
+                    {t('profile.cancel')}
                   </button>
                 </div>
               </form>
@@ -365,7 +367,7 @@ const ProfilePage = () => {
             <div className={styles.editModal}>
               <form onSubmit={handlePasswordSubmit}>
                 <div className={styles.modalHeader}>
-                  <h3 className="modal-title">Change Password</h3>
+                  <h3 className="modal-title">{t('profile.change_password')}</h3>
                   <button
                     type="button"
                     className={`${styles.closeBtn} fs-2`}
@@ -377,7 +379,7 @@ const ProfilePage = () => {
 
                 <div className={styles.modalBody}>
                   <div className="mb-3">
-                    <label className="form-label">Current Password</label>
+                    <label className="form-label">{t('profile.current_password')}</label>
                     <input
                       type="password"
                       name="currentPassword"
@@ -391,7 +393,7 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">New Password</label>
+                    <label className="form-label">{t('profile.new_password')}</label>
                     <input
                       type="password"
                       name="newPassword"
@@ -405,7 +407,7 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Confirm New Password</label>
+                    <label className="form-label">{t('profile.confirm_new_password')}</label>
                     <input
                       type="password"
                       name="confirmPassword"
@@ -421,14 +423,14 @@ const ProfilePage = () => {
 
                 <div className={styles.modalFooter}>
                   <button type="submit" className="btn btn-primary">
-                    Save Changes
+                    {t('profile.save_changes')}
                   </button>
                   <button
                     type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => setShowPasswordModal(false)}
                   >
-                    Cancel
+                    {t('profile.cancel')}
                   </button>
                 </div>
               </form>

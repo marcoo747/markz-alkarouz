@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { usePage, router, Head } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 import NavBar from "@/Components/NavBar";
 import Container from "@/Components/Container";
 import Button from "@/Components/Button";
@@ -7,6 +8,7 @@ import ProductCard from "@/Components/CartCard";
 import CheckoutModal from "@/Components/CheckoutModal";
 
 const CartPage = () => {
+  const { t } = useTranslation();
   const { cart, user, osra_time } = usePage().props;
   const products = cart?.products ?? [];
   const { errors } = usePage().props;
@@ -31,12 +33,12 @@ const CartPage = () => {
 console.log(products);
   return (
     <>
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('home.page_title')} />
       <NavBar page_name="cart" />
       <Container>
-        <h2 className="mt-6">Your Cart</h2>
+        <h2 className="mt-6">{t('cart.title')}</h2>
 
-        {products.length === 0 && <p>Your cart is empty.</p>}
+        {products.length === 0 && <p>{t('cart.empty')}</p>}
 
         <div className="row">
           {products.map((product) => {
@@ -54,7 +56,7 @@ console.log(products);
                   color={product.pivot.color}
                   size={product.pivot.size}
                   quantity={product.pivot.quantity}
-                  description={`Price: EGP ${product.pr_price}`}
+                  description={`${t('cart.price_egp')} ${product.pr_price}`}
                   image={image}
                   onRemove={() => removeItem(product.product_id)}
                 />
@@ -65,9 +67,9 @@ console.log(products);
 
         {products.length > 0 && (
           <div className="text-right mt-6">
-            <h4>Total: EGP {total}</h4>
+            <h4>{t('cart.total_egp')} {total}</h4>
             <button className="btn btn-success" onClick={() => setShowCheckout(true)}>
-              Checkout
+              {t('cart.checkout')}
             </button>
           </div>
         )}

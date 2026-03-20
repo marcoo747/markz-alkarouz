@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { usePage, router, Head } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 import NavBar from "@/Components/NavBar";
 import DeleteUserModal from "@/Components/DeleteUserModal";
 import EditUserModal from "@/Components/EditUserModal";
 
 const UsersPage = () => {
+  const { t } = useTranslation();
   const { users, osras } = usePage().props;
 
   const [showEditModal, setShowEditModal] = useState(false);
@@ -83,16 +85,16 @@ const UsersPage = () => {
 
   return (
     <div className="bg-light min-vh-100">
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('home.page_title')} />
       <NavBar page_name="users" />
 
       <div className="container py-5">
         {/* ================= HEADER ================= */}
         <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
           <div className="flex-grow-1">
-            <h2 className="fw-bold mb-1">Users Management</h2>
+            <h2 className="fw-bold mb-1">{t('users.title')}</h2>
             <small className="text-muted">
-              Manage all registered users
+              {t('users.subtitle')}
             </small>
           </div>
 
@@ -100,7 +102,7 @@ const UsersPage = () => {
             className="btn btn-success px-4"
             onClick={() => router.visit(route("register"))}
           >
-            Add User
+            {t('users.add_user')}
           </button>
         </div>
 
@@ -111,7 +113,7 @@ const UsersPage = () => {
               <div className="text-center py-5">
                 <i className="bi bi-people display-4 text-muted"></i>
                 <p className="mt-3 text-muted fw-semibold">
-                  No users found
+                  {t('users.no_users')}
                 </p>
               </div>
             ) : (
@@ -119,12 +121,12 @@ const UsersPage = () => {
                 <table className="table table-hover align-middle mb-0 users-table">
                   <thead className="table-light">
                     <tr>
-                      <th>#</th>
-                      <th>User</th>
-                      <th>Role</th>
-                      <th>Mobile</th>
-                      <th>Email</th>
-                      <th className="text-center">Actions</th>
+                      <th>{t('users.hash')}</th>
+                      <th>{t('users.user_col')}</th>
+                      <th>{t('users.role')}</th>
+                      <th>{t('users.mobile')}</th>
+                      <th>{t('users.email')}</th>
+                      <th className="text-center">{t('users.actions')}</th>
                     </tr>
                   </thead>
 
@@ -179,14 +181,14 @@ const UsersPage = () => {
                                 className="btn btn-sm btn-primary px-2"
                                 onClick={() => openEditModal(user)}
                               >
-                                Edit
+                                {t('users.edit')}
                               </button>
 
                               <button
                                 className="btn btn-sm btn-danger px-2"
                                 onClick={() => deleteUser(user)}
                               >
-                                Delete
+                                {t('users.delete')}
                               </button>
                             </div>
                           </td>

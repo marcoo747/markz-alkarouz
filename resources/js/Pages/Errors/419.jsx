@@ -2,13 +2,15 @@ import React from "react";
 import { Link, Head } from "@inertiajs/react";
 import { ShieldAlert, Home, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function NotFoundPage({
-  message = "The page you are looking for might have been removed, renamed, or is temporarily unavailable."
+  message
 }) {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-blue-100 to-sky-200 px-4">
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('home.page_title')} />
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -39,12 +41,12 @@ export default function NotFoundPage({
 
           {/* Title */}
           <h2 className="mt-4 text-2xl font-semibold bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent">
-            Please go back and try to refresh the page!
+            {t('errors.419_title')}
           </h2>
 
           {/* Message */}
           <p className="mt-3 text-md text-slate-800 leading-relaxed">
-            {message}
+            {message || ""}
           </p>
 
           {/* Divider */}

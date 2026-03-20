@@ -4,8 +4,10 @@ import { route } from "ziggy-js";
 import NavBar from "@/Components/NavBar";
 import namer from "color-namer";
 import shopping_image from "../../imgs/shopping.webp";
+import { useTranslation } from "react-i18next";
 
 const RequestShow = () => {
+    const { t } = useTranslation();
     const { request } = usePage().props;
 
     const handleShowItem = (item_id) => {
@@ -22,11 +24,11 @@ const RequestShow = () => {
 
     return (
         <>
-            <Head title="مركز وسائل الإيضاح" />
+            <Head title={t('home.page_title')} />
             <NavBar page_name="requests" />
 
             <div className="container my-4">
-                <h1 className="mb-4">Request Page</h1>
+                <h1 className="mb-4">{t('request_show.title')}</h1>
 
                 <div className="card shadow-sm mb-4">
                     <div className="card-body">
@@ -43,7 +45,7 @@ const RequestShow = () => {
                         </h6>
 
                         <p className="mb-1">
-                            <strong>Status:{" "}
+                            <strong>{t('request_show.status')}{" "}
                             <span
                                 className={
                                     request.request_status === "pending"
@@ -61,7 +63,7 @@ const RequestShow = () => {
                         </p>
 
                         <p className="mb-1">
-                            <strong>Time:</strong> {request.display_time}
+                            <strong>{t('request_show.time')}</strong> {request.display_time}
                         </p>
 
                         {/* Accept / Done buttons */}
@@ -73,14 +75,14 @@ const RequestShow = () => {
                                             className="btn btn-success btn-sm"
                                             onClick={() => acceptRequest(request.request_id)}
                                         >
-                                            Accept
+                                            {t('request_show.accept')}
                                         </button>
                                     )}
                                     <button
                                         className="btn btn-danger btn-sm"
                                         onClick={() => doneRequest(request.request_id)}
                                     >
-                                        Done
+                                        {t('request_show.done')}
                                     </button>
                                 </>
                             )}
@@ -88,7 +90,7 @@ const RequestShow = () => {
                     </div>
                 </div>
 
-                <h4>Products</h4>
+                <h4>{t('request_show.products_heading')}</h4>
                 {request.products.length ? (
                     <div className="list-group">
                         {request.products.map((p) => (
@@ -117,11 +119,11 @@ const RequestShow = () => {
                                     <div>
                                         <h6 className="mb-1">{p.pr_name}</h6>
                                         <small className="text-muted">
-                                            <strong>Price:</strong> {p.pr_price}{" "}
+                                            <strong>{t('request_show.price')}</strong> {p.pr_price}{" "}
                                             <br />
-                                            <strong>Brand:</strong> {p.brand}{" "}
+                                            <strong>{t('request_show.brand')}</strong> {p.brand}{" "}
                                             <br />
-                                            <strong>Color:</strong>{" "}
+                                            <strong>{t('request_show.color')}</strong>{" "}
                                             {p.pivot?.color ? (
                                                 <span className="d-inline-flex align-items-center">
                                                     <span
@@ -153,12 +155,12 @@ const RequestShow = () => {
                                                 "—"
                                             )}
                                             <br />
-                                            <strong>Size:</strong>{" "}
+                                            <strong>{t('request_show.size')}</strong>{" "}
                                             {p.pivot?.size?.size ||
                                                 p.pivot?.size_id ||
                                                 "—"}{" "}
                                             <br />
-                                            <strong>Quantity:</strong>{" "}
+                                            <strong>{t('request_show.quantity')}</strong>{" "}
                                             {p.pivot?.quantity}
                                         </small>
                                     </div>
@@ -167,7 +169,7 @@ const RequestShow = () => {
                         ))}
                     </div>
                 ) : (
-                    <p>No products</p>
+                    <p>{t('request_show.no_products')}</p>
                 )}
             </div>
         </>

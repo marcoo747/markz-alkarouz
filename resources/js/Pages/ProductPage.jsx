@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { usePage, router, Head } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 import NavBar from "@/Components/NavBar";
 import ItemPack from "@/Components/Item-pack";
 import Container from "@/Components/Container";
@@ -9,6 +10,7 @@ import DeleteItemModal from "@/Components/DeleteItemModal";
 import ShareModal from "@/Components/shareModal";
 
 const ProductPage = () => {
+    const { t } = useTranslation();
     const { product, relatedProducts } = usePage().props;
 
     const [showEditItemModal, setShowEditItemModal] = useState(false);
@@ -55,7 +57,7 @@ const ProductPage = () => {
 
     return (
         <>
-            <Head title="مركز وسائل الإيضاح" />
+            <Head title={t('product.page_title')} />
             <NavBar page_name="categories" />
 
             <Container>
@@ -71,7 +73,7 @@ const ProductPage = () => {
                                     setShowEditItemModal(true);
                                 }}
                             >
-                                Edit Product
+                                {t('product.edit_product')}
                             </button>
                             <button
                                 className="btn btn-danger"
@@ -81,7 +83,7 @@ const ProductPage = () => {
                                     setShowDeleteItemModal(true);
                                 }}
                             >
-                                Delete Product
+                                {t('product.delete_product')}
                             </button>
                         </div>
                     </>
@@ -92,7 +94,7 @@ const ProductPage = () => {
 
                 {/* Related Items */}
                 <ItemPack
-                    category_name="You might also like"
+                    category_name={t('product.you_might_also_like')}
                     products={relatedProducts}
                     onEdit={handleEditItem}
                     onDelete={handleDeleteItem}

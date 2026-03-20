@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, router, usePage } from "@inertiajs/react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 import Container from "./Container";
 import Button from "./Button";
 import logo from "../../imgs/AlkaroozCom.png";
@@ -9,6 +10,7 @@ import searchIcon from "../../imgs/search.svg";
 import cartIcon from "../../imgs/cart.svg";
 
 const NavBar = ({ page_name, linkBase }) => {
+    const { t, i18n } = useTranslation();
     const { auth } = usePage().props;
     const user = auth.user;
     const [open, setOpen] = useState(false);
@@ -18,7 +20,7 @@ const NavBar = ({ page_name, linkBase }) => {
         e.preventDefault();
         if (!searchTerm) return;
 
-        router.get(route('search'), { query: searchTerm });
+        router.get(route("search"), { query: searchTerm });
         setOpen(false);
     };
 
@@ -29,7 +31,11 @@ const NavBar = ({ page_name, linkBase }) => {
         <header className="site-header">
             <Container>
                 <nav className="site-nav" aria-label="Main navigation">
-                    <Link href={route('home')} className="site-logo">
+                    <Link
+                        href={route("home")}
+                        className={`nav-link ${page_name === "home" ? "active" : ""} site-logo`}
+                        onClick={() => setOpen(false)}
+                    >
                         <img src={logo} alt="Alkarooz" />
                     </Link>
 
@@ -93,58 +99,40 @@ const NavBar = ({ page_name, linkBase }) => {
                             role="menu"
                         >
                             <Link
-                                href={route('home')}
-                                className={`nav-link ${page_name === "home" ? "active" : ""}`}
-                                onClick={() => setOpen(false)}
-                            >
-                                Home
-                            </Link>
-
-                            <Link
-                                href={route('categories')}
+                                href={route("categories")}
                                 className={`nav-link ${page_name === "categories" ? "active" : ""}`}
                                 onClick={() => setOpen(false)}
                             >
-                                Categories
+                                {t("navbar.categories")}
                             </Link>
 
                             {manager ? (
                                 <>
                                     <Link
-                                        href={route('osra.index')}
+                                        href={route("osra.index")}
                                         className={`nav-link ${page_name === "osras" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                     >
-                                        Families
+                                        {t("navbar.osras")}
                                     </Link>
 
                                     <Link
-                                        href={route('users.index')}
+                                        href={route("users.index")}
                                         className={`nav-link ${page_name === "users" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                     >
-                                        Users
+                                        {t("navbar.users")}
                                     </Link>
                                 </>
                             ) : null}
 
                             {admin || manager ? (
                                 <Link
-                                    href={route('requests')}
+                                    href={route("requests")}
                                     className={`nav-link ${page_name === "requests" ? "active" : ""}`}
                                     onClick={() => setOpen(false)}
                                 >
-                                    Requests
-                                </Link>
-                            ) : null}
-
-                            {user ? (
-                                <Link
-                                    href={route('profile')}
-                                    className={`nav-link ${page_name === "profile" ? "active" : ""}`}
-                                    onClick={() => setOpen(false)}
-                                >
-                                    Profile
+                                    {t("navbar.requests")}
                                 </Link>
                             ) : null}
 
@@ -167,7 +155,10 @@ const NavBar = ({ page_name, linkBase }) => {
                                 >
                                     <input
                                         type="search"
-                                        placeholder="Search"
+                                        placeholder={t(
+                                            "navbar.search_placeholder",
+                                            "Search",
+                                        )}
                                         value={searchTerm}
                                         onChange={(e) =>
                                             setSearchTerm(e.target.value)
@@ -177,10 +168,10 @@ const NavBar = ({ page_name, linkBase }) => {
                                             padding:
                                                 "clamp(6px, 1vw, 10px) clamp(8px, 2vw, 14px)",
                                             fontSize: "clamp(12px, 2vw, 14px)",
-                                            borderTopLeftRadius: 25,
-                                            borderBottomLeftRadius: 25,
+                                            borderStartStartRadius: 25,
+                                            borderEndStartRadius: 25,
                                             border: "1px solid rgba(15,23,42,0.15)",
-                                            borderRight: "none",
+                                            borderInlineEnd: "none",
                                             outline: "none",
                                         }}
                                     />
@@ -189,8 +180,8 @@ const NavBar = ({ page_name, linkBase }) => {
                                         type="submit"
                                         className="btn btn-sm"
                                         style={{
-                                            borderTopRightRadius: 30,
-                                            borderBottomRightRadius: 30,
+                                            borderStartEndRadius: 30,
+                                            borderEndEndRadius: 30,
                                         }}
                                     >
                                         <img
@@ -206,19 +197,19 @@ const NavBar = ({ page_name, linkBase }) => {
                                         className="btn btn-outline-danger btn-sm"
                                         onClick={() => {
                                             setOpen(false);
-                                            router.post(route('logout'));
+                                            router.post(route("logout"));
                                         }}
                                     >
-                                        Log Out
+                                        {t("navbar.logout")}
                                     </button>
                                 ) : (
                                     <>
                                         <Link
-                                            href={route('login')}
+                                            href={route("login")}
                                             className="btn btn-outline-primary btn-sm"
                                             onClick={() => setOpen(false)}
                                         >
-                                            Login
+                                            {t("navbar.login")}
                                         </Link>
                                         {/* <Link
                                             href={route('sign_up')}
@@ -229,12 +220,50 @@ const NavBar = ({ page_name, linkBase }) => {
                                         </Link> */}
                                     </>
                                 )}
-
+                                {/* Language Switcher */}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const nextLang =
+                                            i18n.language.startsWith("ar")
+                                                ? "en"
+                                                : "ar";
+                                        i18n.changeLanguage(nextLang);
+                                    }}
+                                    className="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center fw-bold"
+                                    style={{
+                                        borderRadius: "16px",
+                                        padding: "0 8px",
+                                        height: "28px",
+                                        width: "10px",
+                                        fontSize: "12px",
+                                        flexShrink: 0,
+                                    }}
+                                    aria-label="Toggle language"
+                                >
+                                    {i18n.language.startsWith("ar")
+                                        ? "EN"
+                                        : "عربي"}
+                                </button>
+                                {user ? (
+                                    <Link
+                                        href={route("profile")}
+                                        className={`nav-link ${page_name === "profile" ? "active" : ""}`}
+                                        onClick={() => setOpen(false)}
+                                        aria-label={t("navbar.profile")}
+                                        title={t("navbar.profile")}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                            <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                        </svg>
+                                    </Link>
+                                ) : null}
                                 {user ? (
                                     <Link
                                         id="cart-icon"
-                                        href={route('cart')}
-                                        className={`nav-link ${page_name === "cart" ? "active" : ""}`}
+                                        href={route("cart")}
+                                        className={`nav-link position-relative ${page_name === "cart" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                     >
                                         <img
@@ -242,6 +271,10 @@ const NavBar = ({ page_name, linkBase }) => {
                                             alt="Cart"
                                             className="cart-icon"
                                         />
+                                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style={{ fontSize: '0.8rem', padding: '0.4em 0.6em' }}>
+                                            3
+                                            <span className="visually-hidden">items in cart</span>
+                                        </span>
                                     </Link>
                                 ) : null}
                             </div>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { usePage, router, Head } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 
 import ProductCard from "@/Components/CategoryProductCard";
 import Container from "@/Components/Container";
@@ -10,6 +11,7 @@ import EditItemModal from "@/Components/EditItemModal";
 import DeleteItemModal from "@/Components/DeleteItemModal";
 
 const CategoryPage = () => {
+  const { t } = useTranslation();
   const page = usePage();
   const category = page.props.category || {};
   const products = page.props.products || [];
@@ -90,12 +92,12 @@ const CategoryPage = () => {
   const manager = user?.user_type === "manager";
   return (
     <>
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('home.page_title')} />
       <NavBar page_name="categories" />
 
       <Container>
         <h2 className="mt-6">
-          {category.category_name?.toUpperCase()} Products
+          {category.category_name?.toUpperCase()} {t('category.products')}
         </h2>
         {manager ? (
           <div
@@ -105,7 +107,7 @@ const CategoryPage = () => {
               className="btn btn-success"
               onClick={() => setShowAddItemModal(true)}
             >
-              Add Item
+              {t('category.add_item')}
             </button>
           </div>
         ) : null}

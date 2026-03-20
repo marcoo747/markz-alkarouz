@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { usePage, router, Link, Head } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 import NavBar from "@/Components/NavBar";
 import Category from "@/Components/Category";
 import Container from "@/Components/Container";
@@ -8,6 +9,7 @@ import EditCategoryModal from "@/Components/EditCategoryModal";
 import DeleteCategoryModal from "@/Components/DeleteCategoryModal";
 
 const Categories = () => {
+  const { t } = useTranslation();
   const { categories } = usePage().props;
   const { auth } = usePage().props;
   const user = auth.user;
@@ -58,13 +60,13 @@ const Categories = () => {
 
   return (
     <>
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('categories.page_title')} />
       <NavBar page_name="categories" />
       <Container>
-        <h2 className="mt-6">Categories</h2>
+        <h2 className="mt-6">{t('categories.title')}</h2>
         {manager ? (
           <div className="mt-4 mb-8 flex gap-2.5">
-            <button className="btn btn-success" onClick={handleAdd}>Add Category</button>
+            <button className="btn btn-success" onClick={handleAdd}>{t('categories.add_category')}</button>
           </div>
         ) : null}
 

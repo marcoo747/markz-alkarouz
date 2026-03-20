@@ -3,21 +3,23 @@ import { usePage, Head } from "@inertiajs/react";
 import NavBar from "@/Components/NavBar";
 import Container from "@/Components/Container";
 import ItemPack from "@/Components/Item-pack";
+import { useTranslation } from "react-i18next";
 
 const SearchResult = () => {
+  const { t } = useTranslation();
   const { props } = usePage();
   const query = props.query ?? "";
   const results = Array.isArray(props.results) ? props.results : [];
 
   return (
     <>
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('home.page_title')} />
       <NavBar page_name="search" />
 
       <Container>
         {/* 🔹 Top heading */}
         <h2 className="mt-5 mb-2.5">
-          Search results for "<strong>{query}</strong>"
+          {t('search.results_for')} "<strong>{query}</strong>"
         </h2>
         <div className="mt-0">
           {results.length > 0 ? (
@@ -46,7 +48,7 @@ const SearchResult = () => {
             </div>
           ) : (
             <p className="mt-10">
-              No results found for "<strong>{query}</strong>"
+              {t('search.no_results')} "<strong>{query}</strong>"
             </p>
           )}
         </div>

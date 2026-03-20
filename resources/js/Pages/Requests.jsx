@@ -2,8 +2,10 @@ import React from "react";
 import { Link, usePage, Head, router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import NavBar from "@/Components/NavBar";
+import { useTranslation } from "react-i18next";
 
 const Requests = () => {
+    const { t } = useTranslation();
     const { requests } = usePage().props;
 
     const acceptRequest = (id) => {
@@ -16,13 +18,13 @@ const Requests = () => {
 
     return (
         <>
-            <Head title="مركز وسائل الإيضاح" />
+            <Head title={t('home.page_title')} />
             <NavBar page_name="requests" />
             <div className="container my-4">
-                <h1 className="mb-4">User Requests</h1>
+                <h1 className="mb-4">{t('requests.title')}</h1>
 
                 {!requests.length && (
-                    <div className="alert alert-info">No requests found.</div>
+                    <div className="alert alert-info">{t('requests.no_requests')}</div>
                 )}
 
                 <div className="row">
@@ -39,7 +41,7 @@ const Requests = () => {
                                         </h6>
                                         <p className="mb-1">
                                             <strong>
-                                                Status:{" "}
+                                                {t('requests.status')}{" "}
                                                 <span
                                                     className={
                                                         req.request_status ==
@@ -55,12 +57,12 @@ const Requests = () => {
 
                                         {(req.total_price !== null && req.total_price !== undefined && req.total_price != 0) && (
                                             <p className="mb-1">
-                                                <strong>Price:</strong> {req.total_price}
+                                                <strong>{t('requests.price')}</strong> {req.total_price}
                                             </p>
                                         )}
 
                                         <p className="mb-1">
-                                            <strong>Time:</strong>{" "}
+                                            <strong>{t('requests.time')}</strong>{" "}
                                             {req.display_time}
                                         </p>
 
@@ -70,8 +72,8 @@ const Requests = () => {
                                                 {req.products.length}
                                             </strong>{" "}
                                             {req.products.length === 1
-                                                ? "Product"
-                                                : "Products"}{" "}
+                                                ? t('requests.product')
+                                                : t('requests.products')}{" "}
                                         </p>
                                     </Link>
 
@@ -81,14 +83,14 @@ const Requests = () => {
                                                 className="btn btn-success btn-sm"
                                                 onClick={() => acceptRequest(req.request_id)}
                                             >
-                                                Accept
+                                                {t('requests.accept')}
                                             </button>
                                         )}
                                         <button
                                             className="btn btn-danger btn-sm"
                                             onClick={() => doneRequest(req.request_id)}
                                         >
-                                            Done
+                                            {t('requests.done')}
                                         </button>
                                     </div>
                                 </div>

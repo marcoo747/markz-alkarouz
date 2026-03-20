@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 import styles from "../../css/NotFound.module.css";
+import { useTranslation } from "react-i18next";
 
 const NotFoundPage = () => {
+  const { t } = useTranslation();
   return (
       <div className={styles.container}>
         <div className={styles.contentBox}>
@@ -11,19 +13,18 @@ const NotFoundPage = () => {
         </h1>
 
           <h2 className={styles.subHeading}>
-            Page Not Found
+            {t('404.title')}
           </h2>
 
           <p className={styles.description}>
-            Oops! The page you are looking for might have been removed, had its
-            name changed, or is temporarily unavailable.
+            {t('404.description')}
           </p>
 
           <Link
             href={route("home")}
             className={styles.homeLink}
           >
-            Go to Home
+            {t('404.go_home')}
           </Link>
         </div>
 

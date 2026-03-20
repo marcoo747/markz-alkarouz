@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import shareIcon from "../../imgs/share.png";
 import whatsappIcon from "../../imgs/whatsapp.svg";
@@ -7,6 +8,7 @@ import twitterXIcon from "../../imgs/twitter-x.svg";
 import telegramIcon from "../../imgs/telegram.svg";
 
 export default function ShareModal() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -77,7 +79,7 @@ export default function ShareModal() {
               &times;
             </button>
 
-            <h2 className="mb-5 text-[20px] font-bold">Share this page</h2>
+            <h2 className="mb-5 text-[20px] font-bold">{t('share.title')}</h2>
 
             {/* Icons */}
             <div className="mb-5 flex justify-around gap-3">
@@ -92,7 +94,7 @@ export default function ShareModal() {
                   alt="WhatsApp"
                   className="mb-2.5 w-10 invert"
                 />
-                WhatsApp
+                {t('share.whatsapp')}
               </a>
 
               <a
@@ -106,7 +108,7 @@ export default function ShareModal() {
                   alt="Facebook"
                   className="mb-2.5 w-10 invert"
                 />
-                Facebook
+                {t('share.facebook')}
               </a>
 
               <a
@@ -120,7 +122,7 @@ export default function ShareModal() {
                   alt="Twitter"
                   className="mb-2.5 w-10 invert"
                 />
-                Twitter
+                {t('share.twitter')}
               </a>
 
               <a
@@ -134,7 +136,7 @@ export default function ShareModal() {
                   alt="Telegram"
                   className="mb-2.5 w-10 invert"
                 />
-                Telegram
+                {t('share.telegram')}
               </a>
             </div>
 
@@ -150,7 +152,7 @@ export default function ShareModal() {
                 onClick={handleCopy}
                 className="rounded-md bg-[#7e56f1] px-3 py-1.5 font-bold text-white transition hover:bg-[#a28bfa]"
               >
-                {copied ? "Copied!" : "Copy"}
+                {copied ? t('share.copied') : t('share.copy')}
               </button>
             </div>
           </div>

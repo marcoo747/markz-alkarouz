@@ -3,8 +3,10 @@ import { Head, Link, useForm, router } from "@inertiajs/react";
 import Container from "@/Components/Container";
 import Button from "@/Components/Button";
 import Message from "@/Components/Message";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
 
   const { data, setData, post, processing, errors } = useForm({
@@ -19,11 +21,11 @@ export default function Login() {
 
     // Optional client-side validation
     if (!data.mobile || data.mobile.replace(/\D/g, "").length !== 11) {
-      alert("Mobile number must be exactly 11 digits.");
+      alert(t('auth.mobile_11_digits'));
       return;
     }
     if (!data.password) {
-      alert("Password is required.");
+      alert(t('auth.password_required'));
       return;
     }
 
@@ -40,7 +42,7 @@ export default function Login() {
 
   return (
     <>
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('home.page_title')} />
       <Container className="container--center">
         <div className="auth-page max-w-[520px] w-full">
           <div className="login-container">
@@ -51,7 +53,7 @@ export default function Login() {
               <div>
                 <input
                   type="tel"
-                  placeholder="Mobile number"
+                  placeholder={t('auth.mobile_placeholder')}
                   value={data.mobile}
                   onChange={(e) => setData("mobile", e.target.value)}
                   className={errors.mobile ? "input-error" : undefined}
@@ -64,7 +66,7 @@ export default function Login() {
               <div className="password-wrapper">
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Password"
+                  placeholder={t('auth.password_placeholder')}
                   value={data.password}
                   onChange={(e) => setData("password", e.target.value)}
                   className={errors.password ? "input-error" : undefined}
@@ -86,15 +88,15 @@ export default function Login() {
                 type="button"
                 className="forgot"
                 onClick={() =>
-                  alert("Please contact support to reset your password.")
+                  alert(t('auth.contact_support_reset'))
                 }
               >
-                Forgot your password?
+                {t('auth.forgot_password')}
               </button>
 
               {/* Submit button */}
               <button type="submit" className="btn btn-success mt-1" disabled={processing}>
-                LOG IN
+                {t('auth.login_btn')}
               </button>
             </form>
 

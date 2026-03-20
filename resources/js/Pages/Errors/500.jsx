@@ -2,13 +2,16 @@ import React from "react";
 import { Link, Head } from "@inertiajs/react";
 import { ShieldAlert, Home, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function Error500Page({
-  message = "An unexpected error occurred on the server. Please try again later."
+  message
 }) {
+  const { t } = useTranslation();
+  const displayMessage = message || t('errors.500_msg');
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-blue-100 to-sky-200 px-4">
-      <Head title="مركز وسائل الإيضاح" />
+      <Head title={t('home.page_title')} />
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -36,11 +39,11 @@ export default function Error500Page({
           </h1>
 
           <h2 className="mt-4 text-2xl font-semibold bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent">
-            Internal Server Error
+            {t('errors.500_title')}
           </h2>
 
           <p className="mt-3 text-sm text-slate-600 leading-relaxed">
-            {message}
+            {displayMessage}
           </p>
 
           <div className="mx-auto mt-6 h-px w-24 bg-gradient-to-r from-transparent via-sky-400 to-transparent" />
@@ -51,7 +54,7 @@ export default function Error500Page({
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-6 py-3 text-sm font-medium text-white shadow-lg hover:scale-105 hover:shadow-xl transition text-decoration-none"
             >
               <Home className="h-4 w-4" />
-              Home
+              {t('errors.home_btn')}
             </Link>
 
             <button
@@ -59,7 +62,7 @@ export default function Error500Page({
               className="inline-flex items-center gap-2 rounded-xl border border-sky-300 bg-white/60 px-6 py-3 text-sm font-medium text-slate-700 hover:bg-white hover:scale-105 transition"
             >
               <ArrowLeft className="h-4 w-4" />
-              Go Back
+              {t('errors.go_back_btn')}
             </button>
           </div>
         </div>
