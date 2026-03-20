@@ -28,9 +28,25 @@ const NavBar = ({ page_name, linkBase }) => {
     const admin = user?.user_type === "admin";
 
     return (
-        <header className="site-header">
-            <Container>
-                <nav className="site-nav" aria-label="Main navigation">
+        <>
+            {user && (
+                <Link
+                    href={route("cart")}
+                    className="mobile-floating-cart"
+                    aria-label="Cart"
+                >
+                    <img src={cartIcon} alt="Cart" className="cart-icon" />
+                    <span className="badge">
+                        3
+                        <span className="visually-hidden">
+                            items in cart
+                        </span>
+                    </span>
+                </Link>
+            )}
+            <header className="site-header">
+                <Container>
+                    <nav className="site-nav" aria-label="Main navigation">
                     <Link
                         href={route("home")}
                         className={`nav-link ${page_name === "home" ? "active" : ""} site-logo`}
@@ -47,6 +63,49 @@ const NavBar = ({ page_name, linkBase }) => {
                         }}
                         className="nav-actions"
                     >
+                        <div className="show-on-mobile-only">
+                            {/* Mobile Language Switcher */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const nextLang =
+                                        i18n.language.startsWith("ar")
+                                            ? "en"
+                                            : "ar";
+                                    i18n.changeLanguage(nextLang);
+                                }}
+                                className="mobile-lang-btn"
+                                aria-label="Toggle language"
+                            >
+                                {i18n.language.startsWith("ar")
+                                    ? "EN"
+                                    : "عربي"}
+                            </button>
+                            {/* Mobile Profile Icon */}
+                            {user && (
+                                <Link
+                                    href={route("profile")}
+                                    className={`mobile-profile-icon ${page_name === "profile" ? "active" : ""}`}
+                                    onClick={() => setOpen(false)}
+                                    aria-label={t("navbar.profile")}
+                                    title={t("navbar.profile")}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        fill="currentColor"
+                                        viewBox="0 0 16 16"
+                                    >
+                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+                                        />
+                                    </svg>
+                                </Link>
+                            )}
+                        </div>
                         <button
                             className={`nav-toggle ${open ? "open" : ""}`}
                             aria-controls="main-navigation"
@@ -230,7 +289,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                                 : "ar";
                                         i18n.changeLanguage(nextLang);
                                     }}
-                                    className="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center fw-bold"
+                                    className="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center fw-bold hide-on-mobile"
                                     style={{
                                         borderRadius: "16px",
                                         padding: "0 8px",
@@ -248,14 +307,23 @@ const NavBar = ({ page_name, linkBase }) => {
                                 {user ? (
                                     <Link
                                         href={route("profile")}
-                                        className={`nav-link ${page_name === "profile" ? "active" : ""}`}
+                                        className={`nav-link hide-on-mobile ${page_name === "profile" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                         aria-label={t("navbar.profile")}
                                         title={t("navbar.profile")}
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                            <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            fill="currentColor"
+                                            viewBox="0 0 16 16"
+                                        >
+                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+                                            />
                                         </svg>
                                     </Link>
                                 ) : null}
@@ -271,9 +339,17 @@ const NavBar = ({ page_name, linkBase }) => {
                                             alt="Cart"
                                             className="cart-icon"
                                         />
-                                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style={{ fontSize: '0.8rem', padding: '0.4em 0.6em' }}>
+                                        <span
+                                            className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
+                                            style={{
+                                                fontSize: "0.8rem",
+                                                padding: "0.4em 0.6em",
+                                            }}
+                                        >
                                             3
-                                            <span className="visually-hidden">items in cart</span>
+                                            <span className="visually-hidden">
+                                                items in cart
+                                            </span>
                                         </span>
                                     </Link>
                                 ) : null}
@@ -283,6 +359,7 @@ const NavBar = ({ page_name, linkBase }) => {
                 </nav>
             </Container>
         </header>
+        </>
     );
 };
 
