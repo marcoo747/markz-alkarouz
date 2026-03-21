@@ -1,7 +1,7 @@
 import React from "react";
 import CategoryCard from "./CategoryCard";
 
-const Category = ({ id, title, description, image, isSelected, selectable, onEdit, onDelete }) => {
+const Category = ({ id, title, description, image, isSelected, selectable, onEdit, onDelete, onClick }) => {
 
   return (
     <div
@@ -14,6 +14,7 @@ const Category = ({ id, title, description, image, isSelected, selectable, onEdi
         description={description}
         onEdit={onEdit}
         onDelete={onDelete}
+        onClick={onClick}
       />
     </div>
   );

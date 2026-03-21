@@ -1,11 +1,12 @@
 import React from "react";
 import { usePage, router } from "@inertiajs/react";
 
-const CategoryCard = ({ id, title, description, image, onEdit, onDelete }) => {
+const CategoryCard = ({ id, title, description, image, onEdit, onDelete, onClick }) => {
   const { auth } = usePage().props;
   const user = auth.user;
   const manager = user?.user_type === "manager";
   const handleClick = () => {
+    if (onClick) return onClick();
     router.visit(route("categories.show", id));
   };
 

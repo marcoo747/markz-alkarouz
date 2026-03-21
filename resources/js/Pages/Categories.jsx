@@ -10,7 +10,7 @@ import DeleteCategoryModal from "@/Components/DeleteCategoryModal";
 
 const Categories = () => {
   const { t } = useTranslation();
-  const { categories } = usePage().props;
+  const { categories, type } = usePage().props;
   const { auth } = usePage().props;
   const user = auth.user;
   const manager = user?.user_type === "manager";
@@ -28,7 +28,7 @@ const Categories = () => {
   const handleAddConfirm = ({ name, description, photo }) => {
     const formData = new FormData();
     formData.append("category_name", name);
-    formData.append("category_description", description);
+    formData.append("category_description", description + (type ? ` [type:${type}]` : ''));
     if (photo) formData.append("category_photo", photo);
 
     router.post(route("categories.store"), formData, {
@@ -41,7 +41,7 @@ const Categories = () => {
   const handleEditConfirm = ({ name, description, photo }) => {
     const formData = new FormData();
     formData.append("category_name", name);
-    formData.append("category_description", description);
+    formData.append("category_description", description + (type ? ` [type:${type}]` : ''));
     if (photo) formData.append("category_photo", photo);
     formData.append("_method", "PATCH"); // simulate PATCH
 
@@ -71,19 +71,22 @@ const Categories = () => {
         ) : null}
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {categories.map((cat) => (
+        {categories.map((cat) => {
+          const cleanDesc = cat.category_description ? cat.category_description.replace(/ \[type:.*?\]/g, '') : '';
+          return (
           <div key={cat.category_id}>
             <Category
               key={cat.category_id}
               id={cat.category_id}
               title={cat.category_name}
-              description={cat.category_description}
+              description={cleanDesc}
               image={cat.category_photo ? `storage/${cat.category_photo}` : "/imgs/shopping.webp"}
-              onEdit={() => handleEdit(cat)}
-              onDelete={() => handleDelete(cat)}
+              onEdit={() => handleEdit({ ...cat, category_description: cleanDesc })}
+              onDelete={() => handleDelete({ ...cat, category_description: cleanDesc })}
             />
           </div>
-        ))}
+          );
+        })}
         </div>
 
         {showAddModal && (

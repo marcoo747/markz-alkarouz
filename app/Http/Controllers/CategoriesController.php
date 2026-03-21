@@ -120,6 +120,6 @@ class CategoriesController extends Controller
 
         $category->delete();
 
-        return redirect()->route('categories')->with('success', 'Category Deleted!');
+        return redirect()->back()->with('success', 'Category Deleted!');
     }
 }

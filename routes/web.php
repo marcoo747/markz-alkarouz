@@ -20,7 +20,35 @@ use Inertia\Inertia;
 
 Route::get('/', [Home_controller::class, 'index'])->name('home');
 
-Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
+Route::get('/all-categories', [CategoriesController::class, 'index'])->name('categories.all');
+
+Route::get('/categories', function () {
+    return Inertia::render('MainCategories');
+})->name('categories');
+
+Route::get('/categories/type/{type}', function ($type) {
+    if (!in_array($type, ['1', '2'])) abort(404);
+    
+    // Type 1 acts as default for existing categories that have no tag.
+    $categories = App\Models\Category::all()->filter(function ($cat) use ($type) {
+        $desc = $cat->category_description ?? '';
+        $hasTag1 = str_contains($desc, '[type:1]');
+        $hasTag2 = str_contains($desc, '[type:2]');
+        
+        if ($type == '1') {
+            return $hasTag1 || (!$hasTag1 && !$hasTag2);
+        } else {
+            return $hasTag2;
+        }
+    })->values();
+
+    return Inertia::render('Categories', [
+        'categories' => $categories,
+        'linkBase' => '/markaz_alkarouz/public',
+        'type' => $type
+    ]);
+})->name('categories.type');
+
 Route::get('/categories/{category}', [CategoriesController::class, 'show'])->name('categories.show');
 
 Route::get('/items/{id}', [ProductController::class, 'show'])->name('items.show');
