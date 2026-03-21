@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { usePage, router, Head } from "@inertiajs/react";
 import { useTranslation } from "react-i18next";
-import NavBar from "@/Components/NavBar";
+import NavBar from "@/Components/NavBar";   
 import ItemPack from "@/Components/Item-pack";
 import Container from "@/Components/Container";
 import ProductDetail from "@/Components/ProductDetail";

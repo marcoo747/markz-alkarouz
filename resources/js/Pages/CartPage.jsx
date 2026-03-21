@@ -66,12 +66,18 @@ console.log(products);
         </div>
 
         {products.length > 0 && (
-          <div className="text-right mt-6">
-            <h4>{t('cart.total_egp')} {total}</h4>
-            <button className="btn btn-success" onClick={() => setShowCheckout(true)}>
-              {t('cart.checkout')}
-            </button>
-          </div>
+          <>
+            <div style={{ height: "100px" }}></div>
+            <div 
+              className="position-fixed bottom-0 start-0 w-100 bg-white p-3 shadow-lg d-flex justify-content-between align-items-center"
+              style={{ zIndex: 1000, position: "fixed", bottom: 0, left: 0, right: 0 }}
+            >
+              <h4 className="mb-0 m-0 font-weight-bold">{t('cart.total_egp')} {total}</h4>
+              <button className="btn btn-success px-5 py-2" onClick={() => setShowCheckout(true)}>
+                {t('cart.checkout')}
+              </button>
+            </div>
+          </>
         )}
 
         {/* Only show modal if user exists */}
