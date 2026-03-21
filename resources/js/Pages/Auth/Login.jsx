@@ -1,0 +1,115 @@
+import React, { useState } from "react";
+import { Head, Link, useForm, router } from "@inertiajs/react";
+import Container from "@/Components/Container";
+import Button from "@/Components/Button";
+import Message from "@/Components/Message";
+import { useTranslation } from "react-i18next";
+
+export default function Login() {
+  const { t } = useTranslation();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { data, setData, post, processing, errors } = useForm({
+    mobile: "",
+    password: "",
+  });
+
+  const togglePassword = () => setShowPassword((prev) => !prev);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Optional client-side validation
+    if (!data.mobile || data.mobile.replace(/\D/g, "").length !== 11) {
+      alert(t('auth.mobile_11_digits'));
+      return;
+    }
+    if (!data.password) {
+      alert(t('auth.password_required'));
+      return;
+    }
+
+    // POST request using useForm (Inertia adds CSRF token automatically)
+    post(route("login.store"), {
+      onSuccess: () => {
+        router.visit(route("home"));
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    });
+  };
+
+  return (
+    <>
+      <Head title={t('home.page_title')} />
+      <Container className="container--center">
+        <div className="auth-page max-w-[520px] w-full">
+          <div className="login-container">
+            <img src="imgs/AlkaroozCom.png" alt="Alkarooz" className="logo" />
+
+            <form className="login-form" onSubmit={handleSubmit} method="post">
+              {/* Mobile input */}
+              <div>
+                <input
+                  type="tel"
+                  placeholder={t('auth.mobile_placeholder')}
+                  value={data.mobile}
+                  onChange={(e) => setData("mobile", e.target.value)}
+                  className={errors.mobile ? "input-error" : undefined}
+                  required
+                />
+                {errors.mobile && <div className="error-text">{errors.mobile}</div>}
+              </div>
+
+              {/* Password input */}
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder={t('auth.password_placeholder')}
+                  value={data.password}
+                  onChange={(e) => setData("password", e.target.value)}
+                  className={errors.password ? "input-error" : undefined}
+                  required
+                />
+                <button
+                  type="button"
+                  className="toggle-password"
+                  onClick={togglePassword}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+                {errors.password && <div className="error-text">{errors.password}</div>}
+              </div>
+
+              {/* Forgot password */}
+              <button
+                type="button"
+                className="forgot"
+                onClick={() =>
+                  alert(t('auth.contact_support_reset'))
+                }
+              >
+                {t('auth.forgot_password')}
+              </button>
+
+              {/* Submit button */}
+              <button type="submit" className="btn btn-success mt-1" disabled={processing}>
+                {t('auth.login_btn')}
+              </button>
+            </form>
+
+            {/* <p className="mt-3 mb-0">Do not have an account?</p>
+            <Link href={route("sign_up")} className="btn btn-primary mt-0">
+              Sign Up
+            </Link> */}
+
+            {/* Optional server messages */}
+            {errors.general && <Message type="error">{errors.general}</Message>}
+          </div>
+        </div>
+      </Container>
+    </>
+  );
+}

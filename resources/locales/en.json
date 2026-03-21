@@ -1,0 +1,171 @@
+{
+  "navbar": {
+    "home": "Home",
+    "categories": "Categories",
+    "osras": "Families",
+    "users": "Users",
+    "requests": "Requests",
+    "profile": "Profile",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "home": {
+    "login_alert": "Welcome! Please log in first to use this website.",
+    "page_title": "Markz alkarooz",
+    "welcome": "Welcome",
+    "hero_title": "Markaz Alkarooz - St. Mark's Church",
+    "hero_desc": "Platform displaying resources and products of the center. Discover the latest additions and browse categories easily.",
+    "get_started": "Get Started",
+    "learn_more": "Learn More",
+    "recently_added": "Recently Added"
+  },
+  "share": {
+    "title": "Share this page",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "twitter": "Twitter",
+    "telegram": "Telegram",
+    "copy": "Copy",
+    "copied": "Copied!"
+  },
+  "categories": {
+    "page_title": "Markaz Alkarooz",
+    "title": "Categories",
+    "add_category": "Add Category"
+  },
+  "product": {
+    "page_title": "Markaz Alkarooz",
+    "edit_product": "Edit Product",
+    "delete_product": "Delete Product",
+    "you_might_also_like": "You might also like",
+    "only_5_left": "there is only 5 items in stock"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty.",
+    "price_egp": "Price: EGP",
+    "total_egp": "Total: EGP",
+    "checkout": "Checkout"
+  },
+  "category": {
+    "products": "Products",
+    "add_item": "Add Item"
+  },
+  "osra": {
+    "title": "Families List",
+    "add_family": "Add Family",
+    "code": "Code:",
+    "place": "📍 Place:",
+    "time": "⏰ Time:",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "users": {
+    "title": "Users Management",
+    "subtitle": "Manage all registered users",
+    "add_user": "Add User",
+    "no_users": "No users found",
+    "hash": "#",
+    "user_col": "User",
+    "role": "Role",
+    "mobile": "Mobile",
+    "email": "Email",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "requests": {
+    "title": "User Requests",
+    "no_requests": "No requests found.",
+    "status": "Status:",
+    "price": "Price:",
+    "time": "Time:",
+    "product": "Product",
+    "products": "Products",
+    "accept": "Accept",
+    "done": "Done"
+  },
+  "request_show": {
+    "title": "Request Page",
+    "status": "Status:",
+    "time": "Time:",
+    "accept": "Accept",
+    "done": "Done",
+    "products_heading": "Products",
+    "price": "Price:",
+    "brand": "Brand:",
+    "color": "Color:",
+    "size": "Size:",
+    "quantity": "Quantity:",
+    "no_products": "No products"
+  },
+  "search": {
+    "results_for": "Search results for",
+    "no_results": "No results found for"
+  },
+  "404": {
+    "title": "Page Not Found",
+    "description": "Oops! The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+    "go_home": "Go to Home"
+  },
+  "profile": {
+    "family_details": "Family Details",
+    "name_label": "Name:",
+    "place_label": "Place:",
+    "time_label": "Time:",
+    "code_label": "Code:",
+    "no_family": "No Family assigned",
+    "edit_profile": "Edit Profile",
+    "change_password": "Change Password",
+    "latest_requests": "Latest Requests",
+    "no_requests": "No requests yet.",
+    "request_hash": "Request #",
+    "start": "Start:",
+    "end": "End:",
+    "ordered_at": "Ordered at:",
+    "full_name": "Full Name",
+    "email": "Email",
+    "mobile": "Mobile",
+    "family_code": "Family Code",
+    "enter_family_code": "Enter family code",
+    "profile_photo": "Profile Photo",
+    "upload_photo": "Upload Photo",
+    "save_changes": "Save Changes",
+    "cancel": "Cancel",
+    "current_password": "Current Password",
+    "new_password": "New Password",
+    "confirm_new_password": "Confirm New Password"
+  },
+  "auth": {
+    "mobile_11_digits": "Mobile number must be exactly 11 digits.",
+    "password_required": "Password is required.",
+    "mobile_placeholder": "Mobile number",
+    "password_placeholder": "Password",
+    "contact_support_reset": "Please contact support to reset your password.",
+    "forgot_password": "Forgot your password?",
+    "login_btn": "LOG IN",
+    "full_name_placeholder": "Full Name",
+    "email_placeholder": "Email Address",
+    "role_user": "User",
+    "role_admin": "Admin",
+    "role_manager": "Manager",
+    "osra_code_placeholder": "Enter Osra Code",
+    "osra_code_shorter": "Osra Code",
+    "confirm_password_placeholder": "Confirm Password",
+    "upload_photo": "Upload Photo",
+    "add_user_btn": "Add User",
+    "already_have_account": "Already have an account?",
+    "login_link": "Log In"
+  },
+  "errors": {
+    "403_title": "Access Restricted",
+    "403_msg": "You don’t have permission to access this page.",
+    "404_title": "Page Not Found",
+    "404_msg": "The page you are looking for might have been removed, renamed, or is temporarily unavailable.",
+    "419_title": "Please go back and try to refresh the page!",
+    "500_title": "Internal Server Error",
+    "500_msg": "An unexpected error occurred on the server. Please try again later.",
+    "home_btn": "Home",
+    "go_back_btn": "Go Back"
+  }
+}
