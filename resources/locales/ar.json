@@ -7,7 +7,8 @@
     "requests": "الطلبات",
     "profile": "الملف الشخصي",
     "login": "تسجيل الدخول",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "search": "بحث"
   },
   "home": {
     "login_alert": "مرحباً بكم! يرجى تسجيل الدخول أولاً لاستخدام هذا الموقع.",
@@ -30,26 +31,35 @@
   },
   "categories": {
     "page_title": "مركز وسائل الإيضاح",
-    "title": "التصنيفات",
-    "add_category": "إضافة تصنيف"
+    "title": "التصنيفات الفرعية",
+    "add_category": "إضافة تصنيف فرعي"
+  },
+  "main_categories": {
+    "page_title": "مركز وسائل الإيضاح",
+    "title": "التصنيفات الرئيسية",
+    "add_category": "إضافة تصنيف رئيسي"
   },
   "product": {
     "page_title": "مركز وسائل الإيضاح",
     "edit_product": "تعديل المنتج",
     "delete_product": "حذف المنتج",
     "you_might_also_like": "قد يعجبك أيضاً",
-    "only_5_left": "متبقي فقط 5 قطع"
+    "only_limit_left": "متبقي فقط {{count}} قطع",
+    "out_of_stock": "لا يوجد قطع متوفرة الان"
   },
   "cart": {
     "title": "عربة التسوق",
     "empty": "عربة التسوق فارغة.",
     "price_egp": "السعر: ج.م",
     "total_egp": "الإجمالي: ج.م",
-    "checkout": "إتمام الطلب"
+    "quantity": "الكمية:",
+    "size": "الحجم:",
+    "remove": "إزالة",
+    "checkout": "طلب"
   },
   "category": {
     "products": "منتجات",
-    "add_item": "إضافة عنصر"
+    "add_item": "إضافة منتج"
   },
   "osra": {
     "title": "قائمة الأسر",
@@ -83,14 +93,14 @@
     "product": "منتج",
     "products": "منتجات",
     "accept": "قبول",
-    "done": "تم الإنجاز"
+    "done": "إكمال"
   },
   "request_show": {
     "title": "صفحة الطلب",
     "status": "الحالة:",
     "time": "الوقت:",
     "accept": "قبول",
-    "done": "تم الإنجاز",
+    "done": "إكمال",
     "products_heading": "المنتجات",
     "price": "السعر:",
     "brand": "الماركة:",
@@ -167,5 +177,17 @@
     "500_msg": "حدث خطأ غير متوقع في الخادم. يرجى المحاولة مرة أخرى لاحقاً.",
     "home_btn": "الرئيسية",
     "go_back_btn": "رجوع للخلف"
+  },
+  "add_buttons": {
+    "photo": "إضافة صورة",
+    "color": "إضافة لون",
+    "size": "إضافة حجم",
+    "material": "إضافة خامة"
+  },
+  "requests_filter": {
+    "all": "كل الطلبات",
+    "pending": "قيد الانتظار",
+    "accepted": "مقبول",
+    "done": "مكتمل"
   }
 }

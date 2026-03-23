@@ -25,9 +25,20 @@ class RequestController extends Controller
             $req->display_time = $req->display_time;
             return $req;
         });
+        $user = Auth::user();
+        $cartItems = [];
+
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+
+        $cart_items_count = count($cartItems);
 
         return inertia('Requests', [
-            'requests' => $requests
+            'requests' => $requests,
+            'cart_items_count' => $cart_items_count,
         ]);
     }
 
@@ -42,9 +53,20 @@ class RequestController extends Controller
         $request->products->each(function ($product) {
             $product->pivot->loadMissing(['color', 'size']);
         });
+        $user = Auth::user();
+        $cartItems = [];
+
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+
+        $cart_items_count = count($cartItems);
 
         return inertia('RequestShow', [
             'request' => $request,
+            'cart_items_count' => $cart_items_count,
         ]);
     }
 

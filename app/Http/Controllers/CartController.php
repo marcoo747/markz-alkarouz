@@ -29,10 +29,21 @@ class CartController extends Controller
             $osra = Osra::where('osra_code', $user->osra_code)->first();
         }
 
+        $cartItems = [];
+
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+
+        $cart_items_count = count($cartItems);
+
         return Inertia::render('CartPage', [
-            'cart'      => $cart,
-            'user'      => $user,
-            'osra_time' => $osra?->osra_time,
+            'cart'              => $cart,
+            'user'              => $user,
+            'cart_items_count'  => $cart_items_count,
+            'osra_time'         => $osra?->osra_time,
         ]);
     }
     

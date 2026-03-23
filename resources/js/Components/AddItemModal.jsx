@@ -6,14 +6,15 @@ const AddItemModal = ({ onClose, onConfirm }) => {
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [inventory_quantity, setQuantity] = useState("");
 
   const handleConfirm = () => {
-    if (!name || !brand || !description || !price) return alert("All fields are required!");
-    onConfirm({ name, brand, description, price });
+    if (!name || !brand || !description || !price|| !inventory_quantity) return alert("All fields are required!");
+    onConfirm({ name, brand, description, price, inventory_quantity });
     resetFields();
   };
 
-  const resetFields = () => { setName(""); setBrand(""); setDescription(""); setPrice(""); };
+  const resetFields = () => { setName(""); setBrand(""); setDescription(""); setPrice(""); setQuantity(""); };
 
   return (
     <div className={styles.modalOverlay}>
@@ -35,6 +36,9 @@ const AddItemModal = ({ onClose, onConfirm }) => {
 
           <label>Price</label>
           <input type="number" min="0" value={price} onChange={(e) => setPrice(e.target.value)} />
+
+          <label>Product Quantity</label>
+          <input type="number" min="0" value={inventory_quantity} onChange={(e) => setQuantity(e.target.value)} />
         </div>
 
         <div className={styles.modalFooter}>

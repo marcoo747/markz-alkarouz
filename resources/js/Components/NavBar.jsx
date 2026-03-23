@@ -11,7 +11,7 @@ import cartIcon from "../../imgs/cart.svg";
 
 const NavBar = ({ page_name, linkBase }) => {
     const { t, i18n } = useTranslation();
-    const { auth } = usePage().props;
+    const { auth, cart_items_count } = usePage().props;
     const user = auth.user;
     const [open, setOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -37,7 +37,7 @@ const NavBar = ({ page_name, linkBase }) => {
                 >
                     <img src={cartIcon} alt="Cart" className="cart-icon" />
                     <span className="badge">
-                        3
+                        {cart_items_count}
                         <span className="visually-hidden">
                             items in cart
                         </span>
@@ -90,19 +90,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                     aria-label={t("navbar.profile")}
                                     title={t("navbar.profile")}
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        fill="currentColor"
-                                        viewBox="0 0 16 16"
-                                    >
-                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
-                                        />
-                                    </svg>
+                                    <img src={`/markaz_alkarouz/public/storage/${user.user_photo}`} alt="user photo" width="75px" height="75px" class="rounded-5"/>
                                 </Link>
                             )}
                         </div>
@@ -215,8 +203,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                     <input
                                         type="search"
                                         placeholder={t(
-                                            "navbar.search_placeholder",
-                                            "Search",
+                                            "navbar.search",
                                         )}
                                         value={searchTerm}
                                         onChange={(e) =>
@@ -307,24 +294,12 @@ const NavBar = ({ page_name, linkBase }) => {
                                 {user ? (
                                     <Link
                                         href={route("profile")}
-                                        className={`nav-link hide-on-mobile ${page_name === "profile" ? "active" : ""}`}
+                                        className={`nav-link p-0 hide-on-mobile ${page_name === "profile" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                         aria-label={t("navbar.profile")}
                                         title={t("navbar.profile")}
                                     >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            fill="currentColor"
-                                            viewBox="0 0 16 16"
-                                        >
-                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
-                                            />
-                                        </svg>
+                                        <img src={`/markaz_alkarouz/public/storage/${user.user_photo}`} alt="user photo" width="150px" height="150px" class="rounded-5"/>
                                     </Link>
                                 ) : null}
                                 {user ? (
@@ -340,13 +315,8 @@ const NavBar = ({ page_name, linkBase }) => {
                                             className="cart-icon"
                                         />
                                         <span
-                                            className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
-                                            style={{
-                                                fontSize: "0.8rem",
-                                                padding: "0.4em 0.6em",
-                                            }}
-                                        >
-                                            3
+                                            className="badge position-absolute top-0 start-100 translate-middle rounded-5 bg-primary">
+                                            {cart_items_count}
                                             <span className="visually-hidden">
                                                 items in cart
                                             </span>

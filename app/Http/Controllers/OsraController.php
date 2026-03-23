@@ -5,13 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Osra;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class OsraController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
+        $cartItems = [];
+
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+
+        $cart_items_count = count($cartItems);
         $osras = Osra::orderBy('updated_at', 'desc')->get();
-        return Inertia::render('OsraPage', ['osras' => $osras]);
+        return Inertia::render('OsraPage', [
+            'osras' => $osras,
+            'cart_items_count' => $cart_items_count,
+        ]);
     }
 
     public function store(Request $request)

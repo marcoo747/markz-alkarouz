@@ -7,7 +7,8 @@
     "requests": "Requests",
     "profile": "Profile",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "search": "Search"
   },
   "home": {
     "login_alert": "Welcome! Please log in first to use this website.",
@@ -30,21 +31,29 @@
   },
   "categories": {
     "page_title": "Markaz Alkarooz",
-    "title": "Categories",
-    "add_category": "Add Category"
+    "title": "Sub Categories",
+    "add_category": "Add Sub Category"
+  },
+  "main_categories": {
+    "page_title": "Markaz Alkarooz",
+    "title": "Main Categories",
+    "add_category": "Add Main Category"
   },
   "product": {
     "page_title": "Markaz Alkarooz",
     "edit_product": "Edit Product",
     "delete_product": "Delete Product",
     "you_might_also_like": "You might also like",
-    "only_5_left": "there is only 5 items in stock"
+    "only_limit_left": "there is only {{count}} pieces in stock",
+    "out_of_stock": "There is No available pieces right now"
   },
   "cart": {
     "title": "Your Cart",
     "empty": "Your cart is empty.",
     "price_egp": "Price: EGP",
     "total_egp": "Total: EGP",
+    "quantity": "Quantity:",
+    "remove": "Remove",
     "checkout": "Checkout"
   },
   "category": {
@@ -167,5 +176,17 @@
     "500_msg": "An unexpected error occurred on the server. Please try again later.",
     "home_btn": "Home",
     "go_back_btn": "Go Back"
+  },
+  "add_buttons": {
+    "photo": "Add Photo",
+    "color": "Add Color",
+    "size": "Add Size",
+    "material": "Add Material"
+  },
+  "requests_filter": {
+    "all": "All Requests",
+    "pending": "Pending Requests",
+    "accepted": "Accepted Requests",
+    "done": "Done Requests"
   }
 }

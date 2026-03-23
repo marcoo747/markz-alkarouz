@@ -39,9 +39,12 @@ class Home_controller extends Controller
                 ->toArray();
         }
 
+        $cart_items_count = count($cartItems);
+
         return Inertia::render('Home', [
-            'products'  => $products,
-            'cartItems' => $cartItems,
+            'products'          => $products,
+            'cartItems'         => $cartItems,
+            'cart_items_count'  => $cart_items_count,
         ]);
     }
 }

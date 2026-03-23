@@ -32,6 +32,7 @@ const CategoryPage = () => {
         brand: itemData.brand,
         description: itemData.description,
         price: itemData.price,
+        inventory_quantity: itemData.inventory_quantity,
       },
       {
         preserveScroll: true,
@@ -51,6 +52,7 @@ const CategoryPage = () => {
         brand: itemData.brand,
         description: itemData.description,
         price: itemData.price,
+        inventory_quantity: itemData.inventory_quantity,
       },
       {
         preserveScroll: true,

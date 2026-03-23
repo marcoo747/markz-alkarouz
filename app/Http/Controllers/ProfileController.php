@@ -40,6 +40,15 @@ public function index()
                 'updated_at'     => $request->updated_at,
             ];
         });
+    $cartItems = [];
+
+    if ($user && $user->cart) {
+        $cartItems = $user->cart->products()
+            ->pluck('products.product_id')
+            ->toArray();
+    }
+
+    $cart_items_count = count($cartItems);
 
     return Inertia::render('ProfilePage', [
         'user' => [
@@ -58,11 +67,22 @@ public function index()
             ] : null,
         ],
         'requests' => $requests,
+        'cart_items_count' => $cart_items_count,
     ]);
 }
 
     public function show_all_users()
     {
+        $user = Auth::user();
+        $cartItems = [];
+
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+
+        $cart_items_count = count($cartItems);
         $osras = Osra::all();
         return Inertia::render('UsersPage', [
             'users' => User::select(
@@ -79,6 +99,7 @@ public function index()
                     : null,
             ]),
             'osras' => $osras,
+            'cart_items_count' => $cart_items_count,
         ]);
     }
 

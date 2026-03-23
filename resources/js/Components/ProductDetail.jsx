@@ -80,8 +80,8 @@ const handleAddToCart = () => {
 };
 
   // Determine stock limit or default to 5 if undefined. If 0, out of stock.
-  const stockLimit = product.quantity !== undefined ? product.quantity : 5;
-  const isOutOfStock = stockLimit === 0;
+  const stockLimit = product.inventory_quantity !== undefined ? product.inventory_quantity : 5;
+  const isOutOfStock = stockLimit == 0 || stockLimit == null || stockLimit == "";
 
   return (
     <>
@@ -90,10 +90,10 @@ const handleAddToCart = () => {
         <div className="flex flex-col gap-6">
           {manager && (
             <div className="flex flex-wrap gap-2">
-              <button className="btn btn-success btn-sm active:scale-95 transition-transform" onClick={() => setShowUploadModal(true)}>Add Photo</button>
-              <button className="btn btn-success btn-sm active:scale-95 transition-transform" onClick={() => setShowOptionModal({ show: true, type: "material" })}>Add Material</button>
-              <button className="btn btn-success btn-sm active:scale-95 transition-transform" onClick={() => setShowOptionModal({ show: true, type: "color" })}>Add Color</button>
-              <button className="btn btn-success btn-sm active:scale-95 transition-transform" onClick={() => setShowOptionModal({ show: true, type: "size" })}>Add Size</button>
+              <button className="btn btn-success btn-sm active:scale-95 transition-transform" onClick={() => setShowUploadModal(true)}>{t('add_buttons.photo')}</button>
+              <button className="btn btn-success btn-sm active:scale-95 transition-transform" onClick={() => setShowOptionModal({ show: true, type: "material" })}>{t('add_buttons.material')}</button>
+              <button className="btn btn-success btn-sm active:scale-95 transition-transform" onClick={() => setShowOptionModal({ show: true, type: "color" })}>{t('add_buttons.color')}</button>
+              <button className="btn btn-success btn-sm active:scale-95 transition-transform" onClick={() => setShowOptionModal({ show: true, type: "size" })}>{t('add_buttons.size')}</button>
             </div>
           )}
 
@@ -247,12 +247,12 @@ const handleAddToCart = () => {
                     {/* Stock badge */}
                     {isOutOfStock ? (
                       <span className="inline-block px-3 py-1 bg-red-100 text-red-700 text-sm font-bold rounded-full border border-red-200">
-                        Out of stock
+                        {t('product.out_of_stock')}
                       </span>
                     ) : (
                       <span className="inline-block px-3 py-1 bg-orange-100 text-orange-700 text-sm font-bold rounded-full border border-orange-200 flex items-center gap-1">
                         <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-                        {t('product.only_5_left', { count: stockLimit })}
+                        {t('product.only_limit_left', { count: stockLimit })}
                       </span>
                     )}
 

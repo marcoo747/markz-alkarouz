@@ -21,11 +21,12 @@ class Product extends Model
 
     protected $fillable = [
         'category_id',
+        'main_category_id',
         'pr_name',
         'brand',
         'pr_description',
         'pr_price',
-        'inventory_qnty',
+        'inventory_quantity',
     ];
 
     public function category()

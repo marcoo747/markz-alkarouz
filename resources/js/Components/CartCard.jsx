@@ -1,6 +1,7 @@
 import React from "react";
 import { router } from "@inertiajs/react";
 import namer from "color-namer";
+import { useTranslation } from "react-i18next";
 
 const ProductCard = ({
   id,
@@ -13,6 +14,7 @@ const ProductCard = ({
   size,
   quantity
 }) => {
+  const { t } = useTranslation();
 
   const handleOpen = () => {
     router.get(route("items.show", id));
@@ -57,12 +59,12 @@ const ProductCard = ({
           )}
 
           {/* Show Size */}
-          {size && <p className="mb-1">Size: <strong>{size.size}</strong></p>}
+          {size && <p className="mb-1">{t("cart.size")} <strong>{size.size}</strong></p>}
 
           {/* Show Quantity */}
           {quantity !== undefined && (
             <p className="mb-2">
-              Quantity: <span className="badge bg-primary">{quantity}</span>
+              {t("cart.quantity")} <span className="badge bg-primary">{quantity}</span>
             </p>
           )}
         </div>
@@ -74,7 +76,7 @@ const ProductCard = ({
             onRemove();
           }}
         >
-          Remove
+          {t('cart.remove')}
         </button>
       </div>
     </article>

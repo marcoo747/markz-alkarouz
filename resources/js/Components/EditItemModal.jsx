@@ -7,6 +7,7 @@ const EditItemModal = ({ currentItem, onClose }) => {
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [inventory_quantity, setQuantity] = useState("");
 
   useEffect(() => {
     if (currentItem) {
@@ -14,13 +15,14 @@ const EditItemModal = ({ currentItem, onClose }) => {
       setBrand(currentItem.brand || "");
       setDescription(currentItem.description || "");
       setPrice(currentItem.price || "");
+      setQuantity(currentItem.inventory_quantity || "");
     }
   }, [currentItem]);
 
   const handleConfirm = () => {
     router.put(
       route("items.update", {item: currentItem.id}),
-      { name, brand, description, price: parseFloat(price) || 0 },
+      { name, brand, description, price: parseFloat(price) || 0, inventory_quantity },
       { preserveScroll: true, onSuccess: () => onClose() }
     );
   };
@@ -45,6 +47,9 @@ const EditItemModal = ({ currentItem, onClose }) => {
 
           <label>Price</label>
           <input type="number" min="0" value={price} onChange={(e) => setPrice(e.target.value)} />
+
+          <label>Product Quantity</label>
+          <input type="number" min="0" value={inventory_quantity} onChange={(e) => setQuantity(e.target.value)} />
         </div>
 
         <div className={styles.modalFooter}>

@@ -22,10 +22,10 @@ const Requests = () => {
     };
 
     const FILTERS = [
-        { key: "all", label: t("requests.filter_all") || "All" },
-        { key: "pending", label: t("requests.filter_pending") || "Pending" },
-        { key: "accepted", label: t("requests.filter_accepted") || "Accepted" },
-        { key: "done", label: t("requests.filter_done") || "Done" },
+        { key: "all", label: t("requests_filter.all") || "All" },
+        { key: "pending", label: t("requests_filter.pending") || "Pending" },
+        { key: "accepted", label: t("requests_filter.accepted") || "Accepted" },
+        { key: "done", label: t("requests_filter.done") || "Done" },
     ];
 
     const filtered = activeFilter === "all"

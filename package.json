@@ -33,6 +33,6 @@
         "lucide-react": "^0.562.0",
         "prop-types": "^15.8.1",
         "react-i18next": "^16.5.8",
-        "ziggy-js": "^2.6.0"
+        "ziggy-js": "^2.6.2"
     }
 }

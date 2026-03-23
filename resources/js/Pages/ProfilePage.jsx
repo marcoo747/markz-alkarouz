@@ -154,6 +154,11 @@ const ProfilePage = () => {
             )}
 
             {requests.map((request, index) => (
+              <a
+                  key={request.request_id}
+                  href={route("requests.show", { request: request.request_id })}
+                  className="card shadow-sm mb-3 cursor-pointer hover:shadow-md transition block no-underline"
+              >
               <div key={request.request_id} className="card shadow-sm mb-3">
                 <div className="card-body">
                   {/* Header */}
@@ -225,6 +230,7 @@ const ProfilePage = () => {
                   </div>
                 </div>
               </div>
+              </a>
             ))}
           </div>
         </div>

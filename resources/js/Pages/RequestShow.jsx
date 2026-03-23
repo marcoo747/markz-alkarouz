@@ -8,7 +8,10 @@ import { useTranslation } from "react-i18next";
 
 const RequestShow = () => {
     const { t } = useTranslation();
-    const { request } = usePage().props;
+    const { request, auth } = usePage().props;
+    const user = auth.user;
+
+    const profile_user = user?.user_type === "user";
 
     const handleShowItem = (item_id) => {
         router.visit(route("items.show", { id: item_id }));
@@ -66,27 +69,31 @@ const RequestShow = () => {
                             <strong>{t('request_show.time')}</strong> {request.display_time}
                         </p>
 
-                        {/* Accept / Done buttons */}
-                        <div className="d-flex gap-2 mt-3">
-                            {request.request_status !== "done" && (
-                                <>
-                                    {request.request_status !== "accepted" && (
+                        {!profile_user && (
+                            <>
+                            {/* Accept / Done buttons */}
+                            <div className="d-flex gap-2 mt-3">
+                                {request.request_status !== "done" && (
+                                    <>
+                                        {request.request_status !== "accepted" && (
+                                            <button
+                                                className="btn btn-success btn-sm"
+                                                onClick={() => acceptRequest(request.request_id)}
+                                            >
+                                                {t('request_show.accept')}
+                                            </button>
+                                        )}
                                         <button
-                                            className="btn btn-success btn-sm"
-                                            onClick={() => acceptRequest(request.request_id)}
+                                            className="btn btn-danger btn-sm"
+                                            onClick={() => doneRequest(request.request_id)}
                                         >
-                                            {t('request_show.accept')}
+                                            {t('request_show.done')}
                                         </button>
-                                    )}
-                                    <button
-                                        className="btn btn-danger btn-sm"
-                                        onClick={() => doneRequest(request.request_id)}
-                                    >
-                                        {t('request_show.done')}
-                                    </button>
-                                </>
-                            )}
-                        </div>
+                                    </>
+                                )}
+                            </div>
+                            </>
+                        )}
                     </div>
                 </div>
 

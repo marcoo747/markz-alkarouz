@@ -24,30 +24,44 @@ class ProductController extends Controller
             ->where('product_id', '!=', $id)
             ->with('images')
             ->get();
+        $user = Auth::user();
+        $cartItems = [];
+
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+
+        $cart_items_count = count($cartItems);
 
         return Inertia::render('ProductPage', [
             'product' => $product,
             'relatedProducts' => $relatedProducts,
+            'cart_items_count' => $cart_items_count,
         ]);
     }
 
-    // Store a new product/item under a category
     public function store(Request $request, $categoryId)
     {
         $request->validate([
-            'name' => 'required|string|max:255',        // frontend sends 'name'
+            'name' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'inventory_quantity' => 'required|numeric|min:0',
         ]);
 
         $category = Category::findOrFail($categoryId);
 
-        $category->products()->create([
+        Product::create([
             'pr_name' => $request->name,
             'pr_description' => $request->description,
             'brand' => $request->brand,
             'pr_price' => $request->price,
+            'inventory_quantity' => $request->inventory_quantity,
+            'category_id' => $category->category_id,
+            'main_category_id' => $category->main_category_id,
         ]);
 
         return redirect()->back()->with('success', 'Item added successfully!');
@@ -60,6 +74,7 @@ class ProductController extends Controller
             'brand' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'inventory_quantity' => 'required|numeric|min:0',
         ]);
 
         $item->update([
@@ -67,6 +82,7 @@ class ProductController extends Controller
             'brand' => $request->brand,
             'pr_description' => $request->description,
             'pr_price' => $request->price,
+            'inventory_quantity' => $request->inventory_quantity,
         ]);
 
         return redirect()->back()->with('success', 'Item updated!');
@@ -134,11 +150,21 @@ class ProductController extends Controller
                     ];
                 }
             );
+        $cartItems = [];
+
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+
+        $cart_items_count = count($cartItems);
 
         return Inertia::render('ProductPage', [
             'product' => $product,
             'cartItems' => $cartItems,
             'relatedProducts' => $relatedProducts,
+            'cart_items_count' => $cart_items_count,
             'flash' => [
                 'success' => $flashMessage,
             ],
@@ -166,10 +192,9 @@ class ProductController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,product_id',
-            'value' => 'required|string|max:255', // material name
+            'value' => 'required|string|max:255',
         ]);
 
-        // Insert into materials table
         Material::create([
             'product_id' => $request->product_id,
             'material_name' => $request->value,
@@ -185,7 +210,6 @@ class ProductController extends Controller
             'value' => 'required|string|max:255',
         ]);
 
-        // Store in the colors table
         Color::create([
             'product_id' => $request->product_id,
             'color' => $request->value,
@@ -201,7 +225,6 @@ class ProductController extends Controller
             'value' => 'required|string|max:255',
         ]);
 
-        // Store in the sizes table
         Size::create([
             'product_id' => $request->product_id,
             'size' => $request->value,
@@ -214,12 +237,11 @@ class ProductController extends Controller
     {
         $query = $request->input('query');
 
-        // Get products with their first image
         $results = Product::where('pr_name', 'like', "%{$query}%")
             ->orWhere('pr_description', 'like', "%{$query}%")
             ->orWhere('brand', 'like', "%{$query}%")
             ->with(['images' => function ($q) {
-                $q->orderBy('product_id')->limit(1); // get only the first image
+                $q->orderBy('product_id')->limit(1);
             }])
             ->get();
 
@@ -232,10 +254,13 @@ class ProductController extends Controller
                 ->toArray();
         }
 
+        $cart_items_count = count($cartItems);
+
         return Inertia::render('SearchResult', [
             'query' => $query,
             'results' => $results,
             'cartItems' => $cartItems,
+            'cart_items_count' => $cart_items_count,
         ]);
     }
 }

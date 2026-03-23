@@ -10,12 +10,13 @@ import DeleteCategoryModal from "@/Components/DeleteCategoryModal";
 
 const Categories = () => {
   const { t } = useTranslation();
-  const { categories, type } = usePage().props;
+  const { categories, type, main_category_id } = usePage().props;
   const { auth } = usePage().props;
   const user = auth.user;
   const manager = user?.user_type === "manager";
 
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedMainCategoryId, setSelectedMainCategoryId] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -80,7 +81,7 @@ const Categories = () => {
               id={cat.category_id}
               title={cat.category_name}
               description={cleanDesc}
-              image={cat.category_photo ? `storage/${cat.category_photo}` : "/imgs/shopping.webp"}
+              image={cat.category_photo ? `/markaz_alkarouz/public/storage/${cat.category_photo}` : "/markaz_alkarouz/public/imgs/shopping.webp"}
               onEdit={() => handleEdit({ ...cat, category_description: cleanDesc })}
               onDelete={() => handleDelete({ ...cat, category_description: cleanDesc })}
             />
@@ -92,6 +93,7 @@ const Categories = () => {
         {showAddModal && (
           <AddCategoryModal
             onClose={() => setShowAddModal(false)}
+            main_category_id={main_category_id}
             onConfirm={handleAddConfirm}
           />
         )}
