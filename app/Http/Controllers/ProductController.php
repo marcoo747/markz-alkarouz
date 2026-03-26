@@ -174,18 +174,30 @@ class ProductController extends Controller
     public function upload_image(Request $request)
     {
         $request->validate([
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photos' => 'required|array',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'product_id' => 'required|exists:products,product_id',
         ]);
 
-        $photoPath = $request->file('photo')->store('products', 'public');
+        $currentCount = Product_photos::where('product_id', $request->product_id)->count();
+        $incomingCount = count($request->file('photos'));
 
-        Product_photos::create([
-            'product_id' => $request->product_id,
-            'photo' => $photoPath,
-        ]);
+        if ($currentCount + $incomingCount > 5) {
+            return response()->json([
+                'message' => 'Maximum of 5 images allowed per product. You can only add ' . (5 - $currentCount) . ' more.',
+                'errors' => ['photos' => ['Exceeded maximum 5 images limit.']]
+            ], 422);
+        }
 
-        return back()->with('success', 'Photo added successfully!');
+        foreach ($request->file('photos') as $photoFile) {
+            $photoPath = $photoFile->store('products', 'public');
+            Product_photos::create([
+                'product_id' => $request->product_id,
+                'photo' => $photoPath,
+            ]);
+        }
+
+        return back()->with('success', 'Photos added successfully!');
     }
 
     public function addMaterial(Request $request)

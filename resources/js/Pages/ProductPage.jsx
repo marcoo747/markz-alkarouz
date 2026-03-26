@@ -61,31 +61,28 @@ const ProductPage = () => {
 
             <Container>
                 {manager ? (
-                    <>
-                        {/* Action Buttons */}
-                        <div className="flex gap-2 mb-4 mt-4">
-                            <button
-                                className="btn btn-primary"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedItem(product);
-                                    setShowEditItemModal(true);
-                                }}
-                            >
-                                {t("product.edit_product")}
-                            </button>
-                            <button
-                                className="btn btn-danger"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedItem(product);
-                                    setShowDeleteItemModal(true);
-                                }}
-                            >
-                                {t("product.delete_product")}
-                            </button>
-                        </div>
-                    </>
+                    <div className="flex justify-end gap-3 mb-6 mt-2">
+                        <button
+                            className="flex items-center gap-2 px-4 py-2 bg-white text-blue-700 font-semibold rounded-lg border border-blue-200 hover:bg-blue-50 hover:border-blue-300 shadow-sm transition-all active:scale-95"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedItem(product);
+                                setShowEditItemModal(true);
+                            }}
+                        >
+                            <i className="bi bi-pencil-square"></i> {t("product.edit_product")}
+                        </button>
+                        <button
+                            className="flex items-center gap-2 px-4 py-2 bg-white text-red-600 font-semibold rounded-lg border border-red-200 hover:bg-red-50 hover:border-red-300 shadow-sm transition-all active:scale-95"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedItem(product);
+                                setShowDeleteItemModal(true);
+                            }}
+                        >
+                            <i className="bi bi-trash"></i> {t("product.delete_product")}
+                        </button>
+                    </div>
                 ) : null}
 
                 {/* Product Detail */}

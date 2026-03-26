@@ -72,19 +72,19 @@ const RequestShow = () => {
                         {!profile_user && (
                             <>
                             {/* Accept / Done buttons */}
-                            <div className="d-flex gap-2 mt-3">
+                            <div className="d-flex flex-nowrap gap-2 mt-3">
                                 {request.request_status !== "done" && (
                                     <>
                                         {request.request_status !== "accepted" && (
                                             <button
-                                                className="btn btn-success btn-sm"
+                                                className="btn btn-warning btn-sm text-dark flex-grow-1"
                                                 onClick={() => acceptRequest(request.request_id)}
                                             >
                                                 {t('request_show.accept')}
                                             </button>
                                         )}
                                         <button
-                                            className="btn btn-danger btn-sm"
+                                            className="btn btn-success btn-sm flex-grow-1"
                                             onClick={() => doneRequest(request.request_id)}
                                         >
                                             {t('request_show.done')}

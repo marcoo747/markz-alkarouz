@@ -57,13 +57,22 @@ const ProductCard = ({
                 className={`flex flex-col h-full bg-white rounded-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group ${inCart ? "cursor-default" : "cursor-pointer"}`}
                 onClick={handleOpen}
             >
-                {image && (
+                {image && !image.includes('shopping.webp') ? (
                     <div className="w-full h-48 sm:h-56 overflow-hidden bg-white relative p-4 border-b border-gray-100 flex items-center justify-center">
                         <img
-                            src={image}
+                            src={image.startsWith('http') || image.startsWith('/') ? image : `/${image}`}
                             alt={title}
                             className="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                            onError={(e) => { e.target.style.display = 'none'; }}
                         />
+                    </div>
+                ) : (
+                    <div className="w-full h-48 sm:h-56 bg-gray-50 flex flex-col items-center justify-center text-gray-300 border-b border-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-2 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span className="text-xs font-semibold tracking-wider text-gray-400 uppercase">No Image</span>
                     </div>
                 )}
                 <div className="p-4 flex flex-col flex-grow gap-3">

@@ -73,8 +73,10 @@ const CheckoutModal = ({ total, user, onClose, osraTime }) => {
             <div className={`${styles.addModal}`}>
                 <div className={styles.modalHeader}>
                     <h3>Booking Details</h3>
-                    <button className="close-btn fs-2" onClick={onClose}>
-                        ×
+                    <button className={styles.closeBtn} onClick={onClose}>
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                     </button>
                 </div>
 
@@ -160,7 +162,10 @@ const CheckoutModal = ({ total, user, onClose, osraTime }) => {
                         </>
                     )}
 
-                    <p className="mt-2">Total Amount: EGP {total}</p>
+                    <div className="mt-4 text-lg font-bold text-[#10b981] bg-[#ecfdf5] border border-[#10b981]/20 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
+                       <span>Total Amount</span>
+                       <span>EGP {total}</span>
+                    </div>
                 </div>
 
                 <div className={styles.modalFooter}>

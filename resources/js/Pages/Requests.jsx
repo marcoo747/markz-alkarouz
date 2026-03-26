@@ -48,11 +48,12 @@ const Requests = () => {
                 <h1 className="mb-4">{t('requests.title')}</h1>
 
                 {/* Filter Tabs */}
-                <div className="d-flex flex-wrap gap-2 mb-4">
+                <div className="d-flex flex-row flex-wrap justify-content-center gap-2 mb-4">
                     {FILTERS.map((f) => (
                         <button
                             key={f.key}
                             onClick={() => handleFilter(f.key)}
+                            style={{ width: "auto", whiteSpace: "nowrap" }}
                             className={`btn btn-sm rounded-pill px-4 transition ${
                                 activeFilter === f.key
                                     ? "btn-dark text-white shadow-sm"
@@ -125,17 +126,17 @@ const Requests = () => {
                                         </p>
                                     </Link>
 
-                                    <div className="d-flex gap-2 mt-3">
+                                    <div className="d-flex flex-nowrap gap-2 mt-3">
                                         {req.request_status !== "accepted" && (
                                             <button
-                                                className="btn btn-warning btn-sm text-dark font-weight-bold"
+                                                className="btn btn-warning btn-sm text-dark font-weight-bold flex-grow-1"
                                                 onClick={(e) => { e.preventDefault(); acceptRequest(req.request_id); }}
                                             >
                                                 {t('requests.accept')}
                                             </button>
                                         )}
                                         <button
-                                            className="btn btn-success btn-sm font-weight-bold"
+                                            className="btn btn-success btn-sm font-weight-bold flex-grow-1"
                                             onClick={(e) => { e.preventDefault(); doneRequest(req.request_id); }}
                                         >
                                             {t('requests.done')}

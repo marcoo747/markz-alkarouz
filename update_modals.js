@@ -1,4 +1,20 @@
-.modalOverlay {
+const fs = require('fs');
+const path = require('path');
+
+const cssDir = './resources/css';
+const files = [
+  { name: 'AddModal.module.css', color: '#16a34a', rgb: '22, 163, 74' },
+  { name: 'EditModal.module.css', color: '#2563eb', rgb: '37, 99, 235' },
+  { name: 'DeleteModal.module.css', color: '#dc2626', rgb: '220, 38, 38' },
+  { name: 'ImageUploadModal.module.css', color: '#16a34a', rgb: '22, 163, 74' },
+  { name: 'OptionModal.module.css', color: '#2563eb', rgb: '37, 99, 235' }
+];
+
+files.forEach(file => {
+  const filePath = path.join(cssDir, file.name);
+  if (!fs.existsSync(filePath)) return;
+
+  const content = `.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -14,7 +30,7 @@
   box-sizing: border-box;
 }
 
-.greenModal {
+${file.name.includes('Add') ? '.addModal' : file.name.includes('Delete') ? '.redModal' : file.name.includes('Image') ? '.greenModal' : file.name.includes('Option') ? '.optionModal' : '.editModal'} {
   width: 100%;
   max-width: 480px;
   background: #ffffff;
@@ -41,7 +57,7 @@
   margin: 0;
   font-size: 1.35rem;
   font-weight: 700;
-  color: #16a34a;
+  color: ${file.color};
   letter-spacing: -0.02em;
 }
 
@@ -104,9 +120,9 @@
 .modalBody textarea:focus,
 .modalBody select:focus {
   outline: none;
-  border-color: #16a34a;
+  border-color: ${file.color};
   background-color: #ffffff;
-  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
+  box-shadow: 0 0 0 4px rgba(${file.rgb}, 0.15);
 }
 
 .fileUpload {
@@ -117,13 +133,13 @@
 }
 
 .uploadBtn {
-  background-color: rgba(22, 163, 74, 0.1);
-  color: #16a34a;
+  background-color: rgba(${file.rgb}, 0.1);
+  color: ${file.color};
   padding: 10px 18px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
-  border: 1px solid rgba(22, 163, 74, 0.2);
+  border: 1px solid rgba(${file.rgb}, 0.2);
   transition: all 0.2s;
   display: inline-flex;
   align-items: center;
@@ -131,7 +147,7 @@
 }
 
 .uploadBtn:hover {
-  background-color: #16a34a;
+  background-color: ${file.color};
   color: #ffffff;
 }
 
@@ -168,3 +184,8 @@
     opacity: 1;
   }
 }
+`;
+
+  fs.writeFileSync(filePath, content);
+});
+console.log('Modals updated');

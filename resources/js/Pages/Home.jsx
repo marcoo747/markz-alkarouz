@@ -7,14 +7,24 @@ import Button from "@/Components/Button";
 import { router, usePage, Head } from "@inertiajs/react";
 import TopAlert from "@/Components/TopAlert";
 import LoginMessage from "@/Components/LoginMessage";
+import EditImagesModal from "@/Components/EditImagesModal";
 import { useTranslation } from "react-i18next";
 
 const Home = () => {
   const { t } = useTranslation();
-  const { flash, products } = usePage().props;
+  const { flash, products, auth } = usePage().props;
   const [alertMessage, setAlertMessage] = useState("");
-
   const [showLoginAlert, setShowLoginAlert] = useState(true);
+  
+  const [carouselImages, setCarouselImages] = useState([
+    "imgs/img1.jpg", 
+    "imgs/img1.jpg", 
+    "imgs/img1.jpg", 
+    "imgs/img1.jpg"
+  ]);
+  const [showEditImages, setShowEditImages] = useState(false);
+  const user = auth?.user;
+  const manager = user?.user_type === "manager";
 
   useEffect(() => {
     if (flash?.success) {
@@ -68,10 +78,29 @@ const Home = () => {
       </section>
 
       <Container>
-        <div className="mt-8">
+        <div className="mt-8 flex flex-col gap-4">
           <Carousel
-            images={["imgs/img1.jpg", "imgs/img1.jpg", "imgs/img1.jpg", "imgs/img1.jpg"]}
+            images={carouselImages}
           />
+          
+          {manager && (
+            <button 
+              className="w-full md:w-auto mx-auto px-6 flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-xl transition-all duration-200 border border-slate-200 shadow-sm active:scale-[0.98]"
+              onClick={() => setShowEditImages(true)}
+            >
+              <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+              Edit Images
+            </button>
+          )}
+
+          {showEditImages && (
+            <EditImagesModal 
+               initialImages={carouselImages}
+               onClose={() => setShowEditImages(false)}
+               onSave={(newImages) => setCarouselImages(newImages)}
+            />
+          )}
+
         </div>
 
         <div className="mt-8">

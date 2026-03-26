@@ -216,7 +216,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                 style={{
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: 12,
+                                    gap: 16,
                                     marginTop: 8,
                                 }}
                             >
@@ -231,33 +231,15 @@ const NavBar = ({ page_name, linkBase }) => {
                                 >
                                     <input
                                         type="search"
-                                        placeholder={t(
-                                            "navbar.search",
-                                        )}
+                                        placeholder={t("navbar.search")}
                                         value={searchTerm}
-                                        onChange={(e) =>
-                                            setSearchTerm(e.target.value)
-                                        }
-                                        style={{
-                                            flex: 1,
-                                            padding:
-                                                "clamp(6px, 1vw, 10px) clamp(8px, 2vw, 14px)",
-                                            fontSize: "clamp(12px, 2vw, 14px)",
-                                            borderStartStartRadius: 25,
-                                            borderEndStartRadius: 25,
-                                            border: "1px solid rgba(15,23,42,0.15)",
-                                            borderInlineEnd: "none",
-                                            outline: "none",
-                                        }}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="search-input"
                                     />
 
                                     <Button
                                         type="submit"
-                                        className="btn btn-sm"
-                                        style={{
-                                            borderStartEndRadius: 30,
-                                            borderEndEndRadius: 30,
-                                        }}
+                                        className="btn btn-sm search-submit-btn"
                                     >
                                         <img
                                             src={searchIcon}
@@ -267,34 +249,6 @@ const NavBar = ({ page_name, linkBase }) => {
                                     </Button>
                                 </form>
 
-                                {user ? (
-                                    <button
-                                        className="btn btn-outline-danger btn-sm"
-                                        onClick={() => {
-                                            setOpen(false);
-                                            router.post(route("logout"));
-                                        }}
-                                    >
-                                        {t("navbar.logout")}
-                                    </button>
-                                ) : (
-                                    <>
-                                        <Link
-                                            href={route("login")}
-                                            className="btn btn-outline-primary btn-sm"
-                                            onClick={() => setOpen(false)}
-                                        >
-                                            {t("navbar.login")}
-                                        </Link>
-                                        {/* <Link
-                                            href={route('sign_up')}
-                                            className="btn btn-outline-success btn-sm"
-                                            onClick={() => setOpen(false)}
-                                        >
-                                            Sign Up
-                                        </Link> */}
-                                    </>
-                                )}
                                 {/* Language Switcher */}
                                 <button
                                     type="button"
@@ -323,27 +277,27 @@ const NavBar = ({ page_name, linkBase }) => {
                                 {user ? (
                                     <Link
                                         href={route("profile")}
-                                        className={`nav-link p-0 hide-on-mobile ${page_name === "profile" ? "active" : ""}`}
+                                        className={`nav-link p-0 hide-on-mobile d-flex align-items-center justify-content-center ${page_name === "profile" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                         aria-label={t("navbar.profile")}
                                         title={t("navbar.profile")}
+                                        style={{ width: "35px", height: "35px" }}
                                     >
                                         {user && user.user_photo && !imgError ? (
                                             <img
                                                 src={imageSrc}
                                                 alt="user photo"
-                                                width="160"
-                                                height="160"
-                                                className="rounded-5"
+                                                className="rounded-circle border"
+                                                style={{ width: "35px", height: "35px", objectFit: "cover" }}
                                                 onError={() => setImgError(true)}
                                             />
                                         ) : (
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
-                                                width="40"
-                                                height="40"
+                                                width="30"
+                                                height="30"
                                                 fill="currentColor"
-                                                className="bi bi-person-circle"
+                                                className="bi bi-person-circle text-secondary"
                                                 viewBox="0 0 16 16"
                                             >
                                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
@@ -357,18 +311,18 @@ const NavBar = ({ page_name, linkBase }) => {
                                 ) : null}
                                 {user ? (
                                     <Link
-                                        id="cart-icon"
                                         href={route("cart")}
                                         className={`nav-link position-relative ${page_name === "cart" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
+                                        style={{ marginLeft: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '38px', height: '38px', padding: 0 }}
                                     >
-                                        <img
-                                            src={cartIcon}
-                                            alt="Cart"
-                                            className="cart-icon"
-                                        />
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
+                                        </svg>
                                         <span
-                                            className="badge position-absolute top-0 start-100 translate-middle rounded-5 bg-primary">
+                                            style={{ top: '0', right: '0', transform: 'translate(30%, -30%)', fontSize: '0.65rem', padding: '0.25rem 0.4rem' }}
+                                            className="badge position-absolute rounded-circle bg-primary"
+                                        >
                                             {cart_items_count}
                                             <span className="visually-hidden">
                                                 items in cart
@@ -376,6 +330,33 @@ const NavBar = ({ page_name, linkBase }) => {
                                         </span>
                                     </Link>
                                 ) : null}
+
+                                {user ? (
+                                    <button
+                                        className="btn btn-sm d-flex align-items-center justify-content-center text-danger hover:bg-red-50 transition-colors"
+                                        style={{ width: "35px", height: "35px", borderRadius: "50%", padding: 0 }}
+                                        onClick={() => {
+                                            setOpen(false);
+                                            router.post(route("logout"));
+                                        }}
+                                        title={t("navbar.logout")}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                            <path fillRule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                                            <path fillRule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                                        </svg>
+                                    </button>
+                                ) : (
+                                    <>
+                                        <Link
+                                            href={route("login")}
+                                            className="btn btn-outline-primary btn-sm"
+                                            onClick={() => setOpen(false)}
+                                        >
+                                            {t("navbar.login")}
+                                        </Link>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
