@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { router } from "@inertiajs/react";
 import styles from "../../css/CheckoutModal.module.css";
 
-const CheckoutModal = ({ total, user, onClose, osraTime }) => {
+const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_same_day }) => {
     const [idCode, setIdCode] = useState("");
     const [startDate, setStartDate] = useState("");
     const [startTime, setStartTime] = useState("");
@@ -41,8 +41,8 @@ const CheckoutModal = ({ total, user, onClose, osraTime }) => {
             }
         );
     };
-
     const handleConfirmOsraTime = (e) => {
+        window.prompt(next_same_day);
         e.preventDefault();
         setLoading(true);
 
@@ -91,16 +91,19 @@ const CheckoutModal = ({ total, user, onClose, osraTime }) => {
                             onChange={() => setTimeType("osraTime")}
                         />
                         <label htmlFor="osra_Time">Family Time</label>
-
-                        <input
-                            type="radio"
-                            id="Custom_time"
-                            name="timeOption"
-                            value="customTime"
-                            checked={timeType === "customTime"}
-                            onChange={() => setTimeType("customTime")}
-                        />
-                        <label htmlFor="Custom_time">Custom Time</label>
+                        {!!can_go_outside && (
+                            <>
+                                <input
+                                    type="radio"
+                                    id="Custom_time"
+                                    name="timeOption"
+                                    value="customTime"
+                                    checked={timeType === "customTime"}
+                                    onChange={() => setTimeType("customTime")}
+                                />
+                                <label htmlFor="Custom_time">Custom Time</label>
+                            </>
+                        )}
                     </div>
 
                     {timeType === "osraTime" && (
@@ -124,7 +127,7 @@ const CheckoutModal = ({ total, user, onClose, osraTime }) => {
                         </>
                     )}
 
-                    {timeType === "customTime" && (
+                    {timeType === "customTime" && !!can_go_outside && (
                         <>
                             <label htmlFor="start_date">Start Date</label>
                             <input

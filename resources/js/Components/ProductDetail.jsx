@@ -378,41 +378,30 @@ export default function ProductDetail({ product }) {
 
                     <hr className="border-gray-200 border-dashed my-2" />
 
-                    {/* Actions Section */}
-                    <div className="flex flex-col gap-5">
-                        {user ? (
-                            inCart ? (
-                                <div className="alert alert-info text-center py-4 bg-blue-50 text-blue-800 border-blue-200 rounded-xl font-medium shadow-sm flex items-center justify-center gap-2 transition-all">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                    Already in cart
-                                </div>
-                            ) : (
-                                <>
-                                    <div className="flex items-center justify-between">
-                                        {/* Stock badge */}
-                                        {isOutOfStock ? (
-                                            <span className="inline-block px-3 py-1 bg-red-100 text-red-700 text-sm font-bold rounded-full border border-red-200">
-                                                {t("product.out_of_stock")}
-                                            </span>
-                                        ) : (
-                                            <span className="inline-block px-3 py-1 bg-orange-100 text-orange-700 text-sm font-bold rounded-full border border-orange-200 flex items-center gap-1">
-                                                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-                                                {t("product.only_limit_left", {
-                                                    count: stockLimit,
-                                                })}
-                                            </span>
-                                        )}
+          {/* Actions Section */}
+          <div className="flex flex-col gap-5">
+            {user ? (
+              inCart ? (
+                <div className="alert alert-info text-center py-4 bg-blue-50 text-blue-800 border-blue-200 rounded-xl font-medium shadow-sm flex items-center justify-center gap-2 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Already in cart
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    {/* Stock badge */}
+                    {isOutOfStock ? (
+                      <span className="inline-block px-3 py-1 bg-red-100 text-red-700 text-sm font-bold rounded-full border border-red-200">
+                        {t('product.out_of_stock')}
+                      </span>
+                    ) : (
+                      <span className="inline-block px-3 py-1 bg-orange-100 text-orange-700 text-sm font-bold rounded-full border border-orange-200 flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+                        {t('product.only_limit_left', { count: stockLimit })}
+                      </span>
+                    )}
 
                                         {/* Quantity Selector */}
                                         {!isOutOfStock && (
@@ -481,36 +470,21 @@ export default function ProductDetail({ product }) {
                                     <button
                                         className={`flex items-center justify-center gap-3 text-lg font-bold py-4 rounded-xl transition-all duration-300 active:scale-95 w-full overflow-hidden relative group
                       ${isOutOfStock ? "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none" : "bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30 hover:shadow-[0_10px_25px_rgba(59,130,246,0.6)] hover:-translate-y-1"}`}
-                                        onClick={handleAddToCart}
-                                        disabled={isOutOfStock}
-                                    >
-                                        {!isOutOfStock && (
-                                            <div className="absolute inset-0 w-full h-full bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-                                        )}
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className={`h-6 w-6 relative z-10 ${!isOutOfStock && "group-hover:rotate-12 transition-transform duration-300"}`}
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                            strokeWidth={2}
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                                            />
-                                        </svg>
-                                        <span className="relative z-10 uppercase tracking-widest text-sm sm:text-base">
-                                            Add to Cart
-                                        </span>
-                                    </button>
-                                </>
-                            )
-                        ) : null}
-                    </div>
-                </div>
-            </div>
+                    onClick={handleAddToCart}
+                    disabled={isOutOfStock}
+                  >
+                    {!isOutOfStock && <div className="absolute inset-0 w-full h-full bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>}
+                    <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 relative z-10 ${!isOutOfStock && "group-hover:rotate-12 transition-transform duration-300"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <span className="relative z-10 uppercase tracking-widest text-sm sm:text-base">Add to Cart</span>
+                  </button>
+                </>
+              )
+            ) : null}
+          </div>
+        </div>
+      </div>
 
             <TopAlert
                 message={alertMessage}

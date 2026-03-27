@@ -35,6 +35,7 @@ class OsraController extends Controller
             'osra_place' => 'required|string|max:255',
             'osra_time' => 'required|string|max:255',
             'osra_code' => 'required|string|max:255|unique:osra,osra_code',
+            'example_date' => 'required',
         ]);
 
         Osra::create($request->all());
@@ -48,7 +49,8 @@ class OsraController extends Controller
             'osra_name' => 'required|string|max:255',
             'osra_place' => 'required|string|max:255',
             'osra_time' => 'required|string|max:255',
-            'osra_code' => 'required|string|max:255|unique:osra,osra_code',
+            'osra_code' => 'required|string|max:255',
+            'example_date' => 'required',
         ]);
 
         $osra->update($request->all());

@@ -126,17 +126,17 @@ const Requests = () => {
                                         </p>
                                     </Link>
 
-                                    <div className="d-flex flex-nowrap gap-2 mt-3">
+                                    <div className="d-flex gap-2 mt-3">
                                         {req.request_status !== "accepted" && (
                                             <button
-                                                className="btn btn-warning btn-sm text-dark font-weight-bold flex-grow-1"
+                                                className="btn btn-warning btn-sm text-dark font-weight-bold"
                                                 onClick={(e) => { e.preventDefault(); acceptRequest(req.request_id); }}
                                             >
                                                 {t('requests.accept')}
                                             </button>
                                         )}
                                         <button
-                                            className="btn btn-success btn-sm font-weight-bold flex-grow-1"
+                                            className="btn btn-success btn-sm font-weight-bold"
                                             onClick={(e) => { e.preventDefault(); doneRequest(req.request_id); }}
                                         >
                                             {t('requests.done')}

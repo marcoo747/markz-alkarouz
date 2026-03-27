@@ -223,6 +223,7 @@ class CategoriesController extends Controller
             'category_name' => 'required|string|max:255',
             'category_description' => 'nullable|string',
             'category_photo' => 'nullable|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
+            'can_go_outside' => 'required',
         ]);
 
         if ($request->hasFile('category_photo')) {
@@ -231,6 +232,8 @@ class CategoriesController extends Controller
             }
             $data['category_photo'] = $request->file('category_photo')->store('main_categories', 'public');
         }
+        $category->can_go_outside = $request->boolean('can_go_outside');
+
         $category->update($data);
         return redirect()->back()->with('success', 'Main Category Updated!');
     }

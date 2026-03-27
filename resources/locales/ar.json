@@ -55,7 +55,9 @@
     "quantity": "الكمية:",
     "size": "الحجم:",
     "remove": "إزالة",
-    "checkout": "طلب"
+    "checkout": "طلب",
+    "add_to_cart": "إضافة الى العربة",
+    "in_cart": "موجود في العربة"
   },
   "category": {
     "products": "منتجات",
@@ -64,11 +66,21 @@
   "osra": {
     "title": "قائمة الأسر",
     "add_family": "إضافة أسرة",
+    "edit_family": "تعديل أسرة",
+    "delete_family": "حذف أسرة",
     "code": "الكود:",
     "place": "📍 المكان:",
     "time": "⏰ الوقت:",
     "edit": "تعديل",
-    "delete": "حذف"
+    "delete": "حذف",
+    "input_fields": {
+      "name": "اسم الأسرة",
+      "code": "كود الأسرة",
+      "place": "مكان الأسرة",
+      "time": "ميعاد الأسرة",
+      "example_date": "الأسرة القادمة موافقة لتاريخ"
+    },
+    "delete_confirmation": "هل أنت متأكد أنك تريد حذف {{name}}؟"
   },
   "users": {
     "title": "إدارة المستخدمين",

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Main_Category;
 use App\Models\Osra;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class CartController extends Controller
 {
@@ -39,11 +41,32 @@ class CartController extends Controller
 
         $cart_items_count = count($cartItems);
 
+        $main_categories = Main_Category::whereIn(
+            'category_id',
+            $cart->products->pluck('main_category_id')->unique()
+        )->get();
+
+        $can_go_outside = 1;
+        foreach($main_categories as $main_category){
+            if($main_category->can_go_outside == 0){
+                $can_go_outside = 0;
+            }
+        }
+
+        $oldDate = Carbon::parse($osra->example_date);
+
+        // get next same weekday relative to today
+        $nextSameDay = now()->next($oldDate->dayOfWeek);
+
+        $next_same_day = $nextSameDay->toDateString();
+
         return Inertia::render('CartPage', [
             'cart'              => $cart,
             'user'              => $user,
             'cart_items_count'  => $cart_items_count,
             'osra_time'         => $osra?->osra_time,
+            'can_go_outside'    => $can_go_outside,
+            'next_same_day'     => $next_same_day,
         ]);
     }
     

@@ -54,7 +54,9 @@
     "total_egp": "Total: EGP",
     "quantity": "Quantity:",
     "remove": "Remove",
-    "checkout": "Checkout"
+    "checkout": "Checkout",
+    "add_to_cart": "Add To Cart",
+    "in_cart": "In cart"
   },
   "category": {
     "products": "Products",
@@ -63,11 +65,21 @@
   "osra": {
     "title": "Families List",
     "add_family": "Add Family",
+    "edit_family": "Edit Family",
+    "delete_family": "Delete Family",
     "code": "Code:",
     "place": "📍 Place:",
     "time": "⏰ Time:",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "input_fields": {
+      "name": "Name",
+      "code": "Code",
+      "place": "Place",
+      "time": "Time",
+      "example_date": "Next Osra Is On"
+    },
+    "delete_confirmation": "Are you sure you want to delete {{name}}?"
   },
   "users": {
     "title": "Users Management",

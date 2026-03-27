@@ -118,15 +118,10 @@ export default function Login() {
                 </button>
               </form>
 
-              <div className="mt-8 text-center border-t border-gray-100 pt-6">
-                <p className="text-gray-600 mb-4">Do not have an account?</p>
-                <Link 
-                  href={route("sign_up")} 
-                  className="inline-block w-full bg-white text-blue-600 font-bold py-4 px-6 rounded-xl border-2 border-blue-600 hover:bg-blue-50 transform transition-all duration-300 active:scale-95 text-lg"
-                >
-                  Sign Up
-                </Link>
-              </div>
+            <p className="mt-3 mb-0">Do not have an account?</p>
+            <Link href={route("sign_up")} className="btn btn-primary mt-0">
+              Sign Up
+            </Link>
 
               {/* Optional server messages */}
               {errors.general && <Message type="error" className="mt-4 animate-bounce">{errors.general}</Message>}

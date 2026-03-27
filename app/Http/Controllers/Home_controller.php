@@ -19,6 +19,7 @@ class Home_controller extends Controller
                     'id'          => $product->product_id,
                     'title'       => $product->pr_name,
                     'description' => $product->pr_description,
+                    'inventory_quantity' => $product->inventory_quantity,
                     'price'       => $product->pr_price,
                     'image'       => $product->images->first()
                         ? '/markaz_alkarouz/public/storage/' . $product->images->first()->photo

@@ -9,7 +9,7 @@ import CheckoutModal from "@/Components/CheckoutModal";
 
 const CartPage = () => {
   const { t } = useTranslation();
-  const { cart, user, osra_time } = usePage().props;
+  const { can_go_outside, cart, user, osra_time, next_same_day } = usePage().props;
   const products = cart?.products ?? [];
   const { errors } = usePage().props;
 
@@ -30,7 +30,7 @@ const CartPage = () => {
       onSuccess: () => setShowCheckout(false),
     });
   };
-console.log(products);
+
   return (
     <>
       <Head title={t('home.page_title')} />
@@ -101,6 +101,8 @@ console.log(products);
         {/* Only show modal if user exists */}
         {showCheckout && user && (
           <CheckoutModal
+            next_same_day={next_same_day}
+            can_go_outside={can_go_outside}
             errors={errors}
             total={total}
             user={user}

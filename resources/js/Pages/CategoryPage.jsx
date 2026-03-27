@@ -132,6 +132,7 @@ const CategoryPage = () => {
                 size={product.size}
                 size_id={product.size_id}
                 image={product.image}
+                inventory_quantity={product.inventory_quantity}
                 onEdit={() => {
                   setSelectedItem(product);
                   setShowEditItemModal(true);

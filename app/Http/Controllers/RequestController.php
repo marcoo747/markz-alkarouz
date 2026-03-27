@@ -19,7 +19,6 @@ class RequestController extends Controller
             'osra:osra_code,osra_name'
         ])
         ->where('user_id', Auth::id())
-        ->where('request_status', '!=', 'done')
         ->get()
         ->map(function ($req) {
             $req->display_time = $req->display_time;
