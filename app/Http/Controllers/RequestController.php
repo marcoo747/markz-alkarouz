@@ -19,6 +19,7 @@ class RequestController extends Controller
             'osra:osra_code,osra_name'
         ])
         ->where('user_id', Auth::id())
+        ->orderBy('created_at', 'desc')
         ->get()
         ->map(function ($req) {
             $req->display_time = $req->display_time;
@@ -122,6 +123,12 @@ class RequestController extends Controller
 
     public function accept(UserRequest $request)
     {
+        $request->load('products');
+
+        foreach ($request->products as $product) {
+            $product->decrement('inventory_quantity', $product->pivot->quantity);
+        }
+
         $request->update([
             'request_status' => 'accepted',
         ]);
@@ -131,6 +138,12 @@ class RequestController extends Controller
 
     public function done(UserRequest $request)
     {
+        $request->load('products');
+
+        foreach ($request->products as $product) {
+            $product->increment('inventory_quantity', $product->pivot->quantity);
+        }
+
         $request->update([
             'request_status' => 'done',
         ]);

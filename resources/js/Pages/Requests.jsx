@@ -3,6 +3,8 @@ import { Link, usePage, Head, router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import NavBar from "@/Components/NavBar";
 import { useTranslation } from "react-i18next";
+import Button from "@/Components/Button";
+import "../../css/requests_style.css";
 
 const PER_PAGE = 12;
 
@@ -12,6 +14,10 @@ const Requests = () => {
 
     const [activeFilter, setActiveFilter] = useState("all");
     const [currentPage, setCurrentPage] = useState(1);
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [isDateSearchActive, setIsDateSearchActive] = useState(false);
+    const [dateError, setDateError] = useState("");
 
     const acceptRequest = (id) => {
         router.post(route("requests.accept", { request: id }));
@@ -28,9 +34,68 @@ const Requests = () => {
         { key: "done", label: t("requests_filter.done") || "Done" },
     ];
 
-    const filtered = activeFilter === "all"
-        ? requests
-        : requests.filter((r) => r.request_status === activeFilter);
+    const parseDateValue = (value) => {
+        if (!value) return null;
+
+        let normalized = value.toString().trim();
+
+        // ✅ Handle pure numeric timestamps (Unix)
+        if (/^\d+$/.test(normalized)) {
+            const num = Number(normalized);
+            // If it's in seconds (10 digits), convert to ms
+            return num < 1e12 ? new Date(num * 1000) : new Date(num);
+        }
+
+        // ✅ Handle dd/mm/yyyy
+        if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(normalized)) {
+            const [day, month, year] = normalized.split("/");
+            return new Date(`${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`);
+        }
+
+        // ✅ Handle dd/mm/yyyy hh:mm:ss
+        if (/^\d{1,2}\/\d{1,2}\/\d{4} \d{2}:\d{2}(:\d{2})?$/.test(normalized)) {
+            const [datePart, timePart] = normalized.split(" ");
+            const [day, month, year] = datePart.split("/");
+            return new Date(`${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T${timePart}`);
+        }
+
+        // ✅ Handle yyyy-mm-dd hh:mm:ss
+        if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/.test(normalized)) {
+            return new Date(normalized.replace(" ", "T"));
+        }
+
+        // ✅ Fallback: let JS Date try to parse (covers ISO timestamps like 2026-03-27T14:30:00Z)
+        const date = new Date(normalized);
+        return Number.isNaN(date.getTime()) ? null : date;
+    };
+
+    const filtered = requests.filter((r) => {
+        const statusMatch = activeFilter === "all" || r.request_status === activeFilter;
+        if (!statusMatch) return false;
+
+        if (!isDateSearchActive) return true;
+
+        // ✅ Use created_at or updated_at instead of osra_date
+        const rawDate = r.created_at || r.updated_at;
+        if (!rawDate) return false;
+
+        const requestDate = parseDateValue(rawDate);
+        if (!requestDate) return false;
+
+        if (startDate) {
+            const fromDate = parseDateValue(startDate);
+            if (!fromDate || requestDate < fromDate) return false;
+        }
+
+        if (endDate) {
+            const toDate = parseDateValue(endDate);
+            if (!toDate) return false;
+            toDate.setHours(23, 59, 59, 999);
+            if (requestDate > toDate) return false;
+        }
+
+        return true;
+    });
 
     const totalPages = Math.ceil(filtered.length / PER_PAGE);
     const paginated = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
@@ -40,12 +105,87 @@ const Requests = () => {
         setCurrentPage(1);
     };
 
+    const applyDateFilter = (e) => {
+        e.preventDefault();
+        setDateError("");
+
+        if (startDate && endDate) {
+            const fromDate = parseDateValue(startDate);
+            const toDate = parseDateValue(endDate);
+            if (!fromDate || !toDate || fromDate > toDate) {
+                setDateError(t('requests.error_date_range') || 'Start date cannot be later than end date');
+                setIsDateSearchActive(false);
+                return;
+            }
+        }
+
+        setIsDateSearchActive(true);
+        setCurrentPage(1);
+    };
+
+    const clearDateFilter = () => {
+        setStartDate("");
+        setEndDate("");
+        setIsDateSearchActive(false);
+        setDateError("");
+        setCurrentPage(1);
+    };
+
     return (
         <>
             <Head title={t('home.page_title')} />
             <NavBar page_name="requests" />
             <div className="container my-4">
-                <h1 className="mb-4">{t('requests.title')}</h1>
+                <div className="p-3 mb-4 requests-top-card">
+                    <div className="w-100 d-flex justify-content-between align-items-start flex-wrap gap-3">
+                        <h1 className="mb-0">{t('requests.title')}</h1>
+
+                        <form
+                            role="search"
+                            className="requests-filter-form d-flex align-items-end gap-2 flex-wrap"
+                            style={{ maxWidth: 363 }}
+                            onSubmit={applyDateFilter}
+                        >
+                            <div className="d-flex flex-column requests-date-field">
+                                <label>{t('requests.start_date') || 'Start Date'}</label>
+                                <input
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    className="form-control form-control-sm requests-date-input"
+                                />
+                            </div>
+
+                            <div className="d-flex flex-column requests-date-field">
+                                <label>{t('requests.end_date') || 'End Date'}</label>
+                                <input
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    className="form-control form-control-sm requests-date-input"
+                                />
+                            </div>
+
+                            <Button type="submit" className="btn btn-sm btn-primary">
+                                {t('requests.search') || 'Search'}
+                            </Button>
+
+                            <button
+                                type="button"
+                                onClick={clearDateFilter}
+                                className="btn btn-sm btn-outline-secondary"
+                            >
+                                {t('requests.clear') || 'Clear'}
+                            </button>
+
+                            {dateError && (
+                                <div className="w-100 mt-2 alert alert-danger py-1 px-2">
+                                    {dateError}
+                                </div>
+                            )}
+                        </form>
+                    </div>
+                </div>
 
                 {/* Filter Tabs */}
                 <div className="d-flex flex-row flex-wrap justify-content-center gap-2 mb-4">
@@ -132,7 +272,7 @@ const Requests = () => {
                                     </Link>
 
                                     <div className="d-flex gap-2 mt-3">
-                                        {req.request_status !== "accepted" && (
+                                        {req.request_status === "pending" && (
                                             <button
                                                 className="btn btn-warning btn-sm text-dark font-weight-bold"
                                                 onClick={(e) => { e.preventDefault(); acceptRequest(req.request_id); }}
@@ -140,12 +280,14 @@ const Requests = () => {
                                                 {t('requests.accept')}
                                             </button>
                                         )}
-                                        <button
-                                            className="btn btn-success btn-sm font-weight-bold"
-                                            onClick={(e) => { e.preventDefault(); doneRequest(req.request_id); }}
-                                        >
-                                            {t('requests.done')}
-                                        </button>
+                                        {req.request_status !== "done" && (
+                                            <button
+                                                className="btn btn-success btn-sm font-weight-bold"
+                                                onClick={(e) => { e.preventDefault(); doneRequest(req.request_id); }}
+                                            >
+                                                {t('requests.done')}
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>

@@ -56,11 +56,55 @@
     "remove": "Remove",
     "checkout": "Checkout",
     "add_to_cart": "Add To Cart",
-    "in_cart": "In cart"
+    "in_cart": "In cart",
+    "managers_button": "View Managers",
+    "terms_button": "Terms & Conditions"
   },
   "category": {
     "products": "Products",
     "add_item": "Add Item"
+  },
+  "managers": {
+    "title": "Managers Directory",
+    "count_label": "manager(s)",
+    "search_placeholder": "Search by name, email, or phone...",
+    "no_results": "No managers found",
+    "no_managers": "No managers available",
+    "close_button": "Close"
+  },
+  "terms": {
+    "title": "Terms & Conditions & Penalties",
+    "subtitle": "Important information and financial penalties",
+    "terms_tab": "Terms & Conditions",
+    "penalties_tab": "Financial Penalties",
+    "loading": "Loading...",
+    "no_terms": "No terms and conditions available",
+    "no_penalties": "No financial penalties available",
+    "term_label": "Term",
+    "penalty_label": "Penalty",
+    "currency": "EGP",
+    "last_updated": "Last updated",
+    "close_button": "Close",
+    "add_button": "Add New",
+    "edit_button": "Edit",
+    "delete_button": "Delete",
+    "save_button": "Save",
+    "cancel_button": "Cancel",
+    "confirm_delete": "Are you sure you want to delete this item?",
+    "delete_confirmation": "This action cannot be undone.",
+    "title_label": "Title",
+    "content_label": "Content",
+    "type_label": "Type",
+    "amount_label": "Amount (EGP)",
+    "amount_placeholder": "Enter amount for penalties",
+    "type_terms": "Terms & Conditions",
+    "type_penalty": "Financial Penalty",
+    "success_create": "Item created successfully",
+    "success_update": "Item updated successfully",
+    "success_delete": "Item deleted successfully",
+    "error_create": "Failed to create item",
+    "error_update": "Failed to update item",
+    "error_delete": "Failed to delete item"
   },
   "osra": {
     "title": "Families List",
@@ -105,7 +149,12 @@
     "product": "Product",
     "products": "Products",
     "accept": "Accept",
-    "done": "Done"
+    "done": "Done",
+    "start_date": "Search From Date",
+    "end_date": "To Date",
+    "search": "Search",
+    "clear": "Clear",
+    "error_date_range": "Start date cannot be later than end date"
   },
   "request_show": {
     "date": "Date:",

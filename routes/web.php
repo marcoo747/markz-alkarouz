@@ -11,6 +11,7 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\OsraController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\Carousel_photos_controller;
+use App\Http\Controllers\TermsAndPenaltiesController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -85,6 +86,16 @@ Route::middleware('role:user,admin,manager')->group(function () {
     // Requests
     Route::post('/requests/create-from-cart', [RequestController::class, 'createFromCart'])
         ->name('requests.createFromCart');
+
+    // Managers API
+    Route::get('/api/managers', [ProfileController::class, 'getManagersData'])->name('api.managers');
+
+    // Terms and Penalties API
+    Route::get('/api/terms-penalties', [TermsAndPenaltiesController::class, 'index'])->name('api.terms-penalties');
+    Route::post('/api/terms-penalties', [TermsAndPenaltiesController::class, 'store'])->name('api.terms-penalties.store');
+    Route::put('/api/terms-penalties/{termsAndPenalty}', [TermsAndPenaltiesController::class, 'update'])->name('api.terms-penalties.update');
+    Route::delete('/api/terms-penalties/{termsAndPenalty}', [TermsAndPenaltiesController::class, 'destroy'])->name('api.terms-penalties.destroy');
+    Route::patch('/api/terms-penalties/{termsAndPenalty}/toggle', [TermsAndPenaltiesController::class, 'toggleActive'])->name('api.terms-penalties.toggle');
 
     // Logout
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

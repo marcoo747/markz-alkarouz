@@ -57,11 +57,55 @@
     "remove": "إزالة",
     "checkout": "طلب",
     "add_to_cart": "إضافة الى العربة",
-    "in_cart": "موجود في العربة"
+    "in_cart": "موجود في العربة",
+    "managers_button": "عرض المديرين",
+    "terms_button": "الشروط والأحكام"
   },
   "category": {
     "products": "منتجات",
     "add_item": "إضافة منتج"
+  },
+  "managers": {
+    "title": "دليل المديرين",
+    "count_label": "مدير(ين)",
+    "search_placeholder": "ابحث عن الاسم أو البريد الإلكتروني أو رقم الهاتف...",
+    "no_results": "لم يتم العثور على مديرين",
+    "no_managers": "لا يوجد مديرين متاحين",
+    "close_button": "إغلاق"
+  },
+  "terms": {
+    "title": "الشروط والأحكام والغرامات المالية",
+    "subtitle": "معلومات مهمة والغرامات المالية",
+    "terms_tab": "الشروط والأحكام",
+    "penalties_tab": "الغرامات المالية",
+    "loading": "جاري التحميل...",
+    "no_terms": "لا توجد شروط وأحكام متاحة",
+    "no_penalties": "لا توجد غرامات مالية متاحة",
+    "term_label": "شرط",
+    "penalty_label": "غرامة",
+    "currency": "ج.م",
+    "last_updated": "آخر تحديث",
+    "close_button": "إغلاق",
+    "add_button": "إضافة جديد",
+    "edit_button": "تعديل",
+    "delete_button": "حذف",
+    "save_button": "حفظ",
+    "cancel_button": "إلغاء",
+    "confirm_delete": "هل أنت متأكد أنك تريد حذف هذا العنصر؟",
+    "delete_confirmation": "لا يمكن التراجع عن هذا الإجراء.",
+    "title_label": "العنوان",
+    "content_label": "المحتوى",
+    "type_label": "النوع",
+    "amount_label": "المبلغ (ج.م)",
+    "amount_placeholder": "أدخل المبلغ للغرامات",
+    "type_terms": "شروط وأحكام",
+    "type_penalty": "غرامة مالية",
+    "success_create": "تم إنشاء العنصر بنجاح",
+    "success_update": "تم تحديث العنصر بنجاح",
+    "success_delete": "تم حذف العنصر بنجاح",
+    "error_create": "فشل في إنشاء العنصر",
+    "error_update": "فشل في تحديث العنصر",
+    "error_delete": "فشل في حذف العنصر"
   },
   "osra": {
     "title": "قائمة الأسر",
@@ -106,7 +150,12 @@
     "product": "منتج",
     "products": "منتجات",
     "accept": "قبول",
-    "done": "إكمال"
+    "done": "إكمال",
+    "start_date": "البحث من تاريخ",
+    "end_date": "الى تاريخ",
+    "search": "بحث",
+    "clear": "مسح",
+    "error_date_range": "تاريخ البداية لا يمكن أن يكون بعد تاريخ النهاية"
   },
   "request_show": {
     "date": "التاريخ:",

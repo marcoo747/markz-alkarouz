@@ -47,14 +47,12 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
 
   const handleRemoveImage = async (indexToRemove) => {
     const imageToRemove = images[indexToRemove];
-    
-    // Handle newly selected files (blob URLs)
+
     if (imageToRemove.startsWith('blob:')) {
       setImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
       setFiles((prev) => prev.filter((_, idx) => idx !== indexToRemove));
       setImageData((prev) => prev.filter((_, idx) => idx !== indexToRemove));
     } else {
-      // Handle existing database images
       const imageInfo = imageData[indexToRemove];
       if (imageInfo && imageInfo.id) {
         try {
@@ -66,7 +64,6 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
           });
 
           if (response.ok) {
-            // Remove from local state - use a function to ensure we get the latest state
             setImages((prevImages) => prevImages.filter((_, idx) => idx !== indexToRemove));
             setImageData((prevImageData) => prevImageData.filter((_, idx) => idx !== indexToRemove));
           } else {

@@ -1,0 +1,67 @@
+.link-no-style {
+    text-decoration: none;
+    color: inherit;
+}
+
+body:has([class*="modalOverlay"]) {
+    overflow: hidden !important;
+}
+
+.requests-top-card {
+    background: #ffffff;
+    border: 1px solid rgba(108, 117, 125, .2);
+    border-radius: .75rem;
+    box-shadow: 0 1px 15px rgba(0, 0, 0, .05);
+}
+
+.requests-filter-form {
+    flex-wrap: wrap;
+    gap: .64rem;
+    background: rgba(248, 249, 250, 0.85);
+    border-radius: .65rem;
+    padding: .4rem;
+    border: 1px solid rgba(108, 117, 125, 0.18);
+}
+
+.requests-date-field {
+    min-width: 170px;
+    max-width: 220px;
+}
+
+.requests-date-field label {
+    font-size: .75rem;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    margin-bottom: .2rem;
+    font-weight: 600;
+}
+
+.requests-date-input {
+    border-radius: .5rem;
+    padding: .38rem .5rem;
+    font-size: .90rem;
+    border: 1px solid rgba(108, 117, 125, .35);
+    transition: all .15s ease-in-out;
+}
+
+.requests-date-input:focus {
+    outline: none;
+    border-color: #5a9bdd;
+    box-shadow: 0 0 0 .2rem rgba(84, 144, 255, .20);
+}
+
+.requests-filter-form .btn {
+    min-width: 96px;
+    border-radius: .5rem;
+}
+
+.requests-filter-form .btn-primary {
+    background: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.requests-filter-form .btn-outline-secondary {
+    color: #495057;
+    border-radius: .5rem;
+}

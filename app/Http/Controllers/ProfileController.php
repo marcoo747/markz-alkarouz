@@ -229,4 +229,34 @@ public function index()
 
         return back()->with('success', 'Profile updated successfully!');
     }
+
+    public function getManagersData()
+    {
+        $managers = User::where('user_type', 'manager')
+            ->select(
+                'user_id',
+                'full_name',
+                'mobile',
+                'email',
+                'user_photo',
+                'osra_id',
+                'created_at'
+            )
+            ->with('osra:osra_id,osra_name')
+            ->get()
+            ->map(fn ($user) => [
+                'user_id' => $user->user_id,
+                'full_name' => $user->full_name,
+                'mobile' => $user->mobile,
+                'email' => $user->email,
+                'user_photo' => $user->user_photo ? asset('storage/' . $user->user_photo) : null,
+                'osra_name' => $user->osra ? $user->osra->osra_name : 'N/A',
+                'created_at' => $user->created_at,
+            ]);
+
+        return response()->json([
+            'managers' => $managers,
+            'count' => $managers->count(),
+        ]);
+    }
 }

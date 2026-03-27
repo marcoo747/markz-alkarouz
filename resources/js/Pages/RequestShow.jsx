@@ -54,9 +54,9 @@ const RequestShow = () => {
                                     request.request_status === "pending"
                                         ? "text-warning"
                                         : request.request_status === "done"
-                                        ? "text-danger"
-                                        : request.request_status === "accepted"
                                         ? "text-success"
+                                        : request.request_status === "accepted"
+                                        ? "text-primary"
                                         : "text-secondary"
                                 }
                             >
