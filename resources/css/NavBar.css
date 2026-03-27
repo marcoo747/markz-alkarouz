@@ -46,6 +46,12 @@
     }
 }
 
+@media (min-width: 990px) and (max-width: 1200px) {
+    .site-logo img {
+        width: 10%;
+    }
+}
+
 /* Navigation & search buttons */
 .nav-actions {
     display: flex;
