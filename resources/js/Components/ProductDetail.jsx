@@ -395,7 +395,7 @@ export default function ProductDetail({ product }) {
                                             clipRule="evenodd"
                                         />
                                     </svg>
-                                    Already in cart
+                                    {t("cart.in_cart")}
                                 </div>
                             ) : (
                                 <>
@@ -444,7 +444,9 @@ export default function ProductDetail({ product }) {
                                                     </svg>
                                                 </button>
                                                 <span className="w-12 text-center font-bold text-gray-900">
-                                                    {quantity}
+                                                    {isOutOfStock
+                                                        ? 0
+                                                        : quantity}
                                                 </span>
                                                 <button
                                                     className="w-10 h-10 flex items-center justify-center rounded-md text-gray-600 hover:bg-gray-200 transition-colors active:scale-95 disabled:opacity-50"
@@ -502,7 +504,7 @@ export default function ProductDetail({ product }) {
                                             />
                                         </svg>
                                         <span className="relative z-10 uppercase tracking-widest text-sm sm:text-base">
-                                            Add to Cart
+                                            {t("cart.add_to_cart")}
                                         </span>
                                     </button>
                                 </>

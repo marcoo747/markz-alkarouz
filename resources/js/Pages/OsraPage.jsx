@@ -21,6 +21,7 @@ const OsraPage = ({ osras: initialOsras }) => {
     formData.append("osra_code", data.code);
     formData.append("osra_place", data.osra_place);
     formData.append("osra_time", data.osra_time);
+    formData.append("example_date", data.example_date);
 
     router.post(route("osra.store"), formData, { onSuccess: () => router.reload() });
   };
@@ -32,6 +33,7 @@ const OsraPage = ({ osras: initialOsras }) => {
     formData.append("osra_code", data.code);
     formData.append("osra_place", data.osra_place);
     formData.append("osra_time", data.osra_time);
+    formData.append("example_date", data.example_date);
     formData.append("_method", "PUT");
 
     router.post(route("osra.update", data.osra_id), formData, { onSuccess: () => router.reload() });
@@ -54,7 +56,7 @@ const OsraPage = ({ osras: initialOsras }) => {
 
         <div className="row">
           {osras.map((osra) => (
-            <div key={osra.osra_id} className="col-lg-3 col-md-4 col-sm-6 mt-6">
+            <div key={osra.osra_id} className="col-lg-3 col-md-4 col-sm-6 mt-2">
               <div className="card shadow-sm">
                 <div className="card-body">
                   <h5 className="card-title">{osra.osra_name}</h5>

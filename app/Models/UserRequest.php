@@ -20,6 +20,7 @@ class UserRequest extends Model
         'end_date',
         'end_time',
         'osra_time',
+        'osra_date',
         'request_status',
         'total_price',
     ];

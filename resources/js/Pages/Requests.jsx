@@ -87,6 +87,11 @@ const Requests = () => {
                                         <h6 className="card-subtitle mb-2 text-muted">
                                             {req.osra?.osra_name || "—"}
                                         </h6>
+                                        {req.osra_date && (
+                                            <p className="mb-1 text-muted small">
+                                                <strong>{t('requests.date')}</strong> {req.osra_date}
+                                            </p>
+                                        )}
                                         <p className="mb-1">
                                             <strong>
                                                 {t('requests.status')}{" "}
@@ -126,17 +131,17 @@ const Requests = () => {
                                         </p>
                                     </Link>
 
-                                    <div className="d-flex flex-nowrap gap-2 mt-3">
+                                    <div className="d-flex gap-2 mt-3">
                                         {req.request_status !== "accepted" && (
                                             <button
-                                                className="btn btn-warning btn-sm text-dark font-weight-bold flex-grow-1"
+                                                className="btn btn-warning btn-sm text-dark font-weight-bold"
                                                 onClick={(e) => { e.preventDefault(); acceptRequest(req.request_id); }}
                                             >
                                                 {t('requests.accept')}
                                             </button>
                                         )}
                                         <button
-                                            className="btn btn-success btn-sm font-weight-bold flex-grow-1"
+                                            className="btn btn-success btn-sm font-weight-bold"
                                             onClick={(e) => { e.preventDefault(); doneRequest(req.request_id); }}
                                         >
                                             {t('requests.done')}

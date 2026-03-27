@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { usePage, router } from "@inertiajs/react";
 import namer from "color-namer";
+import { useTranslation } from "react-i18next";
 
 const ProductCard = ({
     id,
@@ -13,8 +14,10 @@ const ProductCard = ({
     color,
     size_id,
     size,
+    inventory_quantity,
     setAlertMessage,
 }) => {
+    const { t } = useTranslation();
     const { auth } = usePage().props;
     const user = auth.user;
     const { cartItems = [] } = usePage().props || {};
@@ -50,7 +53,10 @@ const ProductCard = ({
             }
         );
     };
-
+    
+    // Determine stock limit or default to 5 if undefined. If 0, out of stock.
+    const stockLimit = inventory_quantity !== undefined ? inventory_quantity : 5;
+    const isOutOfStock = stockLimit == 0 || stockLimit == null || stockLimit == "";
     return (
         <>
             <article
@@ -113,10 +119,11 @@ const ProductCard = ({
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" /></svg>
                                                 </button>
-                                                <span className="w-8 text-center text-sm font-bold text-gray-900">{quantity}</span>
+                                                <span className="w-8 text-center text-sm font-bold text-gray-900">{isOutOfStock ? 0 : quantity}</span>
                                                 <button 
                                                     className="w-8 h-full flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors active:scale-95 rounded-r-lg"
                                                     onClick={(e) => { e.stopPropagation(); setQuantity(prev => prev + 1); }}
+                                                    disabled={quantity >= stockLimit}
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
                                                 </button>
@@ -125,14 +132,15 @@ const ProductCard = ({
                                         <button
                                             className="w-full bg-green-600 hover:bg-green-700 text-white text-sm font-bold h-10 rounded-lg transition-all duration-200 active:scale-95 shadow-md flex justify-center items-center"
                                             onClick={handleAddToCart}
+                                            disabled={isOutOfStock}
                                         >
-                                            Add to Cart
+                                            {t('cart.add_to_cart')}
                                         </button>
                                     </>
                                 ) : (
                                     <div className="w-full h-10 bg-blue-50 text-blue-700 rounded-lg text-sm font-bold border border-blue-100 flex justify-center items-center gap-1 cursor-default transition-all shadow-sm">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                                        In cart
+                                        {t('cart.in_cart')}
                                     </div>
                                 )}
                             </div>

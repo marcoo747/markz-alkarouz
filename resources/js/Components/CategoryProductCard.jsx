@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { usePage, router, Link } from "@inertiajs/react";
 import TopAlert from "./TopAlert";
 import namer from "color-namer";
+import { useTranslation } from "react-i18next";
 
 const ProductCard = ({
   id,
@@ -15,9 +16,11 @@ const ProductCard = ({
   size_id,
   size,
   onEdit,
+  inventory_quantity,
   onDelete,
   children,
 }) => {
+  const { t } = useTranslation();
   const { auth, flash, cartItems = [] } = usePage().props || {};
   const user = auth?.user;
   const manager = user?.user_type === "manager";
@@ -59,7 +62,10 @@ const ProductCard = ({
       }
     );
   };
-
+    
+  // Determine stock limit or default to 5 if undefined. If 0, out of stock.
+  const stockLimit = inventory_quantity !== undefined ? inventory_quantity : 5;
+  const isOutOfStock = stockLimit == 0 || stockLimit == null || stockLimit == "";
   return (
     <>
       <article
@@ -126,18 +132,24 @@ const ProductCard = ({
                 <div className="mb-3" onClick={(e) => e.stopPropagation()}>
                   <label className="form-label fw-bold">Quantity</label>
                   <div className="d-flex align-items-center justify-content-center gap-2 qty-controls">
-                    <button type="button" className="btn btn-outline-secondary qty-btn" onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary qty-btn"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       disabled={quantity <= 1}
                     >
                       –
                     </button>
 
                     <span className="qty-display border rounded bg-light fw-bold">
-                      {quantity}
+                      {isOutOfStock ? 0 : quantity}
                     </span>
 
-                    <button type="button" className="btn btn-outline-secondary qty-btn" onClick={() => setQuantity(quantity + 1)}
-                    >
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary qty-btn"
+                      onClick={() => setQuantity(quantity + 1)}
+                      disabled={quantity >= stockLimit}>
                       +
                     </button>
                   </div>
@@ -145,13 +157,15 @@ const ProductCard = ({
                 <button
                   className="btn btn-success w-100"
                   onClick={handleAddToCart}
+                  disabled={isOutOfStock}
                 >
-                  Add to Cart
+                  {t('cart.add_to_cart')}
                 </button>
               </>
             ) : (
-              <div className="alert alert-info mt-2 text-center cursor-text">
-                Already in cart
+              <div className="w-full h-10 bg-blue-50 text-blue-700 rounded-lg text-sm font-bold border border-blue-100 flex justify-center items-center gap-1 cursor-default transition-all shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  {t('cart.in_cart')}
               </div>
             ))}
 

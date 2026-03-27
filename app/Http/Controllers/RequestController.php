@@ -19,7 +19,6 @@ class RequestController extends Controller
             'osra:osra_code,osra_name'
         ])
         ->where('user_id', Auth::id())
-        ->where('request_status', '!=', 'done')
         ->get()
         ->map(function ($req) {
             $req->display_time = $req->display_time;
@@ -80,6 +79,7 @@ class RequestController extends Controller
             'start_time' => 'nullable|date_format:H:i',
             'end_time' => 'nullable|date_format:H:i|after:start_time',
             'total_price' => 'nullable|numeric|min:0',
+            'osra_date' => 'nullable'
         ]);
 
         $userId = Auth::id();
@@ -87,7 +87,8 @@ class RequestController extends Controller
         $cart = Cart::where('user_id', $userId)->with('products')->first();
 
         DB::transaction(function () use ($request, $userId, $cart) {
-            $totalPrice = !empty($request->osra_code) ? 0 : ($request->total_price ?? 0);
+            // Keep the total price from the client unless there is a business rule to override it.
+            $totalPrice = $request->total_price ?? 0;
 
             $userRequest = UserRequest::create([
                 'user_id' => $userId,
@@ -97,6 +98,7 @@ class RequestController extends Controller
                 'end_date' => $request->end_date,
                 'end_time' => $request->end_time,
                 'osra_time' => $request->osra_time,
+                'osra_date' => $request->osra_date,
                 'request_status' => 'pending',
                 'total_price' => $totalPrice,
             ]);

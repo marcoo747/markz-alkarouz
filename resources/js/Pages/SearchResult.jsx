@@ -38,6 +38,7 @@ const SearchResult = () => {
                       brand: p.brand,
                       description: p.pr_description,
                       price: p.pr_price,
+                      inventory_quantity: p.inventory_quantity,
                       image:
                         p.images && p.images.length > 0
                           ? `storage/${p.images[0].photo}`
