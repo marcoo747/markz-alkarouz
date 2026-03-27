@@ -55,7 +55,6 @@ class CartController extends Controller
 
         $oldDate = Carbon::parse($osra->example_date);
 
-        // get next same weekday relative to today
         $nextSameDay = now()->next($oldDate->dayOfWeek);
 
         $next_same_day = $nextSameDay->toDateString();

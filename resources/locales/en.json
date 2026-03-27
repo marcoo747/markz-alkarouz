@@ -101,12 +101,14 @@
     "status": "Status:",
     "price": "Price:",
     "time": "Time:",
+    "date": "Date:",
     "product": "Product",
     "products": "Products",
     "accept": "Accept",
     "done": "Done"
   },
   "request_show": {
+    "date": "Date:",
     "title": "Request Page",
     "status": "Status:",
     "time": "Time:",

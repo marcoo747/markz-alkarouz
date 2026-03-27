@@ -69,6 +69,12 @@ const RequestShow = () => {
                             <strong>{t('request_show.time')}</strong> {request.display_time}
                         </p>
 
+                        {request.osra_date && (
+                            <p className="mb-1 text-muted">
+                                <strong>{t('request_show.date')}</strong> {request.osra_date}
+                            </p>
+                        )}
+
                         {!profile_user && (
                             <>
                             {/* Accept / Done buttons */}

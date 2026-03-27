@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\OsraController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\Carousel_photos_controller;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,9 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', [Home_controller::class, 'index'])->name('home');
+
+// Carousel Photos (public access for home page)
+Route::get('/carousel-photos', [Carousel_photos_controller::class, 'index'])->name('carousel.photos.index');
 
 /*
     Sub Categories
@@ -96,6 +100,10 @@ Route::middleware('role:admin,manager')->group(function () {
     Route::get('/requests', [RequestController::class, 'index'])->name('requests');
     Route::post('/requests/{request}/accept', [RequestController::class, 'accept'])->name('requests.accept');
     Route::post('/requests/{request}/done', [RequestController::class, 'done'])->name('requests.done');
+
+    // Carousel Photos
+    Route::post('/carousel-photos/upload', [Carousel_photos_controller::class, 'upload_photo'])->name('carousel.photos.upload');
+    Route::delete('/carousel-photos/{id}', [Carousel_photos_controller::class, 'destroy'])->name('carousel.photos.destroy');
 });
 
 /*

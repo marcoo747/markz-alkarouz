@@ -16,23 +16,34 @@ const Home = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [showLoginAlert, setShowLoginAlert] = useState(true);
   
-  const [carouselImages, setCarouselImages] = useState([
-    "imgs/img1.jpg", 
-    "imgs/img1.jpg", 
-    "imgs/img1.jpg", 
-    "imgs/img1.jpg"
-  ]);
+  const [carouselImages, setCarouselImages] = useState([]);
+  const [loadingCarousel, setLoadingCarousel] = useState(true);
   const [showEditImages, setShowEditImages] = useState(false);
   const user = auth?.user;
   const manager = user?.user_type === "manager";
 
   useEffect(() => {
-    if (flash?.success) {
-      setAlertMessage(flash.success);
-      const timer = setTimeout(() => setAlertMessage(""), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [flash]);
+    const fetchCarouselImages = async () => {
+      try {
+        const response = await fetch(route('carousel.photos.index'));
+        if (response.ok) {
+          const data = await response.json();
+          setCarouselImages(data.map(img => img.url));
+        } else {
+          // Fallback to default images if API fails
+          setCarouselImages(["imgs/img1.jpg", "imgs/img1.jpg", "imgs/img1.jpg", "imgs/img1.jpg"]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch carousel images:', error);
+        // Fallback to default images
+        setCarouselImages(["imgs/img1.jpg", "imgs/img1.jpg", "imgs/img1.jpg", "imgs/img1.jpg"]);
+      } finally {
+        setLoadingCarousel(false);
+      }
+    };
+
+    fetchCarouselImages();
+  }, []);
 
   return (
     <>
@@ -79,9 +90,18 @@ const Home = () => {
 
       <Container>
         <div className="mt-8 flex flex-col gap-4">
-          <Carousel
-            images={carouselImages}
-          />
+          {loadingCarousel ? (
+            <div className="w-full h-64 bg-slate-100 rounded-xl flex items-center justify-center">
+              <div className="flex items-center gap-3">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-slate-400"></div>
+                <span className="text-slate-500">Loading carousel...</span>
+              </div>
+            </div>
+          ) : (
+            <Carousel
+              images={carouselImages}
+            />
+          )}
           
           {manager && (
             <button 
@@ -97,7 +117,18 @@ const Home = () => {
             <EditImagesModal 
                initialImages={carouselImages}
                onClose={() => setShowEditImages(false)}
-               onSave={(newImages) => setCarouselImages(newImages)}
+               onSave={async (newImages) => {
+                 // Refresh carousel images from database after upload
+                 try {
+                   const response = await fetch(route('carousel.photos.index'));
+                   if (response.ok) {
+                     const data = await response.json();
+                     setCarouselImages(data.map(img => img.url));
+                   }
+                 } catch (error) {
+                   console.error('Failed to refresh carousel images:', error);
+                 }
+               }}
             />
           )}
 

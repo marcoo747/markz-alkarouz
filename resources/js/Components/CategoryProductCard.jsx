@@ -142,7 +142,7 @@ const ProductCard = ({
                     </button>
 
                     <span className="qty-display border rounded bg-light fw-bold">
-                      {quantity}
+                      {isOutOfStock ? 0 : quantity}
                     </span>
 
                     <button
@@ -157,6 +157,7 @@ const ProductCard = ({
                 <button
                   className="btn btn-success w-100"
                   onClick={handleAddToCart}
+                  disabled={isOutOfStock}
                 >
                   {t('cart.add_to_cart')}
                 </button>

@@ -10,11 +10,15 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
     const [endTime, setEndTime] = useState("");
     const [loading, setLoading] = useState(false);
     const [timeType, setTimeType] = useState("osraTime");
+    const [showOsraChoice, setShowOsraChoice] = useState(false);
+    const [selectedOsraDate, setSelectedOsraDate] = useState("");
 
     const today = new Date().toISOString().split("T")[0];
 
     const handleConfirmCustomTime = (e) => {
-        e.preventDefault();
+        if (e && e.preventDefault) {
+            e.preventDefault();
+        }
         setLoading(true);
 
         router.post(
@@ -41,9 +45,8 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
             }
         );
     };
-    const handleConfirmOsraTime = (e) => {
-        window.prompt(next_same_day);
-        e.preventDefault();
+
+    const handleConfirmOsraTime = (dateValue) => {
         setLoading(true);
 
         router.post(
@@ -52,7 +55,8 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                 full_name: user?.full_name || "",
                 osra_code: idCode.trim(),
                 osra_time: osraTime,
-                total_price: idCode.trim() ? 0 : total,
+                osra_date: dateValue || selectedOsraDate,
+                total_price: total,
             },
             {
                 onSuccess: () => {
@@ -62,6 +66,8 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                     setEndDate("");
                     setStartTime("");
                     setEndTime("");
+                    setShowOsraChoice(false);
+                    setSelectedOsraDate("");
                 },
                 onFinish: () => setLoading(false),
             }
@@ -175,11 +181,13 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                     <button
                         disabled={loading}
                         className="btn btn-success"
-                    onClick={
-                        timeType === "osraTime"
-                        ? handleConfirmOsraTime
-                        : handleConfirmCustomTime
-                    }
+                        onClick={() => {
+                            if (timeType === "osraTime") {
+                                setShowOsraChoice(true);
+                            } else {
+                                handleConfirmCustomTime();
+                            }
+                        }}
                     >
                     {loading ? "Booking..." : "Confirm Booking"}
                     </button>
@@ -192,6 +200,49 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                     </button>
                 </div>
             </div>
+
+            {showOsraChoice && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
+                    <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full mx-4 animate-scale-in">
+                        <p className="font-semibold mb-4 text-lg">Choose Booking Day</p>
+
+                        <div className="flex flex-col gap-3">
+                            <button
+                                className={`btn btn-outline-success btn-sm ${selectedOsraDate === next_same_day ? 'active' : ''}`}
+                                onClick={() => {
+                                    setSelectedOsraDate(next_same_day);
+                                }}
+                            >
+                                Next Same Day ({next_same_day})
+                            </button>
+
+                            <input
+                                type="date"
+                                className="form-control form-control-sm bg-gray-50 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-300 transition-all"
+                                min={today}
+                                value={selectedOsraDate}
+                                onChange={(e) => setSelectedOsraDate(e.target.value)}
+                            />
+
+                            <button
+                                className="btn btn-success btn-sm"
+                                disabled={!selectedOsraDate || loading}
+                                onClick={() => handleConfirmOsraTime(selectedOsraDate)}
+                            >
+                                {loading ? "Confirming..." : "Confirm Selected Date"}
+                            </button>
+                            
+                            <button
+                                className="btn btn-outline-secondary btn-sm"
+                                onClick={() => setShowOsraChoice(false)}
+                                disabled={loading}
+                            >
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

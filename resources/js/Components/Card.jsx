@@ -119,7 +119,7 @@ const ProductCard = ({
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" /></svg>
                                                 </button>
-                                                <span className="w-8 text-center text-sm font-bold text-gray-900">{quantity}</span>
+                                                <span className="w-8 text-center text-sm font-bold text-gray-900">{isOutOfStock ? 0 : quantity}</span>
                                                 <button 
                                                     className="w-8 h-full flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors active:scale-95 rounded-r-lg"
                                                     onClick={(e) => { e.stopPropagation(); setQuantity(prev => prev + 1); }}

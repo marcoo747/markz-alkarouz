@@ -87,6 +87,11 @@ const Requests = () => {
                                         <h6 className="card-subtitle mb-2 text-muted">
                                             {req.osra?.osra_name || "—"}
                                         </h6>
+                                        {req.osra_date && (
+                                            <p className="mb-1 text-muted small">
+                                                <strong>{t('requests.date')}</strong> {req.osra_date}
+                                            </p>
+                                        )}
                                         <p className="mb-1">
                                             <strong>
                                                 {t('requests.status')}{" "}
