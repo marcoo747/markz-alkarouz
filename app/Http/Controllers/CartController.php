@@ -20,9 +20,12 @@ class CartController extends Controller
             ->with('products.images')
             ->first();
 
-        $cart->products->each(function ($product) {
-            $product->pivot->loadMissing(['color', 'size']);
-        });
+        // Guard: if user has no cart yet, load an empty cart object
+        if ($cart) {
+            $cart->products->each(function ($product) {
+                $product->pivot->loadMissing(['color', 'size']);
+            });
+        }
 
         $osra = null;
         if ($user->osra_id) {
@@ -41,10 +44,12 @@ class CartController extends Controller
 
         $cart_items_count = count($cartItems);
 
-        $main_categories = Main_Category::whereIn(
-            'category_id',
-            $cart->products->pluck('main_category_id')->unique()
-        )->get();
+        $main_categories = $cart
+            ? Main_Category::whereIn(
+                'category_id',
+                $cart->products->pluck('main_category_id')->unique()
+            )->get()
+            : collect();
 
         $can_go_outside = 1;
         foreach($main_categories as $main_category){
@@ -53,11 +58,13 @@ class CartController extends Controller
             }
         }
 
-        $oldDate = Carbon::parse($osra->example_date);
-
-        $nextSameDay = now()->next($oldDate->dayOfWeek);
-
-        $next_same_day = $nextSameDay->toDateString();
+        // Guard: only calculate next delivery day if osra exists and has a valid example_date
+        $next_same_day = null;
+        if ($osra && $osra->example_date) {
+            $oldDate = Carbon::parse($osra->example_date);
+            $nextSameDay = now()->next($oldDate->dayOfWeek);
+            $next_same_day = $nextSameDay->toDateString();
+        }
 
         return Inertia::render('CartPage', [
             'cart'              => $cart,

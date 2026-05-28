@@ -84,7 +84,7 @@ const NavBar = ({ page_name, linkBase }) => {
                             >
                                 {i18n.language.startsWith("ar")
                                     ? "EN"
-                                    : "عربي"}
+                                    : "عر"}
                             </button>
                             {/* Mobile Profile Icon */}
                             {user && (
@@ -259,20 +259,21 @@ const NavBar = ({ page_name, linkBase }) => {
                                                 : "ar";
                                         i18n.changeLanguage(nextLang);
                                     }}
-                                    className="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center fw-bold hide-on-mobile"
+                                    className="btn btn-outline-secondary d-flex align-items-center justify-content-center fw-bold hide-on-mobile"
                                     style={{
-                                        borderRadius: "16px",
-                                        padding: "0 8px",
-                                        height: "28px",
-                                        width: "10px",
-                                        fontSize: "12px",
+                                        borderRadius: "50%",
+                                        padding: "0",
+                                        height: "35px",
+                                        width: "35px",
+                                        minWidth: "35px",
+                                        fontSize: "13px",
                                         flexShrink: 0,
                                     }}
                                     aria-label="Toggle language"
                                 >
                                     {i18n.language.startsWith("ar")
                                         ? "EN"
-                                        : "عربي"}
+                                        : "عر"}
                                 </button>
                                 {user ? (
                                     <Link
@@ -331,22 +332,8 @@ const NavBar = ({ page_name, linkBase }) => {
                                     </Link>
                                 ) : null}
 
-                                {user ? (
-                                    <button
-                                        className="btn btn-sm d-flex align-items-center justify-content-center text-danger hover:bg-red-50 transition-colors"
-                                        style={{ width: "35px", height: "35px", borderRadius: "50%", padding: 0 }}
-                                        onClick={() => {
-                                            setOpen(false);
-                                            router.post(route("logout"));
-                                        }}
-                                        title={t("navbar.logout")}
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                                            <path fillRule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
-                                            <path fillRule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
-                                        </svg>
-                                    </button>
-                                ) : (
+
+                                {!user && (
                                     <>
                                         <Link
                                             href={route("login")}

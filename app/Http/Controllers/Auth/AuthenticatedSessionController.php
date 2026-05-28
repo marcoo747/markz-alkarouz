@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Carousel_photos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -12,7 +13,13 @@ class AuthenticatedSessionController extends Controller
 {
     public function create()
     {
-        return Inertia::render('Auth/Login');
+        $carouselPhotos = Carousel_photos::all()->map(function ($photo) {
+            return asset('storage/' . $photo->photo);
+        })->values();
+
+        return Inertia::render('Auth/Login', [
+            'carouselPhotos' => $carouselPhotos,
+        ]);
     }
 
     public function login(LoginRequest $request)
