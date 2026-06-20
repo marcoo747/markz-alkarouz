@@ -23,6 +23,7 @@ class UserRequest extends Model
         'osra_date',
         'request_status',
         'total_price',
+        'expiry_time',
     ];
 
     public function products()

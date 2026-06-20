@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Jobs\ProcessRequest;
 use App\Models\UserRequest;
 use App\Models\Cart;
 use App\Models\Osra;
@@ -80,7 +81,8 @@ class RequestController extends Controller
             'start_time' => 'nullable|date_format:H:i',
             'end_time' => 'nullable|date_format:H:i|after:start_time',
             'total_price' => 'nullable|numeric|min:0',
-            'osra_date' => 'nullable'
+            'osra_date' => 'nullable',
+            'expiry_time' => 'nullable'
         ]);
 
         $userId = Auth::id();
@@ -88,7 +90,7 @@ class RequestController extends Controller
         $cart = Cart::where('user_id', $userId)->with('products')->first();
 
         DB::transaction(function () use ($request, $userId, $cart) {
-            // Keep the total price from the client unless there is a business rule to override it.
+            $request_acceptance_time = 10; // 10 minutes
             $totalPrice = $request->total_price ?? 0;
 
             $userRequest = UserRequest::create([
@@ -102,6 +104,12 @@ class RequestController extends Controller
                 'osra_date' => $request->osra_date,
                 'request_status' => 'pending',
                 'total_price' => $totalPrice,
+            ]);
+
+            $expiry_time = $userRequest->created_at->addMinutes($request_acceptance_time);
+
+            $userRequest->update([
+                'expiry_time' => $expiry_time,
             ]);
 
             $syncData = [];
