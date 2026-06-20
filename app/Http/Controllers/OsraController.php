@@ -36,6 +36,7 @@ class OsraController extends Controller
             'osra_time' => 'required|string|max:255',
             'osra_code' => 'required|string|max:255|unique:osra,osra_code',
             'example_date' => 'required',
+            'example_time' => 'required',
         ]);
 
         Osra::create($request->all());
@@ -51,6 +52,7 @@ class OsraController extends Controller
             'osra_time' => 'required|string|max:255',
             'osra_code' => 'required|string|max:255',
             'example_date' => 'required',
+            'example_time' => 'required',
         ]);
 
         $osra->update($request->all());

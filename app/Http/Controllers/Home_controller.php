@@ -8,9 +8,20 @@ use Illuminate\Support\Facades\Auth;
 
 class Home_controller extends Controller
 {
-    public function index()
+    public function index($date = null, $time = null)
     {
+        $date = $date ?: request()->input('date', now()->format('Y-m-d'));
+        $time = $time ?: request()->input('time', now()->format('H:i'));
+
+
+
+
+
+
+
+// ///////////////////////////////////////////////////////////////////////////////////////////
         $products = Product::with(['images', 'colors', 'sizes'])
+            ->availableAt($date, $time)
             ->latest()
             ->take(8)
             ->get()
@@ -30,6 +41,15 @@ class Home_controller extends Controller
                     'size'        => optional($product->sizes->first())->size,
                 ];
             });
+// ///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
         $user = Auth::user();
         $cartItems = [];

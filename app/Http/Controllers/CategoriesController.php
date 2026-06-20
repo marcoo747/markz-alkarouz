@@ -32,14 +32,22 @@ class CategoriesController extends Controller
         ]);
     }
 
-    public function show(Category $category)
+    public function show(Category $category, $date = null, $time = null)
     {
+        $date = $date ?: request()->input('date', now()->format('Y-m-d'));
+        $time = $time ?: request()->input('time', now()->format('H:i'));
+
         $category->load([
-            'products.images' => function ($q) {
-                $q->orderBy('photo_id');
+            'products' => function ($q) use ($date, $time) {
+                $q->availableAt($date, $time)
+                    ->with([
+                        'images' => function ($q) {
+                            $q->orderBy('photo_id');
+                        },
+                        'colors',
+                        'sizes',
+                    ]);
             },
-            'products.colors',
-            'products.sizes',
         ]);
 
         $defaultImage = asset('imgs/shopping.webp');
@@ -53,6 +61,17 @@ class CategoriesController extends Controller
                 ->toArray();
         }
 
+
+
+
+
+
+
+
+
+
+
+// // ///////////////////////////////////////////////////////////////////////////////////////////
         $products = $category->products->map(function ($product) use ($defaultImage) {
             $firstColor = $product->colors->first();
             $firstSize = $product->sizes->first();
@@ -73,6 +92,16 @@ class CategoriesController extends Controller
                 'size_id'     => optional($firstSize)->size_id,
             ];
         });
+// // /////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
         $cartItems = [];
 
         if ($user && $user->cart) {

@@ -83,6 +83,7 @@ class RequestController extends Controller
             'end_time' => 'nullable|date_format:H:i|after:start_time',
             'total_price' => 'nullable|numeric|min:0',
             'osra_date' => 'nullable',
+            'osra_numeric_time' => 'nullable',
             'expiry_time' => 'nullable'
         ]);
 
@@ -103,6 +104,7 @@ class RequestController extends Controller
                 'end_time' => $request->end_time,
                 'osra_time' => $request->osra_time,
                 'osra_date' => $request->osra_date,
+                'osra_numeric_time' => $request->osra_numeric_time,
                 'request_status' => 'pending',
                 'total_price' => $totalPrice,
             ]);

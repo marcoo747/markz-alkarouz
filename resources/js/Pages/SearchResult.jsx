@@ -41,8 +41,8 @@ const SearchResult = () => {
                       inventory_quantity: p.inventory_quantity,
                       image:
                         p.images && p.images.length > 0
-                          ? `storage/${p.images[0].photo}`
-                          : "imgs/shopping.webp",
+                          ? `markaz_alkarouz/public/storage/${p.images[0].photo}`
+                          : "/markaz_alkarouz/public/imgs/shopping.webp",
                     },
                   ]}
                   onEdit={() => {}}

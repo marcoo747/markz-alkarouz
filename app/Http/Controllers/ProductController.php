@@ -246,17 +246,39 @@ class ProductController extends Controller
         return back()->with('success', 'Size added successfully!');
     }
 
-    public function search(Request $request)
+    public function search(Request $request, $date = null, $time = null)
     {
+        $date = $date ?: $request->input('date', now()->format('Y-m-d'));
+        $time = $time ?: $request->input('time', now()->format('H:i'));
         $query = $request->input('query');
 
-        $results = Product::where('pr_name', 'like', "%{$query}%")
-            ->orWhere('pr_description', 'like', "%{$query}%")
-            ->orWhere('brand', 'like', "%{$query}%")
+
+
+
+
+
+
+
+// // ///////////////////////////////////////////////////////////////////////////////////////////
+        $results = Product::availableAt($date, $time)
+            ->where(function ($q) use ($query) {
+                $q->where('pr_name', 'like', "%{$query}%")
+                    ->orWhere('pr_description', 'like', "%{$query}%")
+                    ->orWhere('brand', 'like', "%{$query}%");
+            })
             ->with(['images' => function ($q) {
                 $q->orderBy('product_id')->limit(1);
             }])
             ->get();
+// // ///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
         $user = Auth::user();
         $cartItems = [];

@@ -14,6 +14,7 @@ class Osra extends Model
         'osra_time',
         'osra_code',
         'example_date',
+        'example_time',
     ];
 
     public function requests()

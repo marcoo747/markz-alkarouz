@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { router } from "@inertiajs/react";
 import styles from "../../css/CheckoutModal.module.css";
 
-const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_same_day }) => {
+const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_same_day, osraNumericTime }) => {
     const [idCode, setIdCode] = useState("");
     const [startDate, setStartDate] = useState("");
     const [startTime, setStartTime] = useState("");
@@ -56,6 +56,7 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                 osra_code: idCode.trim(),
                 osra_time: osraTime,
                 osra_date: dateValue || selectedOsraDate,
+                osra_numeric_time: osraNumericTime,
                 total_price: total,
             },
             {
