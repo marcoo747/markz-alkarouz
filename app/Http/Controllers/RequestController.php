@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Jobs\ProcessRequest;
 use App\Models\UserRequest;
+use App\Models\Missings;
 use App\Models\Cart;
 use App\Models\Osra;
 use Illuminate\Support\Facades\Auth;
@@ -114,10 +115,13 @@ class RequestController extends Controller
 
             $syncData = [];
             foreach ($cart->products as $product) {
+                $quantity = $product->pivot->quantity ?? 0;
                 $syncData[$product->pivot->product_id] = [
-                    'color_id'  => $product->pivot->color_id,
-                    'size_id'   => $product->pivot->size_id,
-                    'quantity'  => $product->pivot->quantity,
+                    'color_id'     => $product->pivot->color_id,
+                    'size_id'      => $product->pivot->size_id,
+                    'quantity'     => $quantity,
+                    'checked_qnty' => 0,
+                    'unchecked_qnty' => $quantity,
                 ];
             }
 
@@ -149,7 +153,16 @@ class RequestController extends Controller
         $request->load('products');
 
         foreach ($request->products as $product) {
-            $product->increment('inventory_quantity', $product->pivot->quantity);
+            $product->increment('inventory_quantity', $product->pivot->checked_qnty);
+
+            $missings = Missings::create([
+                "request_id" => $request->request_id,
+                "osra_code" => $request->osra_code,
+                "user_id" => $request->user_id,
+                "product_id" => $product->pivot->product_id,
+                "quantity" => $product->pivot->unchecked_qnty,
+                "comment" => $product->pivot->comment,
+            ]);
         }
 
         $request->update([

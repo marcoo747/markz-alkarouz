@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Missings extends Model
 {
-    protected $primaryKey = 'missings_id ';
+    public $timestamps = false;
+    protected $primaryKey = 'missings_id';
     protected $table = 'missings';
 
     protected $fillable = [
