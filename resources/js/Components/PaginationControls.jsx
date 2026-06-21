@@ -41,13 +41,11 @@ const PaginationControls = ({ pagination, params = {}, currentPage = null, total
           onClick={() => navigate(previousPage)}
           className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-semibold shadow-sm transition hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {/* {t("pagination.previous") || "← Previous"} */}
-          ← Previous
+          {t("pagination.previous") || "← Previous"}
         </button>
 
         <span className="text-gray-700 font-semibold">
-          {/* {t("pagination.page") || "Page"} {page} {t("pagination.of") || "of"} {lastPage} */}
-          {`Page ${page} of ${lastPage}`}
+          {t("pagination.page") || "Page"} {page} {t("pagination.of") || "of"} {lastPage}
         </span>
 
         <button
@@ -55,8 +53,7 @@ const PaginationControls = ({ pagination, params = {}, currentPage = null, total
           onClick={() => navigate(nextPage)}
           className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-semibold shadow-sm transition hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {/* {t("pagination.next") || "Next →"} */}
-          Next →
+          {t("pagination.next") || "Next →"}
         </button>
       </div>
     </div>

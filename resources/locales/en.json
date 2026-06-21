@@ -251,5 +251,11 @@
     "pending": "Pending Requests",
     "accepted": "Accepted Requests",
     "done": "Done Requests"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of"
   }
 }
