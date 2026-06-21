@@ -12,44 +12,29 @@ class Home_controller extends Controller
     {
         $date = $date ?: request()->input('date', now()->format('Y-m-d'));
         $time = $time ?: request()->input('time', now()->format('H:i'));
+        $perPage = request()->input('per_page', 12);
 
-
-
-
-
-
-
-// ///////////////////////////////////////////////////////////////////////////////////////////
-        $products = Product::with(['images', 'colors', 'sizes'])
+        $productsPaginated = Product::with(['images', 'colors', 'sizes'])
             ->availableAt($date, $time)
             ->latest()
-            ->take(8)
-            ->get()
-            ->map(function ($product) {
-                return [
-                    'id'          => $product->product_id,
-                    'title'       => $product->pr_name,
-                    'description' => $product->pr_description,
-                    'inventory_quantity' => $product->inventory_quantity,
-                    'price'       => $product->pr_price,
-                    'image'       => $product->images->first()
-                        ? '/markaz_alkarouz/public/storage/' . $product->images->first()->photo
-                        : '/markaz_alkarouz/public/imgs/shopping.webp',
-                    'color_id'    => optional($product->colors->first())->color_id,
-                    'color'       => optional($product->colors->first())->color,
-                    'size_id'     => optional($product->sizes->first())->size_id,
-                    'size'        => optional($product->sizes->first())->size,
-                ];
-            });
-// ///////////////////////////////////////////////////////////////////////////////////////////
+            ->paginate($perPage);
 
-
-
-
-
-
-
-
+        $products = $productsPaginated->map(function ($product) {
+            return [
+                'id'          => $product->product_id,
+                'title'       => $product->pr_name,
+                'description' => $product->pr_description,
+                'inventory_quantity' => $product->inventory_quantity,
+                'price'       => $product->pr_price,
+                'image'       => $product->images->first()
+                    ? '/markaz_alkarouz/public/storage/' . $product->images->first()->photo
+                    : '/markaz_alkarouz/public/imgs/shopping.webp',
+                'color_id'    => optional($product->colors->first())->color_id,
+                'color'       => optional($product->colors->first())->color,
+                'size_id'     => optional($product->sizes->first())->size_id,
+                'size'        => optional($product->sizes->first())->size,
+            ];
+        });
 
         $user = Auth::user();
         $cartItems = [];
@@ -64,6 +49,13 @@ class Home_controller extends Controller
 
         return Inertia::render('Home', [
             'products'          => $products,
+            'pagination'        => [
+                'current_page'  => $productsPaginated->currentPage(),
+                'last_page'     => $productsPaginated->lastPage(),
+                'per_page'      => $productsPaginated->perPage(),
+                'total'         => $productsPaginated->total(),
+                'path'          => $productsPaginated->path(),
+            ],
             'cartItems'         => $cartItems,
             'cart_items_count'  => $cart_items_count,
         ]);

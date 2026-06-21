@@ -4,13 +4,14 @@ import { useTranslation } from "react-i18next";
 import NavBar from "@/Components/NavBar";
 import Category from "@/Components/Category";
 import Container from "@/Components/Container";
+import PaginationControls from "@/Components/PaginationControls";
 import AddCategoryModal from "@/Components/AddCategoryModal";
 import EditCategoryModal from "@/Components/EditCategoryModal";
 import DeleteCategoryModal from "@/Components/DeleteCategoryModal";
 
 const Categories = () => {
   const { t } = useTranslation();
-  const { categories, type, main_category_id } = usePage().props;
+  const { categories, type, main_category_id, pagination } = usePage().props;
   const { auth } = usePage().props;
   const user = auth.user;
   const manager = user?.user_type === "manager";
@@ -89,6 +90,8 @@ const Categories = () => {
           );
         })}
         </div>
+
+        <PaginationControls pagination={pagination} />
 
         {showAddModal && (
           <AddCategoryModal

@@ -21,15 +21,17 @@ class ProfileController extends Controller
 
         $osra = $user->osra;
 
-        $requests = $user->requests()
+        $perPage = request()->input('per_page', 3);
+        $requestsPaginated = $user->requests()
             ->latest()
-            ->with('osra') // eager load osra relation
-            ->get()
-            ->map(function ($request) {
+            ->with('osra')
+            ->paginate($perPage);
+
+        $requests = $requestsPaginated->map(function ($request) {
                 return [
                     'request_id'     => $request->request_id,
                     'user_id'        => $request->user_id,
-                    'osra_name'      => $request->osra ? $request->osra->osra_name : null, // ✅ use osra_name
+                    'osra_name'      => $request->osra ? $request->osra->osra_name : null,
                     'start_date'     => $request->start_date,
                     'start_time'     => $request->start_time,
                     'end_date'       => $request->end_date,
@@ -67,6 +69,13 @@ class ProfileController extends Controller
                 ] : null,
             ],
             'requests' => $requests,
+            'pagination'    => [
+                'current_page'  => $requestsPaginated->currentPage(),
+                'last_page'     => $requestsPaginated->lastPage(),
+                'per_page'      => $requestsPaginated->perPage(),
+                'total'         => $requestsPaginated->total(),
+                'path'          => $requestsPaginated->path(),
+            ],
             'cart_items_count' => $cart_items_count,
         ]);
     }

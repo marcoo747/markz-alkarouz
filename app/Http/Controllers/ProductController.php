@@ -130,13 +130,14 @@ class ProductController extends Controller
 
         $flashMessage = session('success') ?? null;
 
-        $relatedProducts = Product::with(['images', 'colors', 'sizes'])
+        $perPage = request()->input('per_page', 8);
+        $relatedProductsPaginated = Product::with(['images', 'colors', 'sizes'])
             ->where('category_id', $product->category_id)
             ->where('product_id', '!=', $product->product_id)
             ->latest()
-            ->take(8)
-            ->get()
-            ->map(function ($product) {
+            ->paginate($perPage);
+
+        $relatedProducts = $relatedProductsPaginated->map(function ($product) {
                     return [
                         'id' => $product->product_id,
                         'title' => $product->pr_name,
@@ -165,6 +166,13 @@ class ProductController extends Controller
             'product' => $product,
             'cartItems' => $cartItems,
             'relatedProducts' => $relatedProducts,
+            'pagination'    => [
+                'current_page'  => $relatedProductsPaginated->currentPage(),
+                'last_page'     => $relatedProductsPaginated->lastPage(),
+                'per_page'      => $relatedProductsPaginated->perPage(),
+                'total'         => $relatedProductsPaginated->total(),
+                'path'          => $relatedProductsPaginated->path(),
+            ],
             'cart_items_count' => $cart_items_count,
             'flash' => [
                 'success' => $flashMessage,
@@ -251,16 +259,9 @@ class ProductController extends Controller
         $date = $date ?: $request->input('date', now()->format('Y-m-d'));
         $time = $time ?: $request->input('time', now()->format('H:i'));
         $query = $request->input('query');
+        $perPage = request()->input('per_page', 12);
 
-
-
-
-
-
-
-
-// // ///////////////////////////////////////////////////////////////////////////////////////////
-        $results = Product::availableAt($date, $time)
+        $resultsPaginated = Product::availableAt($date, $time)
             ->where(function ($q) use ($query) {
                 $q->where('pr_name', 'like', "%{$query}%")
                     ->orWhere('pr_description', 'like', "%{$query}%")
@@ -269,16 +270,11 @@ class ProductController extends Controller
             ->with(['images' => function ($q) {
                 $q->orderBy('product_id')->limit(1);
             }])
-            ->get();
-// // ///////////////////////////////////////////////////////////////////////////////////////////
+            ->paginate($perPage);
 
-
-
-
-
-
-
-
+        $results = $resultsPaginated->map(function ($product) {
+            return $product;
+        });
 
         $user = Auth::user();
         $cartItems = [];
@@ -294,6 +290,13 @@ class ProductController extends Controller
         return Inertia::render('SearchResult', [
             'query' => $query,
             'results' => $results,
+            'pagination'    => [
+                'current_page'  => $resultsPaginated->currentPage(),
+                'last_page'     => $resultsPaginated->lastPage(),
+                'per_page'      => $resultsPaginated->perPage(),
+                'total'         => $resultsPaginated->total(),
+                'path'          => $resultsPaginated->path(),
+            ],
             'cartItems' => $cartItems,
             'cart_items_count' => $cart_items_count,
         ]);

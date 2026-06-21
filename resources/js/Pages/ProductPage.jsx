@@ -7,10 +7,11 @@ import Container from "@/Components/Container";
 import ProductDetail from "@/Components/ProductDetail";
 import EditItemModal from "@/Components/EditItemModal";
 import DeleteItemModal from "@/Components/DeleteItemModal";
+import PaginationControls from "@/Components/PaginationControls";
 
 const ProductPage = () => {
     const { t } = useTranslation();
-    const { product, relatedProducts } = usePage().props;
+    const { product, relatedProducts, pagination } = usePage().props;
 
     const [showEditItemModal, setShowEditItemModal] = useState(false);
     const [showDeleteItemModal, setShowDeleteItemModal] = useState(false);
@@ -95,6 +96,8 @@ const ProductPage = () => {
                     onEdit={handleEditItem}
                     onDelete={handleDeleteItem}
                 />
+
+                <PaginationControls pagination={pagination} />
 
                 {/* Modals */}
                 {showEditItemModal && selectedItem && (

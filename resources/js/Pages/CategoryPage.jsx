@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import ProductCard from "@/Components/CategoryProductCard";
 import Container from "@/Components/Container";
 import NavBar from "@/Components/NavBar";
+import PaginationControls from "@/Components/PaginationControls";
 
 import AddItemModal from "@/Components/AddItemModal";
 import EditItemModal from "@/Components/EditItemModal";
@@ -15,6 +16,7 @@ const CategoryPage = () => {
   const page = usePage();
   const category = page.props.category || {};
   const products = page.props.products || [];
+  const pagination = page.props.pagination || null;
 
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [showEditItemModal, setShowEditItemModal] = useState(false);
@@ -145,6 +147,8 @@ const CategoryPage = () => {
             </div>
           ))}
         </div>
+
+        <PaginationControls pagination={pagination} />
 
         {/* =========================
             MODALS
