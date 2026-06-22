@@ -475,7 +475,7 @@ export default function Login({ carouselPhotos = [] }) {
               </button>
 
               {errors.general && (
-                <Message type="error" className="mt-4">{errors.general}</Message>
+                <Message type="error">{t("auth.failed") || errors.general}</Message>
               )}
             </form>
 

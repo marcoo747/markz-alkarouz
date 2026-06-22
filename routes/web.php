@@ -15,6 +15,7 @@ use App\Http\Controllers\TermsAndPenaltiesController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,26 @@ use Illuminate\Support\Facades\Auth;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [Home_controller::class, 'index'])->name('home');
+// temporarly untill i have the date and time from the front-end inputs
+Route::get('/', [function(){
+    $ip = request()->ip();
+
+    $response = Http::get("http://ip-api.com/json/156.205.152.172");
+
+    $data = $response->json();
+
+    $timezone = $data['timezone'];
+
+    $localTime = now()->setTimezone($timezone);
+
+    $date = $localTime->format('Y-m-d');
+    $time = $localTime->format('H:i:s');
+
+    return redirect()->route('home.date', [
+        'date' => $date,
+        'time' => $time
+    ]);
+}])->name('home');
 Route::get('/home/{date?}/{time?}', [Home_controller::class, 'index'])->name('home.date');
 
 // Carousel Photos (public access for home page)
@@ -93,10 +113,6 @@ Route::middleware('role:user,admin,manager')->group(function () {
 
     // Terms and Penalties API
     Route::get('/api/terms-penalties', [TermsAndPenaltiesController::class, 'index'])->name('api.terms-penalties');
-    Route::post('/api/terms-penalties', [TermsAndPenaltiesController::class, 'store'])->name('api.terms-penalties.store');
-    Route::put('/api/terms-penalties/{termsAndPenalty}', [TermsAndPenaltiesController::class, 'update'])->name('api.terms-penalties.update');
-    Route::delete('/api/terms-penalties/{termsAndPenalty}', [TermsAndPenaltiesController::class, 'destroy'])->name('api.terms-penalties.destroy');
-    Route::patch('/api/terms-penalties/{termsAndPenalty}/toggle', [TermsAndPenaltiesController::class, 'toggleActive'])->name('api.terms-penalties.toggle');
 
     // Logout
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -158,6 +174,12 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
     Route::put('/users/{user:user_id}/update', [ProfileController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [ProfileController::class, 'destroy'])->name('users.destroy');
+
+    // Terms and Penalties API
+    Route::post('/api/terms-penalties', [TermsAndPenaltiesController::class, 'store'])->name('api.terms-penalties.store');
+    Route::put('/api/terms-penalties/{termsAndPenalty}', [TermsAndPenaltiesController::class, 'update'])->name('api.terms-penalties.update');
+    Route::delete('/api/terms-penalties/{termsAndPenalty}', [TermsAndPenaltiesController::class, 'destroy'])->name('api.terms-penalties.destroy');
+    Route::patch('/api/terms-penalties/{termsAndPenalty}/toggle', [TermsAndPenaltiesController::class, 'toggleActive'])->name('api.terms-penalties.toggle');
 });
 
 /*
