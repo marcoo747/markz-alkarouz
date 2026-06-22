@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Http;
 Route::get('/', [function(){
     $ip = request()->ip();
 
-    $response = Http::get("http://ip-api.com/json/156.205.152.172");
+    $response = Http::get("http://ip-api.com/json/{$ip}");
 
     $data = $response->json();
 
