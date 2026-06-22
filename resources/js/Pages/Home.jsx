@@ -8,11 +8,12 @@ import { router, usePage, Head } from "@inertiajs/react";
 import TopAlert from "@/Components/TopAlert";
 import LoginMessage from "@/Components/LoginMessage";
 import EditImagesModal from "@/Components/EditImagesModal";
+import PaginationControls from "@/Components/PaginationControls";
 import { useTranslation } from "react-i18next";
 
 const Home = () => {
   const { t } = useTranslation();
-  const { flash, products, auth } = usePage().props;
+  const { flash, products, pagination, auth } = usePage().props;
   const [alertMessage, setAlertMessage] = useState("");
   const [showLoginAlert, setShowLoginAlert] = useState(true);
   
@@ -141,6 +142,8 @@ const Home = () => {
             setAlertMessage={setAlertMessage}
           />
         </div>
+
+        <PaginationControls pagination={pagination} />
       </Container>
     </>
   );

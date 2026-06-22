@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, usePage, Head, router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import NavBar from "@/Components/NavBar";
+import PaginationControls from "@/Components/PaginationControls";
 import { useTranslation } from "react-i18next";
 import Button from "@/Components/Button";
 import "../../css/requests_style.css";
@@ -295,24 +296,11 @@ const Requests = () => {
                     ))}
                 </div>
 
-                {/* Pagination */}
-                {totalPages > 1 && (
-                    <nav className="d-flex justify-content-center mt-4">
-                        <ul className="pagination">
-                            <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                                <button className="page-link" onClick={() => setCurrentPage(p => p - 1)}>&laquo;</button>
-                            </li>
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                                <li key={page} className={`page-item ${currentPage === page ? "active" : ""}`}>
-                                    <button className="page-link" onClick={() => setCurrentPage(page)}>{page}</button>
-                                </li>
-                            ))}
-                            <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
-                                <button className="page-link" onClick={() => setCurrentPage(p => p + 1)}>&raquo;</button>
-                            </li>
-                        </ul>
-                    </nav>
-                )}
+                <PaginationControls
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
             </div>
         </>
     );

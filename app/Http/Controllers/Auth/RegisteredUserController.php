@@ -24,7 +24,7 @@ class RegisteredUserController extends Controller
             'mobile'      => ['required', 'digits:11', 'unique:users,mobile'],
             'password'    => 'required|string|min:8|confirmed',
             'user_type'   => 'required|string',
-            'email'       => 'required|email|unique:users,email',
+            'email'       => 'nullable|email|unique:users,email',
             'user_photo'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'osra_code'   => 'nullable|string',
         ]);

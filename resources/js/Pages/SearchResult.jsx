@@ -1,8 +1,9 @@
 import React from "react";
-import { usePage, Head, Link } from "@inertiajs/react";
+import { usePage, Head, Link, router } from "@inertiajs/react";
 import NavBar from "@/Components/NavBar";
 import Container from "@/Components/Container";
 import ItemPack from "@/Components/Item-pack";
+import PaginationControls from "@/Components/PaginationControls";
 import { useTranslation } from "react-i18next";
 
 const SearchResult = () => {
@@ -10,6 +11,7 @@ const SearchResult = () => {
   const { props } = usePage();
   const query = props.query ?? "";
   const results = Array.isArray(props.results) ? props.results : [];
+  const pagination = props.pagination || null;
 
   return (
     <div className="min-h-screen bg-gray-50 pb-12">
@@ -41,8 +43,8 @@ const SearchResult = () => {
                       inventory_quantity: p.inventory_quantity,
                       image:
                         p.images && p.images.length > 0
-                          ? `storage/${p.images[0].photo}`
-                          : "imgs/shopping.webp",
+                          ? `markaz_alkarouz/public/storage/${p.images[0].photo}`
+                          : "/markaz_alkarouz/public/imgs/shopping.webp",
                     },
                   ]}
                   onEdit={() => {}}
@@ -72,6 +74,8 @@ const SearchResult = () => {
             </div>
           )}
         </div>
+
+        <PaginationControls pagination={pagination} params={{ query }} />
       </Container>
     </div>
   );

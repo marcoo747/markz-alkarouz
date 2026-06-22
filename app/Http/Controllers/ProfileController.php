@@ -15,61 +15,70 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-public function index()
-{
-    $user = Auth::user();
+    public function index()
+    {
+        $user = Auth::user();
 
-    $osra = $user->osra;
+        $osra = $user->osra;
 
-    $requests = $user->requests()
-        ->latest()
-        ->with('osra') // eager load osra relation
-        ->get()
-        ->map(function ($request) {
-            return [
-                'request_id'     => $request->request_id,
-                'user_id'        => $request->user_id,
-                'osra_name'      => $request->osra ? $request->osra->osra_name : null, // ✅ use osra_name
-                'start_date'     => $request->start_date,
-                'start_time'     => $request->start_time,
-                'end_date'       => $request->end_date,
-                'end_time'       => $request->end_time,
-                'osra_time'      => $request->osra_time,
-                'request_status' => $request->request_status,
-                'created_at'     => $request->created_at,
-                'updated_at'     => $request->updated_at,
-            ];
-        });
-    $cartItems = [];
+        $perPage = request()->input('per_page', 3);
+        $requestsPaginated = $user->requests()
+            ->latest()
+            ->with('osra')
+            ->paginate($perPage);
 
-    if ($user && $user->cart) {
-        $cartItems = $user->cart->products()
-            ->pluck('products.product_id')
-            ->toArray();
+        $requests = $requestsPaginated->map(function ($request) {
+                return [
+                    'request_id'     => $request->request_id,
+                    'user_id'        => $request->user_id,
+                    'osra_name'      => $request->osra ? $request->osra->osra_name : null,
+                    'start_date'     => $request->start_date,
+                    'start_time'     => $request->start_time,
+                    'end_date'       => $request->end_date,
+                    'end_time'       => $request->end_time,
+                    'osra_time'      => $request->osra_time,
+                    'request_status' => $request->request_status,
+                    'created_at'     => $request->created_at,
+                    'updated_at'     => $request->updated_at,
+                ];
+            });
+        $cartItems = [];
+
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+
+        $cart_items_count = count($cartItems);
+
+        return Inertia::render('ProfilePage', [
+            'user' => [
+                'name' => $user->full_name,
+                'phone' => $user->mobile,
+                'email' => $user->email,
+                'profilePhoto' => $user->user_photo
+                    ? asset('storage/' . $user->user_photo)
+                    : 'imgs/AlkarouzCom.png',
+                'osra' => $osra ? [
+                    'osra_id' => $osra->osra_id,
+                    'osra_name' => $osra->osra_name,
+                    'osra_place' => $osra->osra_place,
+                    'osra_time' => $osra->osra_time,
+                    'osra_code' => $osra->osra_code,
+                ] : null,
+            ],
+            'requests' => $requests,
+            'pagination'    => [
+                'current_page'  => $requestsPaginated->currentPage(),
+                'last_page'     => $requestsPaginated->lastPage(),
+                'per_page'      => $requestsPaginated->perPage(),
+                'total'         => $requestsPaginated->total(),
+                'path'          => $requestsPaginated->path(),
+            ],
+            'cart_items_count' => $cart_items_count,
+        ]);
     }
-
-    $cart_items_count = count($cartItems);
-
-    return Inertia::render('ProfilePage', [
-        'user' => [
-            'name' => $user->full_name,
-            'phone' => $user->mobile,
-            'email' => $user->email,
-            'profilePhoto' => $user->user_photo
-                ? asset('storage/' . $user->user_photo)
-                : 'imgs/AlkarouzCom.png',
-            'osra' => $osra ? [
-                'osra_id' => $osra->osra_id,
-                'osra_name' => $osra->osra_name,
-                'osra_place' => $osra->osra_place,
-                'osra_time' => $osra->osra_time,
-                'osra_code' => $osra->osra_code,
-            ] : null,
-        ],
-        'requests' => $requests,
-        'cart_items_count' => $cart_items_count,
-    ]);
-}
 
     public function show_all_users()
     {

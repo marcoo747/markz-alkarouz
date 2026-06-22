@@ -21,9 +21,18 @@ class OsraController extends Controller
         }
 
         $cart_items_count = count($cartItems);
-        $osras = Osra::orderBy('updated_at', 'desc')->get();
+        $perPage = request()->input('per_page', 12);
+        $osrasPaginated = Osra::orderBy('updated_at', 'desc')->paginate($perPage);
+        
         return Inertia::render('OsraPage', [
-            'osras' => $osras,
+            'osras' => $osrasPaginated->items(),
+            'pagination'    => [
+                'current_page'  => $osrasPaginated->currentPage(),
+                'last_page'     => $osrasPaginated->lastPage(),
+                'per_page'      => $osrasPaginated->perPage(),
+                'total'         => $osrasPaginated->total(),
+                'path'          => $osrasPaginated->path(),
+            ],
             'cart_items_count' => $cart_items_count,
         ]);
     }
@@ -36,6 +45,7 @@ class OsraController extends Controller
             'osra_time' => 'required|string|max:255',
             'osra_code' => 'required|string|max:255|unique:osra,osra_code',
             'example_date' => 'required',
+            'example_time' => 'required',
         ]);
 
         Osra::create($request->all());
@@ -51,6 +61,7 @@ class OsraController extends Controller
             'osra_time' => 'required|string|max:255',
             'osra_code' => 'required|string|max:255',
             'example_date' => 'required',
+            'example_time' => 'required',
         ]);
 
         $osra->update($request->all());

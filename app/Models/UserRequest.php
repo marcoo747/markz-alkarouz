@@ -21,8 +21,10 @@ class UserRequest extends Model
         'end_time',
         'osra_time',
         'osra_date',
+        'osra_numeric_time',
         'request_status',
         'total_price',
+        'expiry_time',
     ];
 
     public function products()
@@ -34,7 +36,7 @@ class UserRequest extends Model
             'product_id'
         )
         ->using(RequestProduct::class)
-        ->withPivot(['color_id', 'size_id', 'quantity'])
+        ->withPivot(['color_id', 'size_id', 'quantity', 'checked_qnty', 'unchecked_qnty', 'comment'])
         ->withTimestamps();
     }
 

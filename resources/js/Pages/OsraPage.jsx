@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Head, router } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import { useTranslation } from "react-i18next";
 import NavBar from "@/Components/NavBar";
 import EditOsraModal from "@/Components/EditOsraModal";
 import DeleteOsraModal from "@/Components/DeleteOsraModal";
 import AddOsraModal from "@/Components/AddOsraModal";
+import PaginationControls from "@/Components/PaginationControls";
 
 const OsraPage = ({ osras: initialOsras }) => {
   const { t } = useTranslation();
+  const { pagination } = usePage().props;
   const [osras, setOsras] = useState(initialOsras || []);
   const [selectedOsra, setSelectedOsra] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
@@ -73,6 +75,8 @@ const OsraPage = ({ osras: initialOsras }) => {
             </div>
           ))}
         </div>
+
+        <PaginationControls pagination={pagination} />
 
         {showAdd && <AddOsraModal onClose={() => setShowAdd(false)} onConfirm={handleAdd} />}
         {showEdit && selectedOsra && <EditOsraModal osra={selectedOsra} onClose={() => setShowEdit(false)} onConfirm={handleEdit} />}

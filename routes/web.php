@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', [Home_controller::class, 'index'])->name('home');
+Route::get('/home/{date?}/{time?}', [Home_controller::class, 'index'])->name('home.date');
 
 // Carousel Photos (public access for home page)
 Route::get('/carousel-photos', [Carousel_photos_controller::class, 'index'])->name('carousel.photos.index');
@@ -33,7 +34,7 @@ Route::get('/carousel-photos', [Carousel_photos_controller::class, 'index'])->na
 
 Route::get('/all-categories', [CategoriesController::class, 'index'])->name('categories.all');
 
-Route::get('/categories/{category}', [CategoriesController::class, 'show'])->name('categories.show');
+Route::get('/categories/{category}/{date?}/{time?}', [CategoriesController::class, 'show'])->name('categories.show');
 
 /*
     Main Categories
@@ -48,7 +49,7 @@ Route::get('/main_categories/{main_category_id}', [CategoriesController::class, 
 */
 
 Route::get('/items/{id}', [ProductController::class, 'show'])->name('items.show');
-Route::get('/search', [ProductController::class, 'search'])->name('search');
+Route::get('/search/{date?}/{time?}', [ProductController::class, 'search'])->name('search');
 
 /*
 |--------------------------------------------------------------------------

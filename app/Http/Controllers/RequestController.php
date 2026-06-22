@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Jobs\ProcessRequest;
 use App\Models\UserRequest;
+use App\Models\Missings;
 use App\Models\Cart;
 use App\Models\Osra;
 use Illuminate\Support\Facades\Auth;
@@ -80,7 +82,9 @@ class RequestController extends Controller
             'start_time' => 'nullable|date_format:H:i',
             'end_time' => 'nullable|date_format:H:i|after:start_time',
             'total_price' => 'nullable|numeric|min:0',
-            'osra_date' => 'nullable'
+            'osra_date' => 'nullable',
+            'osra_numeric_time' => 'nullable',
+            'expiry_time' => 'nullable'
         ]);
 
         $userId = Auth::id();
@@ -88,7 +92,7 @@ class RequestController extends Controller
         $cart = Cart::where('user_id', $userId)->with('products')->first();
 
         DB::transaction(function () use ($request, $userId, $cart) {
-            // Keep the total price from the client unless there is a business rule to override it.
+            $request_acceptance_time = 10; // 10 minutes
             $totalPrice = $request->total_price ?? 0;
 
             $userRequest = UserRequest::create([
@@ -100,16 +104,26 @@ class RequestController extends Controller
                 'end_time' => $request->end_time,
                 'osra_time' => $request->osra_time,
                 'osra_date' => $request->osra_date,
+                'osra_numeric_time' => $request->osra_numeric_time,
                 'request_status' => 'pending',
                 'total_price' => $totalPrice,
             ]);
 
+            $expiry_time = $userRequest->created_at->addMinutes($request_acceptance_time);
+
+            $userRequest->update([
+                'expiry_time' => $expiry_time,
+            ]);
+
             $syncData = [];
             foreach ($cart->products as $product) {
+                $quantity = $product->pivot->quantity ?? 0;
                 $syncData[$product->pivot->product_id] = [
-                    'color_id'  => $product->pivot->color_id,
-                    'size_id'   => $product->pivot->size_id,
-                    'quantity'  => $product->pivot->quantity,
+                    'color_id'     => $product->pivot->color_id,
+                    'size_id'      => $product->pivot->size_id,
+                    'quantity'     => $quantity,
+                    'checked_qnty' => 0,
+                    'unchecked_qnty' => $quantity,
                 ];
             }
 
@@ -141,7 +155,16 @@ class RequestController extends Controller
         $request->load('products');
 
         foreach ($request->products as $product) {
-            $product->increment('inventory_quantity', $product->pivot->quantity);
+            $product->increment('inventory_quantity', $product->pivot->checked_qnty);
+
+            $missings = Missings::create([
+                "request_id" => $request->request_id,
+                "osra_code" => $request->osra_code,
+                "user_id" => $request->user_id,
+                "product_id" => $product->pivot->product_id,
+                "quantity" => $product->pivot->unchecked_qnty,
+                "comment" => $product->pivot->comment,
+            ]);
         }
 
         $request->update([

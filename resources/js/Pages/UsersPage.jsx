@@ -73,7 +73,7 @@ const UsersPage = () => {
     setShowEditModal(true);
   };
 
-    const handleEditSubmit = (e) => {
+  const handleEditSubmit = (e) => {
     e.preventDefault();
 
     const formData = new FormData();

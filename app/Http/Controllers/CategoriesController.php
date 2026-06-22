@@ -24,23 +24,39 @@ class CategoriesController extends Controller
 
         $cart_items_count = count($cartItems);
 
-        $categories = Category::all();
+        $perPage = request()->input('per_page', 12);
+        $categoriesPaginated = Category::paginate($perPage);
+        
         return Inertia::render('Categories', [
-            'categories' => $categories,
+            'categories' => $categoriesPaginated->items(),
+            'pagination'    => [
+                'current_page'  => $categoriesPaginated->currentPage(),
+                'last_page'     => $categoriesPaginated->lastPage(),
+                'per_page'      => $categoriesPaginated->perPage(),
+                'total'         => $categoriesPaginated->total(),
+                'path'          => $categoriesPaginated->path(),
+            ],
             'cart_items_count' => $cart_items_count,
             'linkBase' => '/markaz_alkarouz/public',
         ]);
     }
 
-    public function show(Category $category)
+    public function show(Category $category, $date = null, $time = null)
     {
-        $category->load([
-            'products.images' => function ($q) {
-                $q->orderBy('photo_id');
-            },
-            'products.colors',
-            'products.sizes',
-        ]);
+        $date = $date ?: request()->input('date', now()->format('Y-m-d'));
+        $time = $time ?: request()->input('time', now()->format('H:i'));
+        $perPage = request()->input('per_page', 12);
+
+        $productsPaginated = $category->products()
+            ->availableAt($date, $time)
+            ->with([
+                'images' => function ($q) {
+                    $q->orderBy('photo_id');
+                },
+                'colors',
+                'sizes',
+            ])
+            ->paginate($perPage);
 
         $defaultImage = asset('imgs/shopping.webp');
         $user = Auth::user();
@@ -53,7 +69,7 @@ class CategoriesController extends Controller
                 ->toArray();
         }
 
-        $products = $category->products->map(function ($product) use ($defaultImage) {
+        $products = $productsPaginated->map(function ($product) use ($defaultImage) {
             $firstColor = $product->colors->first();
             $firstSize = $product->sizes->first();
             return [
@@ -73,6 +89,7 @@ class CategoriesController extends Controller
                 'size_id'     => optional($firstSize)->size_id,
             ];
         });
+
         $cartItems = [];
 
         if ($user && $user->cart) {
@@ -86,6 +103,13 @@ class CategoriesController extends Controller
         return Inertia::render('CategoryPage', [
             'category'      => $category,
             'products'      => $products,
+            'pagination'    => [
+                'current_page'  => $productsPaginated->currentPage(),
+                'last_page'     => $productsPaginated->lastPage(),
+                'per_page'      => $productsPaginated->perPage(),
+                'total'         => $productsPaginated->total(),
+                'path'          => $productsPaginated->path(),
+            ],
             'default_image' => $defaultImage,
             'cart_items_count' => $cart_items_count,
             'cartItems'     => $cartItems,
@@ -178,7 +202,9 @@ class CategoriesController extends Controller
 
     public function show_main()
     {
-        $main_categories = Main_Category::all();
+        $perPage = request()->input('per_page', 12);
+        $main_categoriesPaginated = Main_Category::paginate($perPage);
+        
         $user = Auth::user();
         $cartItems = [];
 
@@ -190,14 +216,23 @@ class CategoriesController extends Controller
 
         $cart_items_count = count($cartItems);
         return Inertia::render('MainCategories',[
-            'main_categories' => $main_categories,
+            'main_categories' => $main_categoriesPaginated->items(),
+            'pagination'    => [
+                'current_page'  => $main_categoriesPaginated->currentPage(),
+                'last_page'     => $main_categoriesPaginated->lastPage(),
+                'per_page'      => $main_categoriesPaginated->perPage(),
+                'total'         => $main_categoriesPaginated->total(),
+                'path'          => $main_categoriesPaginated->path(),
+            ],
             'cart_items_count' => $cart_items_count,
         ]);
     }
 
     public function show_one_main($main_category_id)
     {
-        $categories = Category::where('main_category_id', $main_category_id)->get();
+        $perPage = request()->input('per_page', 12);
+        $categoriesPaginated = Category::where('main_category_id', $main_category_id)->paginate($perPage);
+        
         $user = Auth::user();
         $cartItems = [];
 
@@ -210,7 +245,14 @@ class CategoriesController extends Controller
         $cart_items_count = count($cartItems);
 
         return Inertia::render('Categories', [
-            'categories' => $categories,
+            'categories' => $categoriesPaginated->items(),
+            'pagination'    => [
+                'current_page'  => $categoriesPaginated->currentPage(),
+                'last_page'     => $categoriesPaginated->lastPage(),
+                'per_page'      => $categoriesPaginated->perPage(),
+                'total'         => $categoriesPaginated->total(),
+                'path'          => $categoriesPaginated->path(),
+            ],
             'linkBase' => '/markaz_alkarouz/public',
             'cart_items_count' => $cart_items_count,
             'main_category_id'=> $main_category_id,

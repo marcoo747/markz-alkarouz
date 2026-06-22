@@ -11,7 +11,7 @@ import TermsAndPenaltiesModal from "@/Components/TermsAndPenaltiesModal";
 
 const CartPage = () => {
   const { t } = useTranslation();
-  const { can_go_outside, cart, user, osra_time, next_same_day } = usePage().props;
+  const { can_go_outside, cart, user, osra_time, next_same_day, osra_numeric_time } = usePage().props;
   const products = cart?.products ?? [];
   const { errors } = usePage().props;
 
@@ -135,6 +135,7 @@ const CartPage = () => {
             onClose={() => setShowCheckout(false)}
             onConfirm={handleConfirmBooking}
             osraTime={osra_time}
+            osraNumericTime={osra_numeric_time}
           />
         )}
 

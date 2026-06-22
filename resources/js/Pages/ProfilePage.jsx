@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { usePage, router, Head } from "@inertiajs/react";
 import NavBar from "@/Components/NavBar";
 import Container from "@/Components/Container";
+import PaginationControls from "@/Components/PaginationControls";
 import styles from "../../css/ProfilePage.module.css";
 import { useTranslation } from "react-i18next";
 
 const ProfilePage = () => {
   const { t } = useTranslation();
-  const { user, requests = [] } = usePage().props; // requests from backend
+  const { user, requests = [], pagination } = usePage().props; // requests from backend
 
   // --- Edit Profile ---
   const [showEditModal, setShowEditModal] = useState(false);
@@ -19,7 +20,6 @@ const ProfilePage = () => {
     osra_code: "",
   });
   const [fileName, setFileName] = useState("");
-
   const [editErrors, setEditErrors] = useState({});
 
   // --- Password Modal ---
@@ -30,6 +30,7 @@ const ProfilePage = () => {
     confirmPassword: "",
   });
   const [passwordErrors, setPasswordErrors] = useState({});
+  const [imgError, setImgError] = useState(false);
 
   // --- Handle profile change ---
   const handleEditChange = (e) => {
@@ -86,8 +87,6 @@ const ProfilePage = () => {
     });
   };
 
-  const [imgError, setImgError] = useState(false);
-
   return (
     <>
       <Head title={t('home.page_title')} />
@@ -95,31 +94,31 @@ const ProfilePage = () => {
 
       <Container>
         <div className="row mt-4 g-4">
-          {/* Profile */}
+          {/* Profile Column */}
           <div className="col-12 col-md-4">
             <div className="card shadow-sm text-center p-4">
               {user.profilePhoto && !imgError ? (
-              <img
+                <img
                   src={user.profilePhoto}
                   alt="user photo"
                   className="rounded-circle mx-auto w-32 h-32 object-cover"
                   onError={() => setImgError(true)}
-              />
+                />
               ) : (
-              <svg
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="35"
                   height="35"
                   fill="currentColor"
                   className="bi bi-person-circle rounded-circle mx-auto w-32 h-32 object-cover"
                   viewBox="0 0 16 16"
-              >
+                >
                   <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                   <path
-                  fillRule="evenodd"
-                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                    fillRule="evenodd"
+                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
                   />
-              </svg>
+                </svg>
               )}
               <h5 className="mb-1">{user.name}</h5>
               <p className="text-muted mb-0">{user.email}</p>
@@ -168,15 +167,15 @@ const ProfilePage = () => {
                 onClick={() => router.post(route("logout"))}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                    <path fillRule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
-                    <path fillRule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                  <path fillRule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                  <path fillRule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
                 </svg>
                 {t('navbar.logout')}
               </button>
             </div>
           </div>
 
-          {/* Requests */}
+          {/* Requests Column */}
           <div className="col-12 col-md-8">
             <h5 className="mb-3">{t('profile.latest_requests')}</h5>
 
@@ -186,15 +185,14 @@ const ProfilePage = () => {
 
             {requests.map((request, index) => (
               <a
-                  key={request.request_id}
-                  href={route("requests.show", { request: request.request_id })}
-                  className="card shadow-sm mb-3 cursor-pointer hover:shadow-md transition block no-underline"
+                key={request.request_id}
+                href={route("requests.show", { request: request.request_id })}
+                className="card shadow-sm mb-3 cursor-pointer hover:shadow-md transition block no-underline"
               >
-              <div key={request.request_id} className="card shadow-sm mb-3">
                 <div className="card-body">
                   {/* Header */}
                   <div className="d-flex justify-content-between align-items-center mb-2">
-                    <strong>{t('profile.request_hash')}{++index}</strong>
+                    <strong>{t('profile.request_hash')}{index + 1}</strong>
                     <span
                       className={`badge ${
                         request.request_status === "accepted"
@@ -260,9 +258,10 @@ const ProfilePage = () => {
                     })}
                   </div>
                 </div>
-              </div>
               </a>
             ))}
+
+            <PaginationControls pagination={pagination} />
           </div>
         </div>
       </Container>
@@ -318,7 +317,6 @@ const ProfilePage = () => {
                       name="phone"
                       value={editData.phone}
                       onChange={(e) => {
-                        // allow only numbers
                         const value = e.target.value.replace(/[^0-9]/g, "");
                         setEditData({ ...editData, phone: value });
                       }}

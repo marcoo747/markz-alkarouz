@@ -71,6 +71,7 @@ class CartController extends Controller
             'user'              => $user,
             'cart_items_count'  => $cart_items_count,
             'osra_time'         => $osra?->osra_time,
+            'osra_numeric_time' => $osra?->example_time,
             'can_go_outside'    => $can_go_outside,
             'next_same_day'     => $next_same_day,
         ]);
