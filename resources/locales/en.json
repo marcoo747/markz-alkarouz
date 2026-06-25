@@ -209,6 +209,7 @@
     "confirm_new_password": "Confirm New Password"
   },
   "auth": {
+    "failed": "These credentials do not match our records",
     "mobile_11_digits": "Mobile number must be exactly 11 digits.",
     "password_required": "Password is required.",
     "mobile_placeholder": "Mobile number",

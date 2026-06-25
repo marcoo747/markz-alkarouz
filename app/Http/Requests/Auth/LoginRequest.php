@@ -44,8 +44,9 @@ class LoginRequest extends FormRequest
         if (! Auth::attempt($this->only('mobile', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
+            // Return a general error key so the frontend can translate it client-side
             throw ValidationException::withMessages([
-                'mobile' => trans('auth.failed'),
+                'general' => 'auth.failed',
             ]);
         }
 
