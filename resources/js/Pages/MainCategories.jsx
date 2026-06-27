@@ -113,7 +113,7 @@ const MainCategories = () => {
                   description={cleanDesc}
                   image={
                     cat.category_photo
-                      ? `storage/${cat.category_photo}`
+                      ? `/markaz_alkarouz/public/storage/${cat.category_photo}`
                       : "/markaz_alkarouz/public/imgs/shopping.webp"
                   }
                   onClick={() =>
@@ -137,7 +137,7 @@ const MainCategories = () => {
                     description={cleanDesc}
                     image={
                       cat.category_photo
-                        ? `storage/${cat.category_photo}`
+                        ? `/markaz_alkarouz/public/storage/${cat.category_photo}`
                         : "/markaz_alkarouz/public/imgs/shopping.webp"
                     }
                     onClick={() =>

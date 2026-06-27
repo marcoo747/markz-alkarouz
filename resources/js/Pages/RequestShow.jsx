@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, usePage, Head, router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import NavBar from "@/Components/NavBar";
@@ -12,6 +12,7 @@ const RequestShow = () => {
     const user = auth.user;
 
     const profile_user = user?.user_type === "user";
+    const [showRejectModal, setShowRejectModal] = useState(false);
 
     const handleShowItem = (item_id) => {
         router.visit(route("items.show", { id: item_id }));
@@ -25,8 +26,90 @@ const RequestShow = () => {
         router.post(route("requests.done", { request: id }));
     };
 
+    const rejectRequest = (id) => {
+        router.post(route("requests.reject", { request: id }));
+        setShowRejectModal(false);
+    };
+
     return (
         <>
+            {/* Reject Confirmation Modal */}
+            {showRejectModal && (
+                <div
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 1050,
+                        background: "rgba(0,0,0,0.5)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "1rem",
+                    }}
+                >
+                    <div
+                        style={{
+                            background: "#fff",
+                            borderRadius: "12px",
+                            maxWidth: "480px",
+                            width: "100%",
+                            overflow: "hidden",
+                            boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+                        }}
+                    >
+                        {/* Red header */}
+                        <div
+                            style={{
+                                background: "#dc3545",
+                                color: "#fff",
+                                padding: "1.25rem 1.5rem",
+                            }}
+                        >
+                            <h5 style={{ margin: 0, fontWeight: 700, fontSize: "1.1rem" }}>
+                                ⚠️ {t('request_show.reject_confirm_title') || 'هل أنت متأكد أنك تريد رفض هذا الطلب؟'}
+                            </h5>
+                        </div>
+
+                        {/* Order details */}
+                        <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid #f0f0f0" }}>
+                            <p className="mb-1">
+                                <strong>{t('request_show.status')} </strong>
+                                <span className="text-danger">{request.request_status}</span>
+                            </p>
+                            <p className="mb-1">
+                                <strong>{t('request_show.time')} </strong>{request.display_time}
+                            </p>
+                            {request.osra_date && (
+                                <p className="mb-1">
+                                    <strong>{t('request_show.date')} </strong>{request.osra_date}
+                                </p>
+                            )}
+                            <p className="mb-0">
+                                <strong>{request.user.full_name}</strong>
+                                {request.osra?.osra_name && (
+                                    <span className="text-muted ms-2">— {request.osra.osra_name}</span>
+                                )}
+                            </p>
+                        </div>
+
+                        {/* Buttons */}
+                        <div style={{ padding: "1rem 1.5rem", display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+                            <button
+                                className="btn btn-outline-secondary"
+                                onClick={() => setShowRejectModal(false)}
+                            >
+                                {t('request_show.cancel') || 'إلغاء'}
+                            </button>
+                            <button
+                                className="btn btn-danger"
+                                onClick={() => rejectRequest(request.request_id)}
+                            >
+                                {t('request_show.reject') || 'رفض'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <Head title={t('home.page_title')} />
             <NavBar page_name="requests" />
 
@@ -57,6 +140,8 @@ const RequestShow = () => {
                                         ? "text-success"
                                         : request.request_status === "accepted"
                                         ? "text-primary"
+                                        : request.request_status === "rejected"
+                                        ? "text-danger"
                                         : "text-secondary"
                                 }
                             >
@@ -77,9 +162,9 @@ const RequestShow = () => {
 
                         {!profile_user && (
                             <>
-                            {/* Accept / Done buttons */}
+                            {/* Accept / Done / Reject buttons */}
                             <div className="d-flex flex-nowrap gap-2 mt-3">
-                                {request.request_status !== "done" && (
+                                {request.request_status !== "done" && request.request_status !== "rejected" && (
                                     <>
                                         {request.request_status !== "accepted" && (
                                             <button
@@ -94,6 +179,12 @@ const RequestShow = () => {
                                             onClick={() => doneRequest(request.request_id)}
                                         >
                                             {t('request_show.done')}
+                                        </button>
+                                        <button
+                                            className="btn btn-danger btn-sm flex-grow-1"
+                                            onClick={() => setShowRejectModal(true)}
+                                        >
+                                            {t('request_show.reject') || 'رفض'}
                                         </button>
                                     </>
                                 )}

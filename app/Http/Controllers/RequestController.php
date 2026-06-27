@@ -173,4 +173,21 @@ class RequestController extends Controller
 
         return back()->with('success', 'Request has been done successfully!');
     }
+
+    public function reject(UserRequest $request)
+    {
+        $request->load('products');
+
+        if ($request->request_status === 'accepted') {
+            foreach ($request->products as $product) {
+                $product->increment('inventory_quantity', $product->pivot->quantity);
+            }
+        }
+
+        $request->update([
+            'request_status' => 'rejected',
+        ]);
+
+        return back()->with('success', 'Request rejected successfully!');
+    }
 }

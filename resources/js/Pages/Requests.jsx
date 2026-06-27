@@ -19,6 +19,7 @@ const Requests = () => {
     const [endDate, setEndDate] = useState("");
     const [isDateSearchActive, setIsDateSearchActive] = useState(false);
     const [dateError, setDateError] = useState("");
+    const [rejectTarget, setRejectTarget] = useState(null); // request to reject
 
     const acceptRequest = (id) => {
         router.post(route("requests.accept", { request: id }));
@@ -28,11 +29,17 @@ const Requests = () => {
         router.post(route("requests.done", { request: id }));
     };
 
+    const rejectRequest = (id) => {
+        router.post(route("requests.reject", { request: id }));
+        setRejectTarget(null);
+    };
+
     const FILTERS = [
         { key: "all", label: t("requests_filter.all") || "All" },
         { key: "pending", label: t("requests_filter.pending") || "Pending" },
         { key: "accepted", label: t("requests_filter.accepted") || "Accepted" },
         { key: "done", label: t("requests_filter.done") || "Done" },
+        { key: "rejected", label: t("requests_filter.rejected") || "Rejected" },
     ];
 
     const parseDateValue = (value) => {
@@ -134,6 +141,83 @@ const Requests = () => {
 
     return (
         <>
+            {/* Reject Confirmation Modal */}
+            {rejectTarget && (
+                <div
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 1050,
+                        background: "rgba(0,0,0,0.5)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "1rem",
+                    }}
+                >
+                    <div
+                        style={{
+                            background: "#fff",
+                            borderRadius: "12px",
+                            maxWidth: "480px",
+                            width: "100%",
+                            overflow: "hidden",
+                            boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+                        }}
+                    >
+                        {/* Red header */}
+                        <div
+                            style={{
+                                background: "#dc3545",
+                                color: "#fff",
+                                padding: "1.25rem 1.5rem",
+                            }}
+                        >
+                            <h5 style={{ margin: 0, fontWeight: 700, fontSize: "1.1rem" }}>
+                                ⚠️ {t('requests.reject_confirm_title') || 'هل أنت متأكد أنك تريد رفض هذا الطلب؟'}
+                            </h5>
+                        </div>
+
+                        {/* Order details */}
+                        <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid #f0f0f0" }}>
+                            <p className="mb-1">
+                                <strong>{rejectTarget.user.full_name}</strong>
+                                {rejectTarget.osra?.osra_name && (
+                                    <span className="text-muted ms-2">— {rejectTarget.osra.osra_name}</span>
+                                )}
+                            </p>
+                            <p className="mb-1">
+                                <strong>{t('requests.status')} </strong>
+                                <span className="text-warning">{rejectTarget.request_status}</span>
+                            </p>
+                            {rejectTarget.osra_date && (
+                                <p className="mb-1">
+                                    <strong>{t('requests.date')} </strong>{rejectTarget.osra_date}
+                                </p>
+                            )}
+                            <p className="mb-0">
+                                <strong>{t('requests.time')} </strong>{rejectTarget.display_time}
+                            </p>
+                        </div>
+
+                        {/* Buttons */}
+                        <div style={{ padding: "1rem 1.5rem", display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+                            <button
+                                className="btn btn-outline-secondary"
+                                onClick={() => setRejectTarget(null)}
+                            >
+                                {t('requests.cancel') || 'إلغاء'}
+                            </button>
+                            <button
+                                className="btn btn-danger"
+                                onClick={() => rejectRequest(rejectTarget.request_id)}
+                            >
+                                {t('requests.reject') || 'رفض'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <Head title={t('home.page_title')} />
             <NavBar page_name="requests" />
             <div className="container my-4">
@@ -242,6 +326,8 @@ const Requests = () => {
                                                             ? "text-warning"
                                                             : req.request_status === "accepted"
                                                             ? "text-primary"
+                                                            : req.request_status === "rejected"
+                                                            ? "text-danger"
                                                             : "text-success"
                                                     }
                                                 >
@@ -281,13 +367,21 @@ const Requests = () => {
                                                 {t('requests.accept')}
                                             </button>
                                         )}
-                                        {req.request_status !== "done" && (
-                                            <button
-                                                className="btn btn-success btn-sm font-weight-bold"
-                                                onClick={(e) => { e.preventDefault(); doneRequest(req.request_id); }}
-                                            >
-                                                {t('requests.done')}
-                                            </button>
+                                        {req.request_status !== "done" && req.request_status !== "rejected" && (
+                                            <>
+                                                <button
+                                                    className="btn btn-success btn-sm font-weight-bold"
+                                                    onClick={(e) => { e.preventDefault(); doneRequest(req.request_id); }}
+                                                >
+                                                    {t('requests.done')}
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger btn-sm font-weight-bold"
+                                                    onClick={(e) => { e.preventDefault(); setRejectTarget(req); }}
+                                                >
+                                                    {t('requests.reject') || 'رفض'}
+                                                </button>
+                                            </>
                                         )}
                                     </div>
                                 </div>

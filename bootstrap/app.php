@@ -30,7 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     return Inertia::render('Errors/419', ['status' => 419, 'message' => 'Page Expired',])->toResponse($request);
                 }
             }
-            return Inertia::render('Errors/500', ['status' => 500, 'message' => 'Internal Server Error',])->toResponse($request);
+            throw $e;
         });
     })
     ->create();

@@ -150,6 +150,9 @@
     "products": "Products",
     "accept": "Accept",
     "done": "Done",
+    "reject": "Reject",
+    "cancel": "Cancel",
+    "reject_confirm_title": "Are you sure you want to reject this order?",
     "start_date": "Search From Date",
     "end_date": "To Date",
     "search": "Search",
@@ -163,6 +166,9 @@
     "time": "Time:",
     "accept": "Accept",
     "done": "Done",
+    "reject": "Reject",
+    "cancel": "Cancel",
+    "reject_confirm_title": "Are you sure you want to reject this order?",
     "products_heading": "Products",
     "price": "Price:",
     "brand": "Brand:",
@@ -251,7 +257,8 @@
     "all": "All Requests",
     "pending": "Pending Requests",
     "accepted": "Accepted Requests",
-    "done": "Done Requests"
+    "done": "Done Requests",
+    "rejected": "Rejected Requests"
   },
   "pagination": {
     "previous": "Previous",

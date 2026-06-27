@@ -31,7 +31,7 @@ Route::get('/', [function(){
 
     $data = $response->json();
 
-    $timezone = $data['timezone'];
+    $timezone = $data['timezone'] ?? config('app.timezone');
 
     $localTime = now()->setTimezone($timezone);
 
@@ -128,6 +128,7 @@ Route::middleware('role:admin,manager')->group(function () {
     Route::get('/requests', [RequestController::class, 'index'])->name('requests');
     Route::post('/requests/{request}/accept', [RequestController::class, 'accept'])->name('requests.accept');
     Route::post('/requests/{request}/done', [RequestController::class, 'done'])->name('requests.done');
+    Route::post('/requests/{request}/reject', [RequestController::class, 'reject'])->name('requests.reject');
 
     // Carousel Photos
     Route::post('/carousel-photos/upload', [Carousel_photos_controller::class, 'upload_photo'])->name('carousel.photos.upload');

@@ -1,0 +1,1 @@
+import{j as t}from"./app-Drqhu6sc.js";const a=({type:e,children:s})=>{const r=e==="success"?"text-green-700":e==="error"?"text-red-700":"";return t.jsx("div",{className:`${r} font-semibold text-center mt-2`,role:e==="error"?"alert":"status",children:s})};export{a as M};

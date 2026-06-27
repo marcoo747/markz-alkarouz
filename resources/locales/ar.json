@@ -151,6 +151,9 @@
     "products": "منتجات",
     "accept": "قبول",
     "done": "إكمال",
+    "reject": "رفض",
+    "cancel": "إلغاء",
+    "reject_confirm_title": "هل أنت متأكد أنك تريد رفض هذا الطلب؟",
     "start_date": "البحث من تاريخ",
     "end_date": "الى تاريخ",
     "search": "بحث",
@@ -164,6 +167,9 @@
     "time": "الوقت:",
     "accept": "قبول",
     "done": "إكمال",
+    "reject": "رفض",
+    "cancel": "إلغاء",
+    "reject_confirm_title": "هل أنت متأكد أنك تريد رفض هذا الطلب؟",
     "products_heading": "المنتجات",
     "price": "السعر:",
     "brand": "الماركة:",
@@ -252,7 +258,8 @@
     "all": "كل الطلبات",
     "pending": "قيد الانتظار",
     "accepted": "مقبول",
-    "done": "مكتمل"
+    "done": "مكتمل",
+    "rejected": "مرفوض"
   },
   "pagination": {
     "previous": "السابق",
