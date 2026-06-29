@@ -184,43 +184,17 @@ const Requests = () => {
         <>
             {/* Reject Confirmation Modal */}
             {rejectTarget && (
-                <div
-                    style={{
-                        position: "fixed",
-                        inset: 0,
-                        zIndex: 1050,
-                        background: "rgba(0,0,0,0.5)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: "1rem",
-                    }}
-                >
-                    <div
-                        style={{
-                            background: "#fff",
-                            borderRadius: "12px",
-                            maxWidth: "480px",
-                            width: "100%",
-                            overflow: "hidden",
-                            boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
-                        }}
-                    >
+                <div className="fixed inset-0 z-[1050] bg-black/50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl max-w-[480px] w-full overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
                         {/* Red header */}
-                        <div
-                            style={{
-                                background: "#dc3545",
-                                color: "#fff",
-                                padding: "1.25rem 1.5rem",
-                            }}
-                        >
-                            <h5 style={{ margin: 0, fontWeight: 700, fontSize: "1.1rem" }}>
+                        <div className="bg-[#dc3545] text-white py-5 px-6">
+                            <h5 className="m-0 font-bold text-[1.1rem]">
                                 ⚠️ {t('requests.reject_confirm_title') || 'هل أنت متأكد أنك تريد رفض هذا الطلب؟'}
                             </h5>
                         </div>
 
                         {/* Order details */}
-                        <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid #f0f0f0" }}>
+                        <div className="py-5 px-6 border-b border-[#f0f0f0]">
                             <p className="mb-1">
                                 <strong>{rejectTarget.user.full_name}</strong>
                                 {rejectTarget.osra?.osra_name && (
@@ -242,7 +216,7 @@ const Requests = () => {
                         </div>
 
                         {/* Buttons */}
-                        <div style={{ padding: "1rem 1.5rem", display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+                        <div className="py-4 px-6 flex gap-3 justify-end">
                             <button
                                 className="btn btn-outline-secondary"
                                 onClick={() => setRejectTarget(null)}
@@ -268,8 +242,7 @@ const Requests = () => {
 
                         <form
                             role="search"
-                            className="requests-filter-form d-flex align-items-end gap-2 flex-wrap"
-                            style={{ maxWidth: 363 }}
+                            className="requests-filter-form d-flex align-items-end gap-2 flex-wrap max-w-[363px]"
                             onSubmit={applyDateFilter}
                         >
                             <div className="d-flex flex-column requests-date-field">
@@ -319,8 +292,7 @@ const Requests = () => {
                         <button
                             key={f.key}
                             onClick={() => handleFilter(f.key)}
-                            style={{ width: "auto", whiteSpace: "nowrap" }}
-                            className={`btn btn-sm rounded-pill px-4 transition ${
+                            className={`btn btn-sm rounded-pill px-4 transition w-auto whitespace-nowrap ${
                                 activeFilter === f.key
                                     ? "btn-dark text-white shadow-sm"
                                     : "btn-outline-secondary"

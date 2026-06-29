@@ -103,7 +103,7 @@ const CartPage = () => {
 
         {products.length > 0 && (
           <>
-            <div style={{ height: "120px" }}></div>
+            <div className="h-[120px]"></div>
             <div 
               className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl border border-slate-200/60 p-3 px-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)] flex justify-between items-center rounded-2xl w-[92%] md:w-[600px] z-[1000] transition-all"
             >

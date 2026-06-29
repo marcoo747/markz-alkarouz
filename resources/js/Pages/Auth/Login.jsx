@@ -111,7 +111,7 @@ export default function Login({ carouselPhotos = [] }) {
 
             {/* ── Language toggle ── */}
             <div className="flex justify-end mb-6">
-              <div className="flex items-center bg-slate-100 border border-slate-200 rounded-full p-[3px] relative cursor-pointer ltr" style={{ direction: 'ltr' }} role="group" aria-label="Language switcher">
+              <div className="flex items-center bg-slate-100 border border-slate-200 rounded-full p-[3px] relative cursor-pointer" dir="ltr" role="group" aria-label="Language switcher">
                 {/* Sliding white pill */}
                 <div
                   className={`absolute top-[3px] bottom-[3px] rounded-full bg-white shadow-sm transition-all duration-300 z-0 left-[3px] ${isRTL ? "translate-x-[43px] w-[52px]" : "translate-x-0 w-[43px]"}`}

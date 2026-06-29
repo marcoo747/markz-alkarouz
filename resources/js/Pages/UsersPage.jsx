@@ -124,9 +124,8 @@ const UsersPage = () => {
 
           <div>
             <button
-              className="btn btn-success px-4 py-2 rounded-pill shadow-sm hover:shadow transition-all"
+              className="btn btn-success px-4 py-2 rounded-pill shadow-sm hover:shadow transition-all w-auto"
               onClick={() => router.visit(route("register"))}
-              style={{ width: "auto" }}
             >
               <i className="bi bi-person-plus-fill me-2"></i>
               {t('users.add_user')}
@@ -171,11 +170,10 @@ const UsersPage = () => {
                               <img
                                 src={user.user_photo}
                                 alt={user.full_name}
-                                className="user-avatar rounded-circle border shadow-sm"
-                                style={{ width: '45px', height: '45px', objectFit: 'cover' }}
+                                className="user-avatar rounded-circle border shadow-sm w-[45px] h-[45px] object-cover"
                               />
                             ) : (
-                              <div className="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary" style={{ width: '45px', height: '45px' }}>
+                              <div className="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary w-[45px] h-[45px]">
                                 <i className="bi bi-person-fill fs-4"></i>
                               </div>
                             )}

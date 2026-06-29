@@ -79,10 +79,7 @@ const EditUserModal = ({ editData, editErrors, onChange, onSubmit, onClose }) =>
           {editData.profilePhoto && (
             <img
               src={URL.createObjectURL(editData.profilePhoto)}
-              className="rounded-xl mt-3 object-cover shadow-sm border border-slate-200"
-              width="80"
-              height="80"
-              style={{ aspectRatio: '1/1' }}
+              className="w-20 rounded-xl mt-3 object-cover shadow-sm border border-slate-200 aspect-square"
               alt="Profile preview"
             />
           )}

@@ -61,12 +61,7 @@ const NavBar = ({ page_name, linkBase }) => {
                     </Link>
 
                     <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                        }}
-                        className="nav-actions"
+                        className="nav-actions flex items-center gap-3"
                     >
                         <div className="show-on-mobile-only">
                             {/* Mobile Language Switcher */}
@@ -213,21 +208,12 @@ const NavBar = ({ page_name, linkBase }) => {
                             ) : null}
 
                             <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 16,
-                                    marginTop: 8,
-                                }}
+                                className="flex items-center gap-4 mt-2"
                             >
                                 <form
                                     role="search"
                                     onSubmit={handleSearch}
-                                    style={{
-                                        display: "flex",
-                                        width: "100%",
-                                        maxWidth: 400,
-                                    }}
+                                    className="flex w-full max-w-[400px]"
                                 >
                                     <input
                                         type="search"
@@ -259,16 +245,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                                 : "ar";
                                         i18n.changeLanguage(nextLang);
                                     }}
-                                    className="btn btn-outline-secondary d-flex align-items-center justify-content-center fw-bold hide-on-mobile"
-                                    style={{
-                                        borderRadius: "50%",
-                                        padding: "0",
-                                        height: "35px",
-                                        width: "35px",
-                                        minWidth: "35px",
-                                        fontSize: "13px",
-                                        flexShrink: 0,
-                                    }}
+                                    className="btn btn-outline-secondary d-flex align-items-center justify-content-center fw-bold hide-on-mobile rounded-full p-0 h-[35px] w-[35px] min-w-[35px] text-[13px] shrink-0"
                                     aria-label="Toggle language"
                                 >
                                     {i18n.language.startsWith("ar")
@@ -278,18 +255,16 @@ const NavBar = ({ page_name, linkBase }) => {
                                 {user ? (
                                     <Link
                                         href={route("profile")}
-                                        className={`nav-link p-0 hide-on-mobile d-flex align-items-center justify-content-center ${page_name === "profile" ? "active" : ""}`}
+                                        className={`nav-link p-0 hide-on-mobile d-flex align-items-center justify-content-center w-[35px] h-[35px] ${page_name === "profile" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                         aria-label={t("navbar.profile")}
                                         title={t("navbar.profile")}
-                                        style={{ width: "35px", height: "35px" }}
                                     >
                                         {user && user.user_photo && !imgError ? (
                                             <img
                                                 src={imageSrc}
                                                 alt="user photo"
-                                                className="rounded-circle border"
-                                                style={{ width: "35px", height: "35px", objectFit: "cover" }}
+                                                className="rounded-circle border w-[35px] h-[35px] object-cover"
                                                 onError={() => setImgError(true)}
                                             />
                                         ) : (
@@ -313,16 +288,14 @@ const NavBar = ({ page_name, linkBase }) => {
                                 {user ? (
                                     <Link
                                         href={route("cart")}
-                                        className={`nav-link position-relative ${page_name === "cart" ? "active" : ""}`}
+                                        className={`nav-link position-relative ml-2.5 flex items-center justify-center w-[38px] h-[38px] p-0 ${page_name === "cart" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
-                                        style={{ marginLeft: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '38px', height: '38px', padding: 0 }}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
                                         </svg>
                                         <span
-                                            style={{ top: '0', right: '0', transform: 'translate(30%, -30%)', fontSize: '0.65rem', padding: '0.25rem 0.4rem' }}
-                                            className="badge position-absolute rounded-circle bg-primary"
+                                            className="badge position-absolute rounded-circle bg-primary top-0 right-0 translate-x-[30%] -translate-y-[30%] text-[0.65rem] px-[0.4rem] py-[0.25rem]"
                                         >
                                             {cart_items_count}
                                             <span className="visually-hidden">
