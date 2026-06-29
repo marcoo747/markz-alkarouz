@@ -137,6 +137,10 @@ class RequestController extends Controller
 
     public function accept(UserRequest $request)
     {
+        if ($request->request_status === 'accepted' || $request->request_status === 'done') {
+            return back();
+        }
+
         $request->load('products');
 
         foreach ($request->products as $product) {
@@ -176,6 +180,10 @@ class RequestController extends Controller
 
     public function reject(UserRequest $request)
     {
+        if ($request->request_status === 'rejected' || $request->request_status === 'done') {
+            return back();
+        }
+
         $request->load('products');
 
         if ($request->request_status === 'accepted') {

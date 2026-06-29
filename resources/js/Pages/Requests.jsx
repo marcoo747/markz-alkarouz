@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, usePage, Head, router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import NavBar from "@/Components/NavBar";
@@ -8,6 +8,47 @@ import Button from "@/Components/Button";
 import "../../css/requests_style.css";
 
 const PER_PAGE = 12;
+
+const RequestTimer = ({ createdAt, t }) => {
+    const [timeLeft, setTimeLeft] = useState(null);
+
+    useEffect(() => {
+        if (!createdAt) return;
+        
+        const createdAtTime = new Date(createdAt).getTime();
+        const endTime = createdAtTime + 10 * 60 * 1000;
+
+        const updateTimer = () => {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance <= 0) {
+                setTimeLeft("00:00");
+            } else {
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                setTimeLeft(
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+                );
+            }
+        };
+
+        updateTimer();
+        const interval = setInterval(updateTimer, 1000);
+
+        return () => clearInterval(interval);
+    }, [createdAt]);
+
+    if (!timeLeft || timeLeft === "00:00") return null;
+
+    return (
+        <div className="text-warning fw-bold mb-2">
+            auto accept : {timeLeft}
+        </div>
+    );
+};
+
 
 const Requests = () => {
     const { t } = useTranslation();
@@ -358,29 +399,37 @@ const Requests = () => {
                                         </p>
                                     </Link>
 
+                                    {req.request_status === 'pending' && (
+                                        <RequestTimer createdAt={req.created_at} t={t} />
+                                    )}
                                     <div className="d-flex gap-2 mt-3">
-                                        {req.request_status === "pending" && (
-                                            <button
-                                                className="btn btn-warning btn-sm text-dark font-weight-bold"
-                                                onClick={(e) => { e.preventDefault(); acceptRequest(req.request_id); }}
-                                            >
-                                                {t('requests.accept')}
-                                            </button>
-                                        )}
-                                        {req.request_status !== "done" && req.request_status !== "rejected" && (
+                                        {req.request_status !== "done" && (
                                             <>
-                                                <button
-                                                    className="btn btn-success btn-sm font-weight-bold"
-                                                    onClick={(e) => { e.preventDefault(); doneRequest(req.request_id); }}
-                                                >
-                                                    {t('requests.done')}
-                                                </button>
-                                                <button
-                                                    className="btn btn-danger btn-sm font-weight-bold"
-                                                    onClick={(e) => { e.preventDefault(); setRejectTarget(req); }}
-                                                >
-                                                    {t('requests.reject') || 'رفض'}
-                                                </button>
+                                                {req.request_status !== "accepted" && (
+                                                    <button
+                                                        className="btn btn-warning btn-sm text-dark font-weight-bold"
+                                                        onClick={(e) => { e.preventDefault(); acceptRequest(req.request_id); }}
+                                                    >
+                                                        {t('requests.accept')}
+                                                    </button>
+                                                )}
+                                                
+                                                {req.request_status !== "rejected" && (
+                                                    <>
+                                                        <button
+                                                            className="btn btn-success btn-sm font-weight-bold"
+                                                            onClick={(e) => { e.preventDefault(); doneRequest(req.request_id); }}
+                                                        >
+                                                            {t('requests.done')}
+                                                        </button>
+                                                        <button
+                                                            className="btn btn-danger btn-sm font-weight-bold"
+                                                            onClick={(e) => { e.preventDefault(); setRejectTarget(req); }}
+                                                        >
+                                                            {t('requests.reject') || 'رفض'}
+                                                        </button>
+                                                    </>
+                                                )}
                                             </>
                                         )}
                                     </div>

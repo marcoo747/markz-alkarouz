@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, usePage, Head, router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import NavBar from "@/Components/NavBar";
@@ -13,6 +13,35 @@ const RequestShow = () => {
 
     const profile_user = user?.user_type === "user";
     const [showRejectModal, setShowRejectModal] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(null);
+
+    useEffect(() => {
+        if (!request.created_at) return;
+        
+        const createdAt = new Date(request.created_at).getTime();
+        const endTime = createdAt + 10 * 60 * 1000;
+
+        const updateTimer = () => {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance <= 0) {
+                setTimeLeft("00:00");
+            } else {
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                setTimeLeft(
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+                );
+            }
+        };
+
+        updateTimer();
+        const interval = setInterval(updateTimer, 1000);
+
+        return () => clearInterval(interval);
+    }, [request.created_at]);
 
     const handleShowItem = (item_id) => {
         router.visit(route("items.show", { id: item_id }));
@@ -163,8 +192,13 @@ const RequestShow = () => {
                         {!profile_user && (
                             <>
                             {/* Accept / Done / Reject buttons */}
+                            {request.request_status === 'pending' && timeLeft && timeLeft !== '00:00' && (
+                                <div className="text-warning fw-bold mb-2">
+                                    auto accept : {timeLeft}
+                                </div>
+                            )}
                             <div className="d-flex flex-nowrap gap-2 mt-3">
-                                {request.request_status !== "done" && request.request_status !== "rejected" && (
+                                {request.request_status !== "done" && (
                                     <>
                                         {request.request_status !== "accepted" && (
                                             <button
@@ -174,18 +208,23 @@ const RequestShow = () => {
                                                 {t('request_show.accept')}
                                             </button>
                                         )}
-                                        <button
-                                            className="btn btn-success btn-sm flex-grow-1"
-                                            onClick={() => doneRequest(request.request_id)}
-                                        >
-                                            {t('request_show.done')}
-                                        </button>
-                                        <button
-                                            className="btn btn-danger btn-sm flex-grow-1"
-                                            onClick={() => setShowRejectModal(true)}
-                                        >
-                                            {t('request_show.reject') || 'رفض'}
-                                        </button>
+                                        
+                                        {request.request_status !== "rejected" && (
+                                            <>
+                                                <button
+                                                    className="btn btn-success btn-sm flex-grow-1"
+                                                    onClick={() => doneRequest(request.request_id)}
+                                                >
+                                                    {t('request_show.done')}
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger btn-sm flex-grow-1"
+                                                    onClick={() => setShowRejectModal(true)}
+                                                >
+                                                    {t('request_show.reject') || 'رفض'}
+                                                </button>
+                                            </>
+                                        )}
                                     </>
                                 )}
                             </div>
