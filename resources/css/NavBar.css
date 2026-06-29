@@ -387,15 +387,7 @@
         color: #6c757d;
         border-radius: 50%;
         padding: 0;
-        width: 35px;
-        height: 35px;
-        font-size: 13px;
-        font-weight: bold;
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 35px;
     }
     .mobile-lang-btn:hover {
         background-color: #6c757d;

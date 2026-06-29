@@ -74,7 +74,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                             : "ar";
                                     i18n.changeLanguage(nextLang);
                                 }}
-                                className="mobile-lang-btn"
+                                className="mobile-lang-btn flex items-center justify-center font-bold bg-transparent border border-[#6c757d] text-[#6c757d] rounded-full p-0 !w-[24px] !min-w-[24px] h-[35px] text-[13px] cursor-pointer hover:bg-[#6c757d] hover:text-white"
                                 aria-label="Toggle language"
                             >
                                 {i18n.language.startsWith("ar")
@@ -245,7 +245,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                                 : "ar";
                                         i18n.changeLanguage(nextLang);
                                     }}
-                                    className="btn btn-outline-secondary d-flex align-items-center justify-content-center fw-bold hide-on-mobile rounded-full p-0 h-[35px] w-[35px] min-w-[35px] text-[13px] shrink-0"
+                                    className="btn btn-outline-secondary d-flex align-items-center justify-content-center fw-bold hide-on-mobile rounded-full p-0 h-[35px] !w-[100px] !min-w-[100px] text-[13px] shrink-0"
                                     aria-label="Toggle language"
                                 >
                                     {i18n.language.startsWith("ar")
