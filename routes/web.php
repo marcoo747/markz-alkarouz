@@ -129,12 +129,12 @@ Route::middleware('role:admin,manager')->group(function () {
     Route::post('/requests/{request}/accept', [RequestController::class, 'accept'])->name('requests.accept');
     Route::post('/requests/{request}/done', [RequestController::class, 'done'])->name('requests.done');
     Route::post('/requests/{request}/reject', [RequestController::class, 'reject'])->name('requests.reject');
+    Route::get('/doneRequest/{request}', function ($request) {
+        return Inertia::render('DoneRequest', ['requestId' => $request]);
+    })->name('doneRequest');
 
-    // Carousel Photos
-    Route::post('/carousel-photos/upload', [Carousel_photos_controller::class, 'upload_photo'])->name('carousel.photos.upload');
-    Route::delete('/carousel-photos/{id}', [Carousel_photos_controller::class, 'destroy'])->name('carousel.photos.destroy');
+    
 });
-
 /*
 |--------------------------------------------------------------------------
 | Manager only
@@ -181,6 +181,10 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::put('/api/terms-penalties/{termsAndPenalty}', [TermsAndPenaltiesController::class, 'update'])->name('api.terms-penalties.update');
     Route::delete('/api/terms-penalties/{termsAndPenalty}', [TermsAndPenaltiesController::class, 'destroy'])->name('api.terms-penalties.destroy');
     Route::patch('/api/terms-penalties/{termsAndPenalty}/toggle', [TermsAndPenaltiesController::class, 'toggleActive'])->name('api.terms-penalties.toggle');
+    
+    // Carousel Photos
+    Route::post('/carousel-photos/upload', [Carousel_photos_controller::class, 'upload_photo'])->name('carousel.photos.upload');
+    Route::delete('/carousel-photos/{id}', [Carousel_photos_controller::class, 'destroy'])->name('carousel.photos.destroy');
 });
 
 /*

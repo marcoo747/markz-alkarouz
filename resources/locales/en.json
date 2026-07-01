@@ -265,5 +265,44 @@
     "next": "Next",
     "page": "Page",
     "of": "of"
+  },
+  "done_request": {
+    "page_title": "Return Reconciliation",
+    "heading": "Return Reconciliation",
+    "request_number": "Request #:",
+    "filters": {
+        "all": "All",
+        "pending": "Pending",
+        "returned": "Returned",
+        "missing": "Missing",
+        "damaged": "Damaged"
+    },
+    "status": {
+        "returned": "Returned",
+        "missing": "Missing",
+        "damaged": "Damaged",
+        "pending": "Pending"
+    },
+    "remaining": "Remaining:",
+    "no_products": "No products match this filter",
+    "recover_btn": "↩ Return",
+    "comment_btn_title": "Notes",
+    "modal": {
+        "log_heading": "Full History",
+        "new_entry_heading": "Add New Note",
+        "returned_at": "Returned:",
+        "recovered_badge": "Recovered",
+        "classification_label": "Shortfall Type",
+        "missing_option": "🔴 Missing",
+        "damaged_option": "🟡 Damaged",
+        "comment_label": "Comment",
+        "comment_optional": "(optional)",
+        "comment_placeholder": "Write your note here...",
+        "error_no_classification": "Please select Missing or Damaged first",
+        "error_no_comment": "Comment is required when there's a shortfall",
+        "cancel": "Cancel",
+        "save": "Save",
+        "auto_recover_comment": "Item recovered"
+    }
   }
 }

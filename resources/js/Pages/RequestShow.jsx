@@ -51,8 +51,9 @@ const RequestShow = () => {
         router.post(route("requests.accept", { request: id }));
     };
 
-    const doneRequest = (id) => {
-        router.post(route("requests.done", { request: id }));
+    // ✅ ONLY CHANGE HERE
+    const doneRequest = () => {
+        router.visit(route("doneRequest", { request: request.request_id }));
     };
 
     const rejectRequest = (id) => {
@@ -62,18 +63,15 @@ const RequestShow = () => {
 
     return (
         <>
-            {/* Reject Confirmation Modal */}
             {showRejectModal && (
                 <div className="fixed inset-0 z-[1050] bg-black/50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-xl max-w-[480px] w-full overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
-                        {/* Red header */}
                         <div className="bg-[#dc3545] text-white py-5 px-6">
                             <h5 className="m-0 font-bold text-[1.1rem]">
                                 ⚠️ {t('request_show.reject_confirm_title') || 'هل أنت متأكد أنك تريد رفض هذا الطلب؟'}
                             </h5>
                         </div>
 
-                        {/* Order details */}
                         <div className="py-5 px-6 border-b border-[#f0f0f0]">
                             <p className="mb-1">
                                 <strong>{t('request_show.status')} </strong>
@@ -95,7 +93,6 @@ const RequestShow = () => {
                             </p>
                         </div>
 
-                        {/* Buttons */}
                         <div className="py-4 px-6 flex gap-3 justify-end">
                             <button
                                 className="btn btn-outline-secondary"
@@ -113,6 +110,7 @@ const RequestShow = () => {
                     </div>
                 </div>
             )}
+
             <Head title={t('home.page_title')} />
             <NavBar page_name="requests" />
 
@@ -122,9 +120,7 @@ const RequestShow = () => {
                 <div className="card shadow-sm mb-4">
                     <div className="card-body">
                         <h5 className="card-title">
-                            <p
-                                className="text-decoration-none text-dark text-xl"
-                            >
+                            <p className="text-decoration-none text-dark text-xl">
                                 {request.user.full_name}
                             </p>
                         </h5>
@@ -165,49 +161,51 @@ const RequestShow = () => {
 
                         {!profile_user && (
                             <>
-                            {/* Accept / Done / Reject buttons */}
-                            {request.request_status === 'pending' && timeLeft && timeLeft !== '00:00' && (
-                                <div className="text-warning fw-bold mb-2">
-                                    auto accept : {timeLeft}
-                                </div>
-                            )}
-                            <div className="d-flex flex-nowrap gap-2 mt-3">
-                                {request.request_status !== "done" && (
-                                    <>
-                                        {request.request_status !== "accepted" && (
-                                            <button
-                                                className="btn btn-warning btn-sm text-dark flex-grow-1"
-                                                onClick={() => acceptRequest(request.request_id)}
-                                            >
-                                                {t('request_show.accept')}
-                                            </button>
-                                        )}
-                                        
-                                        {request.request_status !== "rejected" && (
-                                            <>
-                                                <button
-                                                    className="btn btn-success btn-sm flex-grow-1"
-                                                    onClick={() => doneRequest(request.request_id)}
-                                                >
-                                                    {t('request_show.done')}
-                                                </button>
-                                                <button
-                                                    className="btn btn-danger btn-sm flex-grow-1"
-                                                    onClick={() => setShowRejectModal(true)}
-                                                >
-                                                    {t('request_show.reject') || 'رفض'}
-                                                </button>
-                                            </>
-                                        )}
-                                    </>
+                                {request.request_status === 'pending' && timeLeft && timeLeft !== '00:00' && (
+                                    <div className="text-warning fw-bold mb-2">
+                                        auto accept : {timeLeft}
+                                    </div>
                                 )}
-                            </div>
+
+                                <div className="d-flex flex-nowrap gap-2 mt-3">
+                                    {request.request_status !== "done" && (
+                                        <>
+                                            {request.request_status !== "accepted" && (
+                                                <button
+                                                    className="btn btn-warning btn-sm text-dark flex-grow-1"
+                                                    onClick={() => acceptRequest(request.request_id)}
+                                                >
+                                                    {t('request_show.accept')}
+                                                </button>
+                                            )}
+
+                                            {request.request_status !== "rejected" && (
+                                                <>
+                                                    <button
+                                                        className="btn btn-success btn-sm flex-grow-1"
+                                                        onClick={doneRequest}
+                                                    >
+                                                        {t('request_show.done')}
+                                                    </button>
+
+                                                    <button
+                                                        className="btn btn-danger btn-sm flex-grow-1"
+                                                        onClick={() => setShowRejectModal(true)}
+                                                    >
+                                                        {t('request_show.reject') || 'رفض'}
+                                                    </button>
+                                                </>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
                             </>
                         )}
                     </div>
                 </div>
 
                 <h4>{t('request_show.products_heading')}</h4>
+
                 {request.products.length ? (
                     <div className="list-group">
                         {request.products.map((p) => (
@@ -217,7 +215,6 @@ const RequestShow = () => {
                                 className="card mb-3 cursor-pointer"
                             >
                                 <div className="card-body d-flex align-items-center">
-                                    {/* Product image */}
                                     {p.images?.length > 0 ? (
                                         <img
                                             src={p.images[0].url}
@@ -232,13 +229,12 @@ const RequestShow = () => {
                                         />
                                     )}
 
-                                    {/* Product details */}
                                     <div>
                                         <h6 className="mb-1">{p.pr_name}</h6>
                                         <small className="text-muted">
-                                            <strong>{t('request_show.price')}</strong> {p.pr_price}{" "}
+                                            <strong>{t('request_show.price')}</strong> {p.pr_price}
                                             <br />
-                                            <strong>{t('request_show.brand')}</strong> {p.brand}{" "}
+                                            <strong>{t('request_show.brand')}</strong> {p.brand}
                                             <br />
                                             <strong>{t('request_show.color')}</strong>{" "}
                                             {p.pivot?.color ? (
@@ -247,29 +243,21 @@ const RequestShow = () => {
                                                         className="inline-block w-4 h-4 rounded-full mr-1.5 border border-[#ccc]"
                                                         style={{
                                                             backgroundColor:
-                                                                p.pivot.color
-                                                                    .hex_code ||
-                                                                p.pivot.color
-                                                                    .color,
+                                                                p.pivot.color.hex_code ||
+                                                                p.pivot.color.color,
                                                         }}
                                                     />
-                                                    {
-                                                        namer(
-                                                            p.pivot.color
-                                                                .hex_code ||
-                                                                p.pivot.color
-                                                                    .color
-                                                        ).ntc[0].name
-                                                    }
+                                                    {namer(
+                                                        p.pivot.color.hex_code ||
+                                                        p.pivot.color.color
+                                                    ).ntc[0].name}
                                                 </span>
                                             ) : (
                                                 "—"
                                             )}
                                             <br />
                                             <strong>{t('request_show.size')}</strong>{" "}
-                                            {p.pivot?.size?.size ||
-                                                p.pivot?.size_id ||
-                                                "—"}{" "}
+                                            {p.pivot?.size?.size || p.pivot?.size_id || "—"}
                                             <br />
                                             <strong>{t('request_show.quantity')}</strong>{" "}
                                             {p.pivot?.quantity}

@@ -266,5 +266,44 @@
     "next": "التالي",
     "page": "الصفحة",
     "of": "من"
-  }
+  },
+  "done_request": {
+    "page_title": "استرداد المنتجات",
+    "heading": "استرداد المنتجات",
+    "request_number": "طلب رقم:",
+    "filters": {
+        "all": "الكل",
+        "pending": "في انتظار",
+        "returned": "مرتجع",
+        "missing": "مفقود",
+        "damaged": "تالف"
+    },
+    "status": {
+        "returned": "مرتجع",
+        "missing": "مفقود",
+        "damaged": "تالف",
+        "pending": "في انتظار"
+    },
+    "remaining": "متبقي:",
+    "no_products": "مفيش منتجات في الفلتر ده",
+    "recover_btn": "↩ Return",
+    "comment_btn_title": "ملاحظات",
+    "modal": {
+        "log_heading": "السجل الكامل",
+        "new_entry_heading": "إضافة ملاحظة جديدة",
+        "returned_at": "رجع:",
+        "recovered_badge": "استرداد",
+        "classification_label": "نوع العجز",
+        "missing_option": "🔴 مفقود",
+        "damaged_option": "🟡 تالف",
+        "comment_label": "الكومنت",
+        "comment_optional": "(اختياري)",
+        "comment_placeholder": "اكتب ملاحظتك هنا...",
+        "error_no_classification": "لازم تختار مفقود أو تالف الأول",
+        "error_no_comment": "الكومنت مطلوب لما في عجز",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "auto_recover_comment": "تم الاسترداد"
+    }
+}
 }

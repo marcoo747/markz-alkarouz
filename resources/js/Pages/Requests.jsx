@@ -6,6 +6,7 @@ import PaginationControls from "@/Components/PaginationControls";
 import { useTranslation } from "react-i18next";
 import Button from "@/Components/Button";
 import "../../css/requests_style.css";
+import DoneRequest from "@/Pages/DoneRequest";
 
 const PER_PAGE = 12;
 
@@ -14,7 +15,7 @@ const RequestTimer = ({ createdAt, t }) => {
 
     useEffect(() => {
         if (!createdAt) return;
-        
+
         const createdAtTime = new Date(createdAt).getTime();
         const endTime = createdAtTime + 10 * 60 * 1000;
 
@@ -25,11 +26,13 @@ const RequestTimer = ({ createdAt, t }) => {
             if (distance <= 0) {
                 setTimeLeft("00:00");
             } else {
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const minutes = Math.floor(
+                    (distance % (1000 * 60 * 60)) / (1000 * 60),
+                );
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                
+
                 setTimeLeft(
-                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+                    `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
                 );
             }
         };
@@ -48,7 +51,6 @@ const RequestTimer = ({ createdAt, t }) => {
         </div>
     );
 };
-
 
 const Requests = () => {
     const { t } = useTranslation();
@@ -98,14 +100,18 @@ const Requests = () => {
         // ✅ Handle dd/mm/yyyy
         if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(normalized)) {
             const [day, month, year] = normalized.split("/");
-            return new Date(`${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`);
+            return new Date(
+                `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`,
+            );
         }
 
         // ✅ Handle dd/mm/yyyy hh:mm:ss
         if (/^\d{1,2}\/\d{1,2}\/\d{4} \d{2}:\d{2}(:\d{2})?$/.test(normalized)) {
             const [datePart, timePart] = normalized.split(" ");
             const [day, month, year] = datePart.split("/");
-            return new Date(`${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T${timePart}`);
+            return new Date(
+                `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T${timePart}`,
+            );
         }
 
         // ✅ Handle yyyy-mm-dd hh:mm:ss
@@ -119,7 +125,8 @@ const Requests = () => {
     };
 
     const filtered = requests.filter((r) => {
-        const statusMatch = activeFilter === "all" || r.request_status === activeFilter;
+        const statusMatch =
+            activeFilter === "all" || r.request_status === activeFilter;
         if (!statusMatch) return false;
 
         if (!isDateSearchActive) return true;
@@ -147,7 +154,10 @@ const Requests = () => {
     });
 
     const totalPages = Math.ceil(filtered.length / PER_PAGE);
-    const paginated = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+    const paginated = filtered.slice(
+        (currentPage - 1) * PER_PAGE,
+        currentPage * PER_PAGE,
+    );
 
     const handleFilter = (key) => {
         setActiveFilter(key);
@@ -162,7 +172,10 @@ const Requests = () => {
             const fromDate = parseDateValue(startDate);
             const toDate = parseDateValue(endDate);
             if (!fromDate || !toDate || fromDate > toDate) {
-                setDateError(t('requests.error_date_range') || 'Start date cannot be later than end date');
+                setDateError(
+                    t("requests.error_date_range") ||
+                        "Start date cannot be later than end date",
+                );
                 setIsDateSearchActive(false);
                 return;
             }
@@ -189,7 +202,9 @@ const Requests = () => {
                         {/* Red header */}
                         <div className="bg-[#dc3545] text-white py-5 px-6">
                             <h5 className="m-0 font-bold text-[1.1rem]">
-                                ⚠️ {t('requests.reject_confirm_title') || 'هل أنت متأكد أنك تريد رفض هذا الطلب؟'}
+                                ⚠️{" "}
+                                {t("requests.reject_confirm_title") ||
+                                    "هل أنت متأكد أنك تريد رفض هذا الطلب؟"}
                             </h5>
                         </div>
 
@@ -198,20 +213,26 @@ const Requests = () => {
                             <p className="mb-1">
                                 <strong>{rejectTarget.user.full_name}</strong>
                                 {rejectTarget.osra?.osra_name && (
-                                    <span className="text-muted ms-2">— {rejectTarget.osra.osra_name}</span>
+                                    <span className="text-muted ms-2">
+                                        — {rejectTarget.osra.osra_name}
+                                    </span>
                                 )}
                             </p>
                             <p className="mb-1">
-                                <strong>{t('requests.status')} </strong>
-                                <span className="text-warning">{rejectTarget.request_status}</span>
+                                <strong>{t("requests.status")} </strong>
+                                <span className="text-warning">
+                                    {rejectTarget.request_status}
+                                </span>
                             </p>
                             {rejectTarget.osra_date && (
                                 <p className="mb-1">
-                                    <strong>{t('requests.date')} </strong>{rejectTarget.osra_date}
+                                    <strong>{t("requests.date")} </strong>
+                                    {rejectTarget.osra_date}
                                 </p>
                             )}
                             <p className="mb-0">
-                                <strong>{t('requests.time')} </strong>{rejectTarget.display_time}
+                                <strong>{t("requests.time")} </strong>
+                                {rejectTarget.display_time}
                             </p>
                         </div>
 
@@ -221,24 +242,26 @@ const Requests = () => {
                                 className="btn btn-outline-secondary"
                                 onClick={() => setRejectTarget(null)}
                             >
-                                {t('requests.cancel') || 'إلغاء'}
+                                {t("requests.cancel") || "إلغاء"}
                             </button>
                             <button
                                 className="btn btn-danger"
-                                onClick={() => rejectRequest(rejectTarget.request_id)}
+                                onClick={() =>
+                                    rejectRequest(rejectTarget.request_id)
+                                }
                             >
-                                {t('requests.reject') || 'رفض'}
+                                {t("requests.reject") || "رفض"}
                             </button>
                         </div>
                     </div>
                 </div>
             )}
-            <Head title={t('home.page_title')} />
+            <Head title={t("home.page_title")} />
             <NavBar page_name="requests" />
             <div className="container my-4">
                 <div className="p-3 mb-4 requests-top-card">
                     <div className="w-100 d-flex justify-content-between align-items-start flex-wrap gap-3">
-                        <h1 className="mb-0">{t('requests.title')}</h1>
+                        <h1 className="mb-0">{t("requests.title")}</h1>
 
                         <form
                             role="search"
@@ -246,17 +269,23 @@ const Requests = () => {
                             onSubmit={applyDateFilter}
                         >
                             <div className="d-flex flex-column requests-date-field">
-                                <label>{t('requests.start_date') || 'Start Date'}</label>
+                                <label>
+                                    {t("requests.start_date") || "Start Date"}
+                                </label>
                                 <input
                                     type="date"
                                     value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
+                                    onChange={(e) =>
+                                        setStartDate(e.target.value)
+                                    }
                                     className="form-control form-control-sm requests-date-input"
                                 />
                             </div>
 
                             <div className="d-flex flex-column requests-date-field">
-                                <label>{t('requests.end_date') || 'End Date'}</label>
+                                <label>
+                                    {t("requests.end_date") || "End Date"}
+                                </label>
                                 <input
                                     type="date"
                                     value={endDate}
@@ -265,8 +294,11 @@ const Requests = () => {
                                 />
                             </div>
 
-                            <Button type="submit" className="btn btn-sm btn-primary">
-                                {t('requests.search') || 'Search'}
+                            <Button
+                                type="submit"
+                                className="btn btn-sm btn-primary"
+                            >
+                                {t("requests.search") || "Search"}
                             </Button>
 
                             <button
@@ -274,7 +306,7 @@ const Requests = () => {
                                 onClick={clearDateFilter}
                                 className="btn btn-sm btn-outline-secondary"
                             >
-                                {t('requests.clear') || 'Clear'}
+                                {t("requests.clear") || "Clear"}
                             </button>
 
                             {dateError && (
@@ -299,26 +331,41 @@ const Requests = () => {
                             }`}
                         >
                             {f.label}
-                            <span className={`ms-2 badge rounded-pill ${activeFilter === f.key ? "bg-white text-dark" : "bg-secondary text-white"}`}>
+                            <span
+                                className={`ms-2 badge rounded-pill ${activeFilter === f.key ? "bg-white text-dark" : "bg-secondary text-white"}`}
+                            >
                                 {activeFilter === f.key
                                     ? filtered.length
-                                    : (f.key === "all" ? requests.length : requests.filter(r => r.request_status === f.key).length)
-                                }
+                                    : f.key === "all"
+                                      ? requests.length
+                                      : requests.filter(
+                                            (r) => r.request_status === f.key,
+                                        ).length}
                             </span>
                         </button>
                     ))}
                 </div>
 
                 {!paginated.length && (
-                    <div className="alert alert-info">{t('requests.no_requests')}</div>
+                    <div className="alert alert-info">
+                        {t("requests.no_requests")}
+                    </div>
                 )}
 
                 <div className="row">
                     {paginated.map((req) => (
-                        <div key={req.request_id} className="col-6 col-md-4 col-lg-3 mb-4">
+                        <div
+                            key={req.request_id}
+                            className="col-6 col-md-4 col-lg-3 mb-4"
+                        >
                             <div className="card shadow-sm h-100">
                                 <div className="card-body">
-                                    <Link href={route("requests.show", {request: req.request_id})} className="text-decoration-none">
+                                    <Link
+                                        href={route("requests.show", {
+                                            request: req.request_id,
+                                        })}
+                                        className="text-decoration-none"
+                                    >
                                         <h5 className="card-title text-dark">
                                             {req.user.full_name}
                                         </h5>
@@ -327,21 +374,27 @@ const Requests = () => {
                                         </h6>
                                         {req.osra_date && (
                                             <p className="mb-1 text-muted small">
-                                                <strong>{t('requests.date')}</strong> {req.osra_date}
+                                                <strong>
+                                                    {t("requests.date")}
+                                                </strong>{" "}
+                                                {req.osra_date}
                                             </p>
                                         )}
                                         <p className="mb-1">
                                             <strong>
-                                                {t('requests.status')}{" "}
+                                                {t("requests.status")}{" "}
                                                 <span
                                                     className={
-                                                        req.request_status === "pending"
+                                                        req.request_status ===
+                                                        "pending"
                                                             ? "text-warning"
-                                                            : req.request_status === "accepted"
-                                                            ? "text-primary"
-                                                            : req.request_status === "rejected"
-                                                            ? "text-danger"
-                                                            : "text-success"
+                                                            : req.request_status ===
+                                                                "accepted"
+                                                              ? "text-primary"
+                                                              : req.request_status ===
+                                                                  "rejected"
+                                                                ? "text-danger"
+                                                                : "text-success"
                                                     }
                                                 >
                                                     {req.request_status}
@@ -349,14 +402,21 @@ const Requests = () => {
                                             </strong>
                                         </p>
 
-                                        {(req.total_price !== null && req.total_price !== undefined && req.total_price != 0) && (
-                                            <p className="mb-1">
-                                                <strong>{t('requests.price')}</strong> {req.total_price}
-                                            </p>
-                                        )}
+                                        {req.total_price !== null &&
+                                            req.total_price !== undefined &&
+                                            req.total_price != 0 && (
+                                                <p className="mb-1">
+                                                    <strong>
+                                                        {t("requests.price")}
+                                                    </strong>{" "}
+                                                    {req.total_price}
+                                                </p>
+                                            )}
 
                                         <p className="mb-1">
-                                            <strong>{t('requests.time')}</strong>{" "}
+                                            <strong>
+                                                {t("requests.time")}
+                                            </strong>{" "}
                                             {req.display_time}
                                         </p>
 
@@ -366,39 +426,62 @@ const Requests = () => {
                                                 {req.products.length}
                                             </strong>{" "}
                                             {req.products.length === 1
-                                                ? t('requests.product')
-                                                : t('requests.products')}{" "}
+                                                ? t("requests.product")
+                                                : t("requests.products")}{" "}
                                         </p>
                                     </Link>
 
-                                    {req.request_status === 'pending' && (
-                                        <RequestTimer createdAt={req.created_at} t={t} />
+                                    {req.request_status === "pending" && (
+                                        <RequestTimer
+                                            createdAt={req.created_at}
+                                            t={t}
+                                        />
                                     )}
                                     <div className="d-flex gap-2 mt-3">
                                         {req.request_status !== "done" && (
                                             <>
-                                                {req.request_status !== "accepted" && (
+                                                {req.request_status !==
+                                                    "accepted" && (
                                                     <button
                                                         className="btn btn-warning btn-sm text-dark font-weight-bold"
-                                                        onClick={(e) => { e.preventDefault(); acceptRequest(req.request_id); }}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            acceptRequest(
+                                                                req.request_id,
+                                                            );
+                                                        }}
                                                     >
-                                                        {t('requests.accept')}
+                                                        {t("requests.accept")}
                                                     </button>
                                                 )}
-                                                
-                                                {req.request_status !== "rejected" && (
+
+                                                {req.request_status !==
+                                                    "rejected" && (
                                                     <>
-                                                        <button
+                                                        <Link
+                                                            href={route(
+                                                                "doneRequest",
+                                                                {
+                                                                    request:
+                                                                        req.request_id,
+                                                                },
+                                                            )}
                                                             className="btn btn-success btn-sm font-weight-bold"
-                                                            onClick={(e) => { e.preventDefault(); doneRequest(req.request_id); }}
                                                         >
-                                                            {t('requests.done')}
-                                                        </button>
+                                                            {t("requests.done")}
+                                                        </Link>
                                                         <button
                                                             className="btn btn-danger btn-sm font-weight-bold"
-                                                            onClick={(e) => { e.preventDefault(); setRejectTarget(req); }}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setRejectTarget(
+                                                                    req,
+                                                                );
+                                                            }}
                                                         >
-                                                            {t('requests.reject') || 'رفض'}
+                                                            {t(
+                                                                "requests.reject",
+                                                            ) || "رفض"}
                                                         </button>
                                                     </>
                                                 )}
@@ -422,4 +505,3 @@ const Requests = () => {
 };
 
 export default Requests;
-
