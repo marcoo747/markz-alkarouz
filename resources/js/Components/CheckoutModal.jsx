@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import { router } from "@inertiajs/react";
 import styles from "../../css/CheckoutModal.module.css";
 
-const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_same_day, osraNumericTime }) => {
+const CheckoutModal = ({
+    can_go_outside,
+    total,
+    user,
+    onClose,
+    osraTime,
+    next_same_day,
+    osraNumericTime,
+}) => {
     const [idCode, setIdCode] = useState("");
     const [startDate, setStartDate] = useState("");
     const [startTime, setStartTime] = useState("");
@@ -42,7 +50,7 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                     setEndTime("");
                 },
                 onFinish: () => setLoading(false),
-            }
+            },
         );
     };
 
@@ -71,7 +79,7 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                     setSelectedOsraDate("");
                 },
                 onFinish: () => setLoading(false),
-            }
+            },
         );
     };
 
@@ -81,8 +89,18 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                 <div className={styles.modalHeader}>
                     <h3>Booking Details</h3>
                     <button className={styles.closeBtn} onClick={onClose}>
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg
+                            className="w-6 h-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -122,7 +140,6 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                                 value={osraTime}
                                 readOnly
                             />
-
                             <label htmlFor="osra_code_one">Family Code</label>{" "}
                             <input
                                 type="text"
@@ -173,8 +190,8 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                     )}
 
                     <div className="mt-4 text-lg font-bold text-[#10b981] bg-[#ecfdf5] border border-[#10b981]/20 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
-                       <span>Total Amount</span>
-                       <span>EGP {total}</span>
+                        <span>Total Amount</span>
+                        <span>EGP {total}</span>
                     </div>
                 </div>
 
@@ -190,7 +207,7 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                             }
                         }}
                     >
-                    {loading ? "Booking..." : "Confirm Booking"}
+                        {loading ? "Booking..." : "Confirm Booking"}
                     </button>
 
                     <button
@@ -205,11 +222,13 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
             {showOsraChoice && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
                     <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full mx-4 animate-scale-in">
-                        <p className="font-semibold mb-4 text-lg">Choose Booking Day</p>
+                        <p className="font-semibold mb-4 text-lg">
+                            Choose Booking Day
+                        </p>
 
                         <div className="flex flex-col gap-3">
                             <button
-                                className={`btn btn-outline-success btn-sm ${selectedOsraDate === next_same_day ? 'active' : ''}`}
+                                className={`btn btn-outline-success btn-sm ${selectedOsraDate === next_same_day ? "active" : ""}`}
                                 onClick={() => {
                                     setSelectedOsraDate(next_same_day);
                                 }}
@@ -222,17 +241,23 @@ const CheckoutModal = ({ can_go_outside, total, user, onClose, osraTime, next_sa
                                 className="form-control form-control-sm bg-gray-50 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-300 transition-all"
                                 min={today}
                                 value={selectedOsraDate}
-                                onChange={(e) => setSelectedOsraDate(e.target.value)}
+                                onChange={(e) =>
+                                    setSelectedOsraDate(e.target.value)
+                                }
                             />
 
                             <button
                                 className="btn btn-success btn-sm"
                                 disabled={!selectedOsraDate || loading}
-                                onClick={() => handleConfirmOsraTime(selectedOsraDate)}
+                                onClick={() =>
+                                    handleConfirmOsraTime(selectedOsraDate)
+                                }
                             >
-                                {loading ? "Confirming..." : "Confirm Selected Date"}
+                                {loading
+                                    ? "Confirming..."
+                                    : "Confirm Selected Date"}
                             </button>
-                            
+
                             <button
                                 className="btn btn-outline-secondary btn-sm"
                                 onClick={() => setShowOsraChoice(false)}

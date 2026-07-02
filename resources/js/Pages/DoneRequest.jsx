@@ -89,9 +89,9 @@ const getStatus = (product) => {
 
 const STATUS_BADGE = {
     returned: "bg-success",
-    missing:  "bg-danger",
-    damaged:  "bg-warning text-dark",
-    pending:  "bg-secondary",
+    missing: "bg-danger",
+    damaged: "bg-warning text-dark",
+    pending: "bg-secondary",
 };
 
 const FILTER_KEYS = ["all", "pending", "returned", "missing", "damaged"];
@@ -106,10 +106,10 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
         product.quantity_returned >= product.quantity_rented;
 
     const [classification, setClassification] = useState(
-        product.shortfall_reason || ""
+        product.shortfall_reason || "",
     );
     const [comment, setComment] = useState("");
-    const [error,   setError]   = useState("");
+    const [error, setError] = useState("");
 
     const handleSave = () => {
         if (!isFullyReturned && !classification) {
@@ -134,7 +134,6 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
         >
             <div className="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                 <div className="modal-content">
-
                     {/* Header */}
                     <div className="modal-header">
                         <h5 className="modal-title">💬 {product.pr_name}</h5>
@@ -142,7 +141,6 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
                     </div>
 
                     <div className="modal-body">
-
                         {/* Log History */}
                         {product.logs.length > 0 && (
                             <div className="mb-4">
@@ -166,29 +164,44 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
 
                                             <div className="d-flex align-items-center gap-2 mb-1">
                                                 <span className="small text-muted">
-                                                    {t("done_request.modal.returned_at")}{" "}
-                                                    {log.quantity_returned_at_time} / {product.quantity_rented}
+                                                    {t(
+                                                        "done_request.modal.returned_at",
+                                                    )}{" "}
+                                                    {
+                                                        log.quantity_returned_at_time
+                                                    }{" "}
+                                                    / {product.quantity_rented}
                                                 </span>
-                                                {log.classification && log.classification !== "recovered" && (
-                                                    <span
-                                                        className={`badge ${
-                                                            log.classification === "missing"
-                                                                ? "bg-danger"
-                                                                : "bg-warning text-dark"
-                                                        }`}
-                                                    >
-                                                        {t(`done_request.status.${log.classification}`)}
-                                                    </span>
-                                                )}
-                                                {log.classification === "recovered" && (
+                                                {log.classification &&
+                                                    log.classification !==
+                                                        "recovered" && (
+                                                        <span
+                                                            className={`badge ${
+                                                                log.classification ===
+                                                                "missing"
+                                                                    ? "bg-danger"
+                                                                    : "bg-warning text-dark"
+                                                            }`}
+                                                        >
+                                                            {t(
+                                                                `done_request.status.${log.classification}`,
+                                                            )}
+                                                        </span>
+                                                    )}
+                                                {log.classification ===
+                                                    "recovered" && (
                                                     <span className="badge bg-success">
-                                                        {t("done_request.modal.recovered_badge")}
+                                                        {t(
+                                                            "done_request.modal.recovered_badge",
+                                                        )}
                                                     </span>
                                                 )}
                                             </div>
 
                                             {log.comment && (
-                                                <p className="mb-0 small">{log.comment}</p>
+                                                <p className="mb-0 small">
+                                                    {log.comment}
+                                                </p>
                                             )}
                                         </div>
                                     ))}
@@ -206,7 +219,9 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
                         {!isFullyReturned && (
                             <div className="mb-3">
                                 <label className="form-label fw-bold">
-                                    {t("done_request.modal.classification_label")}{" "}
+                                    {t(
+                                        "done_request.modal.classification_label",
+                                    )}{" "}
                                     <span className="text-danger">*</span>
                                 </label>
                                 <div className="d-flex gap-4">
@@ -217,9 +232,13 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
                                             id="cls_missing"
                                             name="classification"
                                             value="missing"
-                                            checked={classification === "missing"}
+                                            checked={
+                                                classification === "missing"
+                                            }
                                             onChange={(e) => {
-                                                setClassification(e.target.value);
+                                                setClassification(
+                                                    e.target.value,
+                                                );
                                                 setError("");
                                             }}
                                         />
@@ -227,7 +246,9 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
                                             className="form-check-label text-danger fw-bold"
                                             htmlFor="cls_missing"
                                         >
-                                            {t("done_request.modal.missing_option")}
+                                            {t(
+                                                "done_request.modal.missing_option",
+                                            )}
                                         </label>
                                     </div>
                                     <div className="form-check">
@@ -237,9 +258,13 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
                                             id="cls_damaged"
                                             name="classification"
                                             value="damaged"
-                                            checked={classification === "damaged"}
+                                            checked={
+                                                classification === "damaged"
+                                            }
                                             onChange={(e) => {
-                                                setClassification(e.target.value);
+                                                setClassification(
+                                                    e.target.value,
+                                                );
                                                 setError("");
                                             }}
                                         />
@@ -248,7 +273,9 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
                                             style={{ color: "#b8860b" }}
                                             htmlFor="cls_damaged"
                                         >
-                                            {t("done_request.modal.damaged_option")}
+                                            {t(
+                                                "done_request.modal.damaged_option",
+                                            )}
                                         </label>
                                     </div>
                                 </div>
@@ -263,14 +290,18 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
                                     <span className="text-danger">*</span>
                                 ) : (
                                     <span className="text-muted fw-normal">
-                                        {t("done_request.modal.comment_optional")}
+                                        {t(
+                                            "done_request.modal.comment_optional",
+                                        )}
                                     </span>
                                 )}
                             </label>
                             <textarea
                                 className="form-control"
                                 rows={3}
-                                placeholder={t("done_request.modal.comment_placeholder")}
+                                placeholder={t(
+                                    "done_request.modal.comment_placeholder",
+                                )}
                                 value={comment}
                                 onChange={(e) => {
                                     setComment(e.target.value);
@@ -280,7 +311,9 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
                         </div>
 
                         {error && (
-                            <div className="alert alert-danger py-2">{error}</div>
+                            <div className="alert alert-danger py-2">
+                                {error}
+                            </div>
                         )}
                     </div>
 
@@ -289,7 +322,10 @@ const ReconciliationModal = ({ product, onClose, onSave }) => {
                         <button className="btn btn-secondary" onClick={onClose}>
                             {t("done_request.modal.cancel")}
                         </button>
-                        <button className="btn btn-primary" onClick={handleSave}>
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleSave}
+                        >
                             {t("done_request.modal.save")}
                         </button>
                     </div>
@@ -313,31 +349,38 @@ const DoneRequest = () => {
     const updateProduct = (id, changes) =>
         setProducts((prev) =>
             prev.map((p) =>
-                p.request_product_id === id ? { ...p, ...changes } : p
-            )
+                p.request_product_id === id ? { ...p, ...changes } : p,
+            ),
         );
 
     const handleCounterChange = (product, delta) => {
         const newQty = Math.max(
             0,
-            Math.min(product.quantity_rented, product.quantity_returned + delta)
+            Math.min(
+                product.quantity_rented,
+                product.quantity_returned + delta,
+            ),
         );
         updateProduct(product.request_product_id, {
             quantity_returned: newQty,
             shortfall_reason:
-                newQty >= product.quantity_rented ? null : product.shortfall_reason,
+                newQty >= product.quantity_rented
+                    ? null
+                    : product.shortfall_reason,
         });
     };
 
     const handleRecover = (product) => {
         const newQty = Math.min(
             product.quantity_rented,
-            product.quantity_returned + 1
+            product.quantity_returned + 1,
         );
         updateProduct(product.request_product_id, {
             quantity_returned: newQty,
             shortfall_reason:
-                newQty >= product.quantity_rented ? null : product.shortfall_reason,
+                newQty >= product.quantity_rented
+                    ? null
+                    : product.shortfall_reason,
             logs: [
                 ...product.logs,
                 {
@@ -370,7 +413,7 @@ const DoneRequest = () => {
     };
 
     const filteredProducts = products.filter((p) =>
-        activeFilter === "all" ? true : getStatus(p) === activeFilter
+        activeFilter === "all" ? true : getStatus(p) === activeFilter,
     );
 
     return (
@@ -390,14 +433,15 @@ const DoneRequest = () => {
             )}
 
             <div className="container my-4" dir="rtl">
-
                 {/* Header */}
                 <div className="mb-4">
                     <h2 className="mb-1">{t("done_request.heading")}</h2>
                     <p className="text-muted mb-0">
                         {MOCK_REQUEST.user.full_name}
                         {MOCK_REQUEST.osra?.osra_name && (
-                            <span className="ms-2">— {MOCK_REQUEST.osra.osra_name}</span>
+                            <span className="ms-2">
+                                — {MOCK_REQUEST.osra.osra_name}
+                            </span>
                         )}
                     </p>
                     <small className="text-muted">
@@ -412,7 +456,8 @@ const DoneRequest = () => {
                         const count =
                             key === "all"
                                 ? products.length
-                                : products.filter((p) => getStatus(p) === key).length;
+                                : products.filter((p) => getStatus(p) === key)
+                                      .length;
                         return (
                             <button
                                 key={key}
@@ -459,11 +504,13 @@ const DoneRequest = () => {
                             >
                                 <div className="card-body">
                                     <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
-
                                         {/* Product Info */}
                                         <div className="d-flex align-items-center gap-3">
                                             <img
-                                                src={product.image || shopping_image}
+                                                src={
+                                                    product.image ||
+                                                    shopping_image
+                                                }
                                                 alt={product.pr_name}
                                                 className="rounded"
                                                 style={{
@@ -473,14 +520,23 @@ const DoneRequest = () => {
                                                 }}
                                             />
                                             <div>
-                                                <h6 className="mb-1">{product.pr_name}</h6>
+                                                <h6 className="mb-1">
+                                                    {product.pr_name}
+                                                </h6>
                                                 <div className="d-flex align-items-center gap-2">
-                                                    <span className={`badge ${STATUS_BADGE[status]}`}>
-                                                        {t(`done_request.status.${status}`)}
+                                                    <span
+                                                        className={`badge ${STATUS_BADGE[status]}`}
+                                                    >
+                                                        {t(
+                                                            `done_request.status.${status}`,
+                                                        )}
                                                     </span>
                                                     {remaining > 0 && (
                                                         <span className="text-muted small">
-                                                            {t("done_request.remaining")} {remaining}
+                                                            {t(
+                                                                "done_request.remaining",
+                                                            )}{" "}
+                                                            {remaining}
                                                         </span>
                                                     )}
                                                 </div>
@@ -489,15 +545,20 @@ const DoneRequest = () => {
 
                                         {/* Controls */}
                                         <div className="d-flex align-items-center gap-3 flex-wrap">
-
                                             {/* Counter */}
                                             <div className="d-flex align-items-center gap-2">
                                                 <button
                                                     className="btn btn-outline-secondary btn-sm"
                                                     onClick={() =>
-                                                        handleCounterChange(product, -1)
+                                                        handleCounterChange(
+                                                            product,
+                                                            -1,
+                                                        )
                                                     }
-                                                    disabled={product.quantity_returned <= 0}
+                                                    disabled={
+                                                        product.quantity_returned <=
+                                                        0
+                                                    }
                                                 >
                                                     −
                                                 </button>
@@ -505,12 +566,16 @@ const DoneRequest = () => {
                                                     className="fw-bold text-center"
                                                     style={{ minWidth: 64 }}
                                                 >
-                                                    {product.quantity_returned} / {product.quantity_rented}
+                                                    {product.quantity_returned}{" "}
+                                                    / {product.quantity_rented}
                                                 </span>
                                                 <button
                                                     className="btn btn-outline-secondary btn-sm"
                                                     onClick={() =>
-                                                        handleCounterChange(product, 1)
+                                                        handleCounterChange(
+                                                            product,
+                                                            1,
+                                                        )
                                                     }
                                                     disabled={
                                                         product.quantity_returned >=
@@ -524,8 +589,12 @@ const DoneRequest = () => {
                                             {/* Comment Icon */}
                                             <button
                                                 className="btn btn-outline-primary btn-sm position-relative"
-                                                onClick={() => setModalProduct(product)}
-                                                title={t("done_request.comment_btn_title")}
+                                                onClick={() =>
+                                                    setModalProduct(product)
+                                                }
+                                                title={t(
+                                                    "done_request.comment_btn_title",
+                                                )}
                                             >
                                                 💬
                                                 {product.logs.length > 0 && (
@@ -539,12 +608,17 @@ const DoneRequest = () => {
                                             </button>
 
                                             {/* Recover Button */}
-                                            {(status === "missing" || status === "damaged") && (
+                                            {(status === "missing" ||
+                                                status === "damaged") && (
                                                 <button
                                                     className="btn btn-success btn-sm"
-                                                    onClick={() => handleRecover(product)}
+                                                    onClick={() =>
+                                                        handleRecover(product)
+                                                    }
                                                 >
-                                                    {t("done_request.recover_btn")}
+                                                    {t(
+                                                        "done_request.recover_btn",
+                                                    )}
                                                 </button>
                                             )}
                                         </div>
@@ -553,6 +627,12 @@ const DoneRequest = () => {
                             </div>
                         );
                     })}
+                </div>
+                {/* Done Button */}
+                <div className="d-flex justify-content-end mt-4">
+                    <button className="btn btn-success px-4">
+                        {t("done_request.done_btn")}
+                    </button>
                 </div>
             </div>
         </>

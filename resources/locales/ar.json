@@ -304,6 +304,7 @@
         "cancel": "إلغاء",
         "save": "حفظ",
         "auto_recover_comment": "تم الاسترداد"
-    }
+    },
+    "done_btn": "تم"
 }
 }

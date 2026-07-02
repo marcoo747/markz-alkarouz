@@ -303,6 +303,7 @@
         "cancel": "Cancel",
         "save": "Save",
         "auto_recover_comment": "Item recovered"
-    }
+    },
+    "done_btn": "Done"
   }
 }
