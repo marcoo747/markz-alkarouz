@@ -199,13 +199,22 @@ const NavBar = ({ page_name, linkBase }) => {
                                 ) : null}
 
                                 {admin || manager ? (
-                                    <Link
-                                        href={route("requests")}
-                                        className={`nav-link ${page_name === "requests" ? "active" : ""}`}
-                                        onClick={() => setOpen(false)}
-                                    >
-                                        {t("navbar.requests")}
-                                    </Link>
+                                    <>
+                                        <Link
+                                            href={route("requests")}
+                                            className={`nav-link ${page_name === "requests" ? "active" : ""}`}
+                                            onClick={() => setOpen(false)}
+                                        >
+                                            {t("navbar.requests")}
+                                        </Link>
+                                        <Link
+                                            href={route("missings.index")}
+                                            className={`nav-link ${page_name === "missings" ? "active" : ""}`}
+                                            onClick={() => setOpen(false)}
+                                        >
+                                            {t("navbar.missings") || "المفقودات"}
+                                        </Link>
+                                    </>
                                 ) : null}
 
                                 <div className="flex items-center gap-4 mt-2">

@@ -261,6 +261,9 @@ const RequestShow = () => {
                                             <br />
                                             <strong>{t('request_show.quantity')}</strong>{" "}
                                             {p.pivot?.quantity}
+                                            <br />
+                                            <strong>{t('request_show.comment')}</strong>{" "}
+                                            {p.pivot?.comment}
                                         </small>
                                     </div>
                                 </div>

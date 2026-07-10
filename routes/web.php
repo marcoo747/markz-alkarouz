@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,25 +25,16 @@ use Illuminate\Support\Facades\Http;
 */
 
 // temporarly untill i have the date and time from the front-end inputs
-Route::get('/', [function(){
-    $ip = request()->ip();
-
-    $response = Http::get("http://ip-api.com/json/{$ip}");
-
-    $data = $response->json();
-
-    $timezone = $data['timezone'] ?? config('app.timezone');
+Route::get('/', function () {
+    $timezone = config('app.timezone');
 
     $localTime = now()->setTimezone($timezone);
 
-    $date = $localTime->format('Y-m-d');
-    $time = $localTime->format('H:i:s');
-
     return redirect()->route('home.date', [
-        'date' => $date,
-        'time' => $time
+        'date' => $localTime->format('Y-m-d'),
+        'time' => str_replace(':', '-', $localTime->format('H:i:s')),
     ]);
-}])->name('home');
+})->name('home');
 Route::get('/home/{date?}/{time?}', [Home_controller::class, 'index'])->name('home.date');
 
 // Carousel Photos (public access for home page)
@@ -70,6 +62,7 @@ Route::get('/main_categories/{main_category_id}', [CategoriesController::class, 
 
 Route::get('/items/{id}', [ProductController::class, 'show'])->name('items.show');
 Route::get('/search/{date?}/{time?}', [ProductController::class, 'search'])->name('search');
+Route::get('/api/available-products', [ProductController::class, 'getAvailableProducts'])->name('api.available-products');
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +91,7 @@ Route::middleware('role:user,admin,manager')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::delete('/cart/product', [CartController::class, 'removeProduct'])->name('cart.remove');
+    Route::delete('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
@@ -118,6 +112,7 @@ Route::middleware('role:user,admin,manager')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
+
 /*
 |--------------------------------------------------------------------------
 | Admin & Manager
@@ -129,11 +124,11 @@ Route::middleware('role:admin,manager')->group(function () {
     Route::post('/requests/{request}/accept', [RequestController::class, 'accept'])->name('requests.accept');
     Route::post('/requests/{request}/done', [RequestController::class, 'done'])->name('requests.done');
     Route::post('/requests/{request}/reject', [RequestController::class, 'reject'])->name('requests.reject');
-    Route::get('/doneRequest/{request}', function ($request) {
-        return Inertia::render('DoneRequest', ['requestId' => $request]);
-    })->name('doneRequest');
+    Route::get('/doneRequest/{request}', [RequestController::class, 'showDoneRequestForm'])->name('doneRequest');
 
-    
+    // Missings
+    Route::get('/missings', [RequestController::class, 'missingsIndex'])->name('missings.index');
+    Route::post('/missings/{missing}/return', [RequestController::class, 'returnMissing'])->name('missings.return');
 });
 /*
 |--------------------------------------------------------------------------
@@ -194,5 +189,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 */
 
 Route::fallback(function () {
-    return Inertia::render('Errors/404');
+    return Inertia::render('404')
+        ->toResponse(request())
+        ->setStatusCode(Response::HTTP_NOT_FOUND);
 });

@@ -12,6 +12,7 @@ const EditOsraModal = ({ osra, onClose }) => {
     osra_place: osra.osra_place,
     osra_time: osra.osra_time,
     example_date: osra.example_date,
+    example_time: osra.example_time,
   });
 
   const handleConfirm = () => {
@@ -48,6 +49,10 @@ const EditOsraModal = ({ osra, onClose }) => {
           <label>{t('osra.input_fields.example_date')}</label>
           <input value={data.example_date} onChange={(e) => setData("example_date", e.target.value)} type="date"/>
           {errors.example_date && <p className="text-danger">{errors.example_date}</p>}
+
+          <label>{t('osra.input_fields.example_time')}</label>
+          <input value={data.example_time} onChange={(e) => setData("example_time", e.target.value)} type="time"/>
+          {errors.example_time && <p className="text-danger">{errors.example_time}</p>}
         </div>
 
         <div className={styles.modalFooter}>

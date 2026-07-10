@@ -36,7 +36,7 @@ class UserRequest extends Model
             'product_id'
         )
         ->using(RequestProduct::class)
-        ->withPivot(['color_id', 'size_id', 'quantity', 'checked_qnty', 'unchecked_qnty', 'comment'])
+        ->withPivot(['request_product_id', 'color_id', 'size_id', 'quantity', 'checked_qnty', 'unchecked_qnty', 'comment'])
         ->withTimestamps();
     }
 

@@ -5,6 +5,7 @@
     "osras": "Families",
     "users": "Users",
     "requests": "Requests",
+    "missings": "Missings",
     "profile": "Profile",
     "login": "Login",
     "logout": "Logout",
@@ -121,7 +122,8 @@
       "code": "Code",
       "place": "Place",
       "time": "Time",
-      "example_date": "Next Osra Is On"
+      "example_date": "Next Osra Is On",
+      "example_time": "Next Osra Is At"
     },
     "delete_confirmation": "Are you sure you want to delete {{name}}?"
   },
@@ -175,6 +177,7 @@
     "color": "Color:",
     "size": "Size:",
     "quantity": "Quantity:",
+    "comment": "Comment:",
     "no_products": "No products"
   },
   "search": {
@@ -305,5 +308,20 @@
         "auto_recover_comment": "Item recovered"
     },
     "done_btn": "Done"
+  },
+  "missings": {
+    "page_title": "Missings Management",
+    "heading": "Missing Products",
+    "no_missings": "No missing products at the moment.",
+    "product": "Product",
+    "family": "Family",
+    "user": "User",
+    "request": "Request",
+    "missing_qty": "Missing Qty",
+    "qty_to_return": "Qty to Return",
+    "return_btn": "Return",
+    "comment": "Comment",
+    "success_return": "Products returned successfully!",
+    "error_qty": "Invalid quantity"
   }
 }

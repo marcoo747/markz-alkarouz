@@ -18,4 +18,24 @@ class Missings extends Model
         'quantity',
         'comment',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function osra()
+    {
+        return $this->belongsTo(Osra::class, 'osra_code', 'osra_code');
+    }
+
+    public function request()
+    {
+        return $this->belongsTo(UserRequest::class, 'request_id');
+    }
 }

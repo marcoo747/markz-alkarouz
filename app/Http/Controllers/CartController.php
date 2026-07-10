@@ -109,4 +109,15 @@ class CartController extends Controller
 
         return back();
     }
+
+    public function clearCart()
+    {
+        $cart = Cart::where('user_id', Auth::id())->first();
+
+        if ($cart) {
+            $cart->products()->detach();
+        }
+
+        return response()->json(['success' => true]);
+    }
 }

@@ -5,34 +5,26 @@ import NavBar from "@/Components/NavBar";
 import Container from "@/Components/Container";
 import Button from "@/Components/Button";
 import ProductCard from "@/Components/CartCard";
-import CheckoutModal from "@/Components/CheckoutModal";
 import ManagersModal from "@/Components/ManagersModal";
 import TermsAndPenaltiesModal from "@/Components/TermsAndPenaltiesModal";
+import { useBooking } from "@/Components/BookingContext";
 
 const CartPage = () => {
     const { t } = useTranslation();
-    const {
-        can_go_outside,
-        cart,
-        user,
-        osra_time,
-        next_same_day,
-        osra_numeric_time,
-    } = usePage().props;
+    const { cart, user } = usePage().props;
     const products = cart?.products ?? [];
-    const { errors } = usePage().props;
 
     const total = products.reduce((acc, p) => acc + Number(p.pr_price), 0);
 
-    const [showCheckout, setShowCheckout] = useState(false);
+    const { openCheckout } = useBooking();
+
     const [showManagersModal, setShowManagersModal] = useState(false);
     const [managers, setManagers] = useState([]);
     const [loadingManagers, setLoadingManagers] = useState(false);
     const [showTermsModal, setShowTermsModal] = useState(false);
 
     const fetchManagers = async () => {
-        if (managers.length > 0) return; // Already loaded
-
+        if (managers.length > 0) return;
         setLoadingManagers(true);
         try {
             const response = await fetch(route("api.managers"));
@@ -54,13 +46,6 @@ const CartPage = () => {
         router.delete(route("cart.remove"), {
             data: { product_id },
             preserveScroll: true,
-        });
-    };
-
-    const handleConfirmBooking = (bookingData) => {
-        router.post(route("requests.createFromCart"), bookingData, {
-            preserveScroll: true,
-            onSuccess: () => setShowCheckout(false),
         });
     };
 
@@ -143,7 +128,7 @@ const CartPage = () => {
                             </div>
                             <button
                                 className="bg-[#10b981] hover:bg-[#059669] text-white font-bold flex items-center gap-2 rounded-xl px-7 py-3.5 transition-all shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_12px_25px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 active:translate-y-0"
-                                onClick={() => setShowCheckout(true)}
+                                onClick={openCheckout}
                             >
                                 {t("cart.checkout")}
                                 <svg
@@ -164,21 +149,6 @@ const CartPage = () => {
                     </>
                 )}
 
-                {/* Only show modal if user exists */}
-                {showCheckout && user && (
-                    <CheckoutModal
-                        next_same_day={next_same_day}
-                        can_go_outside={can_go_outside}
-                        errors={errors}
-                        total={total}
-                        user={user}
-                        onClose={() => setShowCheckout(false)}
-                        onConfirm={handleConfirmBooking}
-                        osraTime={osra_time}
-                        osraNumericTime={osra_numeric_time}
-                    />
-                )}
-
                 {/* Managers Modal */}
                 <ManagersModal
                     isOpen={showManagersModal}
@@ -192,7 +162,7 @@ const CartPage = () => {
                     onClose={() => setShowTermsModal(false)}
                 />
 
-                {/* Floating Terms Button - For All Users */}
+                {/* Floating Terms Button */}
                 <button
                     onClick={() => setShowTermsModal(true)}
                     className="fixed bottom-26 left-8 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-full p-4 shadow-lg hover:shadow-xl z-30 transition-all transform hover:scale-110 active:scale-95"
@@ -221,7 +191,7 @@ const CartPage = () => {
                     </svg>
                 </button>
 
-                {/* Floating Managers Button - For All Users */}
+                {/* Floating Managers Button */}
                 <button
                     onClick={handleOpenManagersModal}
                     disabled={loadingManagers}

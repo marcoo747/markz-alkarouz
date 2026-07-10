@@ -10,18 +10,25 @@ import LoginMessage from "@/Components/LoginMessage";
 import EditImagesModal from "@/Components/EditImagesModal";
 import PaginationControls from "@/Components/PaginationControls";
 import { useTranslation } from "react-i18next";
+import useTimeFilteredProducts from "@/Components/useTimeFilteredProducts";
+import { useBooking } from "@/Components/BookingContext";
 
 const Home = () => {
   const { t } = useTranslation();
-  const { flash, products, pagination, auth } = usePage().props;
+  const { flash, products: initialProducts, pagination, auth, cart_items_count } = usePage().props;
   const [alertMessage, setAlertMessage] = useState("");
   const [showLoginAlert, setShowLoginAlert] = useState(true);
-  
+
   const [carouselImages, setCarouselImages] = useState([]);
   const [loadingCarousel, setLoadingCarousel] = useState(true);
   const [showEditImages, setShowEditImages] = useState(false);
   const user = auth?.user;
   const manager = user?.user_type === "manager";
+
+  const { openCheckout } = useBooking();
+  const { products, loading: loadingProducts } = useTimeFilteredProducts({
+    initialProducts: initialProducts || [],
+  });
 
   useEffect(() => {
     const fetchCarouselImages = async () => {
@@ -31,12 +38,10 @@ const Home = () => {
           const data = await response.json();
           setCarouselImages(data.map(img => img.url));
         } else {
-          // Fallback to default images if API fails
           setCarouselImages(["imgs/img1.jpg", "imgs/img1.jpg", "imgs/img1.jpg", "imgs/img1.jpg"]);
         }
       } catch (error) {
         console.error('Failed to fetch carousel images:', error);
-        // Fallback to default images
         setCarouselImages(["imgs/img1.jpg", "imgs/img1.jpg", "imgs/img1.jpg", "imgs/img1.jpg"]);
       } finally {
         setLoadingCarousel(false);
@@ -48,9 +53,7 @@ const Home = () => {
 
   return (
     <>
-      {/* Top Login Alert */}
       {showLoginAlert && <LoginMessage message={t('home.login_alert')} onClose={() => setShowLoginAlert(false)} />}
-      {/* Top Alert */}
       {alertMessage && <TopAlert message={alertMessage} onClose={() => setAlertMessage("")} />}
 
       <Head title={t('home.page_title')} />
@@ -76,7 +79,7 @@ const Home = () => {
                 </button>
 
                 <button
-                  className="btn btn-outline "
+                  className="btn btn-outline"
                   onClick={() =>
                     window.scrollTo({ top: 600, behavior: "smooth" })
                   }
@@ -99,13 +102,11 @@ const Home = () => {
               </div>
             </div>
           ) : (
-            <Carousel
-              images={carouselImages}
-            />
+            <Carousel images={carouselImages} />
           )}
-          
+
           {manager && (
-            <button 
+            <button
               className="w-full md:w-auto mx-auto px-6 flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-xl transition-all duration-200 border border-slate-200 shadow-sm active:scale-[0.98]"
               onClick={() => setShowEditImages(true)}
             >
@@ -115,36 +116,55 @@ const Home = () => {
           )}
 
           {showEditImages && (
-            <EditImagesModal 
-               initialImages={carouselImages}
-               onClose={() => setShowEditImages(false)}
-               onSave={async (newImages) => {
-                 // Refresh carousel images from database after upload
-                 try {
-                   const response = await fetch(route('carousel.photos.index'));
-                   if (response.ok) {
-                     const data = await response.json();
-                     setCarouselImages(data.map(img => img.url));
-                   }
-                 } catch (error) {
-                   console.error('Failed to refresh carousel images:', error);
-                 }
-               }}
+            <EditImagesModal
+              initialImages={carouselImages}
+              onClose={() => setShowEditImages(false)}
+              onSave={async () => {
+                try {
+                  const response = await fetch(route('carousel.photos.index'));
+                  if (response.ok) {
+                    const data = await response.json();
+                    setCarouselImages(data.map(img => img.url));
+                  }
+                } catch (error) {
+                  console.error('Failed to refresh carousel images:', error);
+                }
+              }}
             />
           )}
-
         </div>
 
         <div className="mt-8">
-          <ItemPack
-            category_name={t('home.recently_added')}
-            products={products}
-            setAlertMessage={setAlertMessage}
-          />
+          {loadingProducts ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mr-3"></div>
+              <span className="text-slate-500">Updating products...</span>
+            </div>
+          ) : (
+            <ItemPack
+              category_name={t('home.recently_added')}
+              products={products}
+              setAlertMessage={setAlertMessage}
+            />
+          )}
         </div>
 
         <PaginationControls pagination={pagination} />
       </Container>
+
+      {/* Floating checkout button when cart has items */}
+      {user && cart_items_count > 0 && (
+        <button
+          onClick={openCheckout}
+          className="fixed bottom-6 right-6 bg-[#10b981] hover:bg-[#059669] text-white font-bold rounded-full px-6 py-4 shadow-[0_8px_20px_rgba(16,185,129,0.4)] hover:shadow-[0_12px_25px_rgba(16,185,129,0.5)] z-40 flex items-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0"
+          aria-label="Open checkout"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Checkout ({cart_items_count})
+        </button>
+      )}
     </>
   );
 };

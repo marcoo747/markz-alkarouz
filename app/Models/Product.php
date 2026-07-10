@@ -105,6 +105,37 @@ class Product extends Model
         });
     }
 
+    /**
+     * Check if a given time window overlaps with an active request.
+     */
+    private static function overlapsWindow($q, $startDate, $startTime, $endDate, $endTime)
+    {
+        $q->where(function ($interval) use ($startDate, $startTime, $endDate, $endTime) {
+            $interval->whereNotNull('start_date')
+                ->whereNotNull('start_time')
+                ->whereNotNull('end_date')
+                ->whereNotNull('end_time')
+                ->where(function ($range) use ($startDate, $startTime, $endDate, $endTime) {
+                    // Request start is before our end AND request end is after our start
+                    $range->where(function ($reqStart) use ($endDate, $endTime) {
+                        $reqStart->where('start_date', '<', $endDate)
+                            ->orWhere(function ($s) use ($endDate, $endTime) {
+                                $s->where('start_date', $endDate)->where('start_time', '<=', $endTime);
+                            });
+                    })->where(function ($reqEnd) use ($startDate, $startTime) {
+                        $reqEnd->where('end_date', '>', $startDate)
+                            ->orWhere(function ($e) use ($startDate, $startTime) {
+                                $e->where('end_date', $startDate)->where('end_time', '>=', $startTime);
+                            });
+                    });
+                });
+        })->orWhere(function ($osraMatch) use ($startDate, $startTime) {
+            $osraMatch->where('osra_date', $startDate)
+                ->where('osra_numeric_time', $startTime);
+        });
+    }
+
+
     public function carts()
     {
         return $this->belongsToMany(

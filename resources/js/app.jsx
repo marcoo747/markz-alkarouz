@@ -10,34 +10,34 @@ import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
 
+import { BookingProvider } from "@/Components/BookingContext";
+import GlobalCheckoutModal from "@/Components/GlobalCheckoutModal";
+
 createInertiaApp({
     title: (title) => title || "Markz alkarooz",
+
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.jsx`,
             import.meta.glob("./Pages/**/*.jsx"),
         ),
+
     setup({ el, App, props }) {
         const root = createRoot(el);
-        root.render(<App {...props} />);
 
-        // ✅ Register Service Worker for PWA
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker
-                    .register("/sw.js")
-                    .then((reg) =>
-                        console.log("Service Worker registered:", reg.scope),
-                    )
-                    .catch((err) =>
-                        console.error(
-                            "Service Worker registration failed:",
-                            err,
-                        ),
-                    );
-            });
-        }
+        root.render(
+            <App
+                {...props}
+                children={({ Component, props: pageProps, key }) => (
+                    <BookingProvider>
+                        <Component {...pageProps} key={key} />
+                        <GlobalCheckoutModal />
+                    </BookingProvider>
+                )}
+            />
+        );
     },
+
     progress: {
         color: "#4B5563",
     },

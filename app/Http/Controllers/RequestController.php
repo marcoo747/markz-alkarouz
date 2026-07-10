@@ -154,28 +154,205 @@ class RequestController extends Controller
         return back()->with('success', 'Request accepted successfully!');
     }
 
-    public function done(UserRequest $request)
+    public function done(UserRequest $request, Request $httpRequest)
     {
-        $request->load('products');
+        $productsData = $httpRequest->input('products');
 
-        foreach ($request->products as $product) {
-            $product->increment('inventory_quantity', $product->pivot->checked_qnty);
+        if (is_array($productsData)) {
+            DB::transaction(function () use ($request, $productsData) {
+                foreach ($productsData as $pData) {
+                    $reqProdId = $pData['request_product_id'] ?? null;
+                    $checkedQnty = (int)($pData['checked_qnty'] ?? 0);
+                    $comment = $pData['comment'] ?? null;
+                    $shortfallReason = $pData['shortfall_reason'] ?? null;
 
-            $missings = Missings::create([
-                "request_id" => $request->request_id,
-                "osra_code" => $request->osra_code,
-                "user_id" => $request->user_id,
-                "product_id" => $product->pivot->product_id,
-                "quantity" => $product->pivot->unchecked_qnty,
-                "comment" => $product->pivot->comment,
-            ]);
+                    $productId = $pData['product_id'] ?? null;
+
+                    $pivot = DB::table('request_products')
+                        ->where('request_product_id', $reqProdId)
+                        ->first();
+
+                    if (!$pivot && $productId) {
+                        $pivot = DB::table('request_products')
+                            ->where('request_id', $request->request_id)
+                            ->where('product_id', $productId)
+                            ->first();
+                    }
+
+                    if ($pivot) {
+                        $uncheckedQnty = max(0, $pivot->quantity - $checkedQnty);
+
+                        DB::table('request_products')
+                            ->where('request_product_id', $pivot->request_product_id)
+                            ->update([
+                                'checked_qnty' => $checkedQnty,
+                                'unchecked_qnty' => $uncheckedQnty,
+                                'comment' => $comment,
+                                'updated_at' => now(),
+                            ]);
+
+                        if ($checkedQnty > 0) {
+                            DB::table('products')
+                                ->where('product_id', $pivot->product_id)
+                                ->increment('inventory_quantity', $checkedQnty);
+                        }
+
+                        if ($uncheckedQnty > 0 && $shortfallReason === 'missing') {
+                            Missings::create([
+                                'request_id' => $request->request_id,
+                                'osra_code' => $request->osra_code,
+                                'user_id' => $request->user_id,
+                                'product_id' => $pivot->product_id,
+                                'quantity' => $uncheckedQnty,
+                                'comment' => $comment,
+                            ]);
+                        }
+                    }
+                }
+
+                $request->update([
+                    'request_status' => 'done',
+                ]);
+            });
+
+            return redirect()->route('requests')->with('success', 'Request has been completed successfully!');
         }
 
-        $request->update([
-            'request_status' => 'done',
-        ]);
+        // Fallback for legacy calls
+        $request->load('products');
+        DB::transaction(function () use ($request) {
+            foreach ($request->products as $product) {
+                $product->increment('inventory_quantity', $product->pivot->checked_qnty);
+
+                if ($product->pivot->unchecked_qnty > 0) {
+                    Missings::create([
+                        "request_id" => $request->request_id,
+                        "osra_code" => $request->osra_code,
+                        "user_id" => $request->user_id,
+                        "product_id" => $product->pivot->product_id,
+                        "quantity" => $product->pivot->unchecked_qnty,
+                        "comment" => $product->pivot->comment,
+                    ]);
+                }
+            }
+
+            $request->update([
+                'request_status' => 'done',
+            ]);
+        });
 
         return back()->with('success', 'Request has been done successfully!');
+    }
+
+    public function showDoneRequestForm(UserRequest $request)
+    {
+        $request->load([
+            'user:user_id,full_name',
+            'osra:osra_code,osra_name',
+            'products.images'
+        ]);
+
+        $request->products->each(function ($product) {
+            $product->pivot->loadMissing(['color', 'size']);
+        });
+
+        $user = Auth::user();
+        $cartItems = [];
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+        $cart_items_count = count($cartItems);
+
+        return inertia('DoneRequest', [
+            'requestDetails' => $request,
+            'cart_items_count' => $cart_items_count,
+        ]);
+    }
+
+    public function missingsIndex()
+    {
+        $missings = Missings::with([
+            'product.images',
+            'user:user_id,full_name',
+            'osra:osra_code,osra_name',
+            'request'
+        ])->get();
+
+        $user = Auth::user();
+        $cartItems = [];
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+        $cart_items_count = count($cartItems);
+
+        return inertia('Missings', [
+            'missings' => $missings,
+            'cart_items_count' => $cart_items_count,
+        ]);
+    }
+
+    public function returnMissing(Request $request, $missingId)
+    {
+        $request->validate([
+            'quantity_to_return' => 'required|integer|min:1'
+        ]);
+
+        $qtyToReturn = (int) $request->input('quantity_to_return');
+
+        DB::transaction(function () use ($missingId, $qtyToReturn) {
+            $missing = Missings::findOrFail($missingId);
+
+            if ($qtyToReturn > $missing->quantity) {
+                throw new \Exception("Cannot return more than the missing quantity.");
+            }
+
+            // 1. Update/delete Missings record
+            $newQty = $missing->quantity - $qtyToReturn;
+            if ($newQty <= 0) {
+                $missing->delete();
+            } else {
+                $missing->update(['quantity' => $newQty]);
+            }
+
+            // 2. Increment product inventory
+            DB::table('products')
+                ->where('product_id', $missing->product_id)
+                ->increment('inventory_quantity', $qtyToReturn);
+
+            // 3. Update request_products checked_qnty and unchecked_qnty
+            $pivots = DB::table('request_products')
+                ->where('request_id', $missing->request_id)
+                ->where('product_id', $missing->product_id)
+                ->where('unchecked_qnty', '>', 0)
+                ->orderBy('request_product_id', 'asc')
+                ->get();
+
+            $remainingToReturn = $qtyToReturn;
+            foreach ($pivots as $pivot) {
+                if ($remainingToReturn <= 0) {
+                    break;
+                }
+
+                $availableToReduce = $pivot->unchecked_qnty;
+                $reduceAmount = min($remainingToReturn, $availableToReduce);
+
+                DB::table('request_products')
+                    ->where('request_product_id', $pivot->request_product_id)
+                    ->update([
+                        'checked_qnty' => $pivot->checked_qnty + $reduceAmount,
+                        'unchecked_qnty' => $pivot->unchecked_qnty - $reduceAmount,
+                        'updated_at' => now(),
+                    ]);
+
+                $remainingToReturn -= $reduceAmount;
+            }
+        });
+
+        return back()->with('success', 'Products returned successfully!');
     }
 
     public function reject(UserRequest $request)
