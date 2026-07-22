@@ -48,7 +48,7 @@ class CategoriesController extends Controller
         $perPage = request()->input('per_page', 12);
 
         $productsPaginated = $category->products()
-            ->availableAt($date, $time)
+            ->withAvailableInWindow(request())
             ->with([
                 'images' => function ($q) {
                     $q->orderBy('photo_id');
@@ -72,13 +72,14 @@ class CategoriesController extends Controller
         $products = $productsPaginated->map(function ($product) use ($defaultImage) {
             $firstColor = $product->colors->first();
             $firstSize = $product->sizes->first();
+            $availQty = max(0, $product->inventory_quantity - ($product->requested_quantity ?? 0));
             return [
                 'id'          => $product->product_id,
                 'title'       => $product->pr_name,
                 'brand'       => $product->brand,
                 'description' => $product->pr_description,
                 'price'       => $product->pr_price,
-                'inventory_quantity'       => $product->inventory_quantity,
+                'inventory_quantity' => $availQty,
                 'rating'      => 5,
                 'image'       => $product->images->first()
                     ? '/markaz_alkarouz/public/storage/' . $product->images->first()->photo

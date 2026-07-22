@@ -261,7 +261,7 @@ class ProductController extends Controller
         $query = $request->input('query');
         $perPage = request()->input('per_page', 12);
 
-        $resultsPaginated = Product::availableAt($date, $time)
+        $resultsPaginated = Product::withAvailableInWindow($request)
             ->where(function ($q) use ($query) {
                 $q->where('pr_name', 'like', "%{$query}%")
                     ->orWhere('pr_description', 'like', "%{$query}%")
@@ -273,6 +273,7 @@ class ProductController extends Controller
             ->paginate($perPage);
 
         $results = $resultsPaginated->map(function ($product) {
+            $product->inventory_quantity = max(0, $product->inventory_quantity - ($product->requested_quantity ?? 0));
             return $product;
         });
 
@@ -303,30 +304,16 @@ class ProductController extends Controller
     }
 
     /**
-     * Returns products available (or partially available) in a given booking time window.
-     * Used by the frontend BookingContext to refresh product lists when dates/times change.
-     *
-     * Accepts query params:
-     *   time_type: "familyTime" | "customTime"
-     *   For customTime: start_date, start_time, end_date, end_time
-     *   For familyTime: osra_date, osra_numeric_time
+     * Returns products available in a given booking time window with available quantities.
      */
     public function getAvailableProducts(Request $request)
     {
-        $timeType        = $request->input('time_type', 'familyTime');
-        $startDate       = $request->input('start_date');
-        $startTime       = $request->input('start_time');
-        $endDate         = $request->input('end_date');
-        $endTime         = $request->input('end_time');
-        $osraDate        = $request->input('osra_date');
-        $osraNumericTime = $request->input('osra_numeric_time');
-        $categoryId      = $request->input('category_id');
-        $searchQuery     = $request->input('query');
+        $categoryId  = $request->input('category_id');
+        $searchQuery = $request->input('query');
 
-        // Base query with images
-        $baseQuery = Product::with(['images', 'colors', 'sizes']);
+        $baseQuery = Product::with(['images', 'colors', 'sizes'])
+            ->withAvailableInWindow($request);
 
-        // Filter by category or search if provided
         if ($categoryId) {
             $baseQuery->where('category_id', $categoryId);
         }
@@ -338,82 +325,9 @@ class ProductController extends Controller
             });
         }
 
-        // Determine which date/time to use for filtering
-        if ($timeType === 'customTime' && $startDate && $startTime && $endDate && $endTime) {
-            $filterDate = $startDate;
-            $filterTime = $startTime;
-        } elseif ($timeType === 'familyTime' && $osraDate && $osraNumericTime) {
-            $filterDate = $osraDate;
-            $filterTime = $osraNumericTime;
-        } else {
-            // No valid time given — return all products
-            $products = $baseQuery->latest()->get();
-            return response()->json($this->formatProductsForApi($products));
-        }
+        $products = $baseQuery->latest()->get();
 
-        // 1. Products NOT requested in this window (fully available)
-        $availableProducts = (clone $baseQuery)->availableAt($filterDate, $filterTime)->latest()->get();
-
-        // 2. Products that ARE requested in this window but have remaining stock
-        //    We get ALL products matching the base query, then for those NOT in availableProducts,
-        //    check if inventory_quantity - sum(requested qty in window) > 0
-        $allProducts = (clone $baseQuery)->latest()->get();
-        $availableIds = $availableProducts->pluck('product_id')->toArray();
-
-        $partialProducts = $allProducts->filter(function ($product) use ($availableIds, $filterDate, $filterTime, $timeType, $startDate, $startTime, $endDate, $endTime, $osraDate, $osraNumericTime) {
-            // Already in available list — skip
-            if (in_array($product->product_id, $availableIds)) {
-                return false;
-            }
-
-            // Sum requested quantity for this product in the overlapping window
-            $requestedQty = DB::table('request_products')
-                ->join('requests', 'request_products.request_id', '=', 'requests.request_id')
-                ->where('request_products.product_id', $product->product_id)
-                ->where(function ($q) {
-                    $q->where('requests.request_status', '!=', 'done')
-                      ->orWhereNull('requests.request_status');
-                })
-                ->where(function ($q) use ($filterDate, $filterTime, $timeType, $startDate, $startTime, $endDate, $endTime, $osraDate, $osraNumericTime) {
-                    if ($timeType === 'customTime') {
-                        // Overlap: request overlaps with [startDate+startTime, endDate+endTime]
-                        $q->where(function ($interval) use ($startDate, $startTime, $endDate, $endTime) {
-                            $interval->whereNotNull('requests.start_date')
-                                ->whereNotNull('requests.start_time')
-                                ->whereNotNull('requests.end_date')
-                                ->whereNotNull('requests.end_time')
-                                ->where(function ($range) use ($startDate, $startTime, $endDate, $endTime) {
-                                    $range->where(function ($rs) use ($endDate, $endTime) {
-                                        $rs->where('requests.start_date', '<', $endDate)
-                                           ->orWhere(function ($s) use ($endDate, $endTime) {
-                                               $s->where('requests.start_date', $endDate)
-                                                 ->where('requests.start_time', '<=', $endTime);
-                                           });
-                                    })->where(function ($re) use ($startDate, $startTime) {
-                                        $re->where('requests.end_date', '>', $startDate)
-                                           ->orWhere(function ($e) use ($startDate, $startTime) {
-                                               $e->where('requests.end_date', $startDate)
-                                                 ->where('requests.end_time', '>=', $startTime);
-                                           });
-                                    });
-                                });
-                        });
-                    } else {
-                        // Family time: exact match on osra_date + osra_numeric_time
-                        $q->where('requests.osra_date', $osraDate)
-                          ->where('requests.osra_numeric_time', $osraNumericTime);
-                    }
-                })
-                ->sum('request_products.quantity');
-
-            $remaining = $product->inventory_quantity - $requestedQty;
-            return $remaining > 0;
-        });
-
-        // Merge: available first, then partial
-        $result = $availableProducts->concat($partialProducts->values());
-
-        return response()->json($this->formatProductsForApi($result));
+        return response()->json($this->formatProductsForApi($products));
     }
 
     private function formatProductsForApi($products)
@@ -421,13 +335,14 @@ class ProductController extends Controller
         return $products->map(function ($product) {
             $firstColor = $product->colors->first();
             $firstSize  = $product->sizes->first();
+            $availQty   = max(0, $product->inventory_quantity - ($product->requested_quantity ?? 0));
             return [
                 'id'                 => $product->product_id,
                 'title'              => $product->pr_name,
                 'brand'              => $product->brand ?? '',
                 'description'        => $product->pr_description ?? '',
                 'price'              => $product->pr_price,
-                'inventory_quantity' => $product->inventory_quantity,
+                'inventory_quantity' => $availQty,
                 'image'              => $product->images->first()
                     ? '/markaz_alkarouz/public/storage/' . $product->images->first()->photo
                     : '/markaz_alkarouz/public/imgs/shopping.webp',

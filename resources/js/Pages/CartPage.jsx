@@ -16,7 +16,52 @@ const CartPage = () => {
 
     const total = products.reduce((acc, p) => acc + Number(p.pr_price), 0);
 
-    const { openCheckout } = useBooking();
+    const {
+        openCheckout,
+        buildTimeParams,
+        timeType,
+        startDate,
+        startTime,
+        endDate,
+        endTime,
+        selectedOsraDate,
+    } = useBooking();
+
+    const { osra_info } = usePage().props;
+    const [submitting, setSubmitting] = useState(false);
+
+    const handleDirectCheckout = () => {
+        setSubmitting(true);
+        const timeParams = buildTimeParams();
+
+        let postPayload = {
+            full_name: user?.full_name || "",
+            total_price: total,
+        };
+
+        if (timeType === "customTime") {
+            postPayload = {
+                ...postPayload,
+                osra_code: null,
+                start_date: startDate,
+                start_time: startTime,
+                end_date: endDate,
+                end_time: endTime,
+            };
+        } else {
+            postPayload = {
+                ...postPayload,
+                osra_code: osra_info?.osra_code || user?.osra_code || null,
+                osra_time: osra_info?.osra_time || "",
+                osra_date: selectedOsraDate || osra_info?.next_same_day || "",
+                osra_numeric_time: osra_info?.osra_numeric_time || "",
+            };
+        }
+
+        router.post(route("requests.createFromCart", timeParams), postPayload, {
+            onFinish: () => setSubmitting(false),
+        });
+    };
 
     const [showManagersModal, setShowManagersModal] = useState(false);
     const [managers, setManagers] = useState([]);
@@ -127,10 +172,11 @@ const CartPage = () => {
                                 </h4>
                             </div>
                             <button
-                                className="bg-[#10b981] hover:bg-[#059669] text-white font-bold flex items-center gap-2 rounded-xl px-7 py-3.5 transition-all shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_12px_25px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 active:translate-y-0"
-                                onClick={openCheckout}
+                                disabled={submitting}
+                                className="bg-[#10b981] hover:bg-[#059669] text-white font-bold flex items-center gap-2 rounded-xl px-7 py-3.5 transition-all shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_12px_25px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50"
+                                onClick={handleDirectCheckout}
                             >
-                                {t("cart.checkout")}
+                                {submitting ? "Processing..." : t("cart.checkout")}
                                 <svg
                                     className="w-5 h-5 ml-1"
                                     fill="none"

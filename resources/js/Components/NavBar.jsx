@@ -178,6 +178,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                     {t("navbar.categories")}
                                 </Link>
 
+
                                 {manager ? (
                                     <>
                                         <Link

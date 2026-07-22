@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import { router, usePage } from "@inertiajs/react";
 import { useBooking } from "@/Components/BookingContext";
 import styles from "../../css/CheckoutModal.module.css";
+
 /**
  * Global checkout modal that renders at the app root level.
  * Opened/closed via BookingContext.openCheckout() / closeCheckout().
- * Reads time state from BookingContext and submits directly to createFromCart.
+ * Supports Option 1 (Family Time) and Option 2 (Custom Time).
+ * Submits directly to requests.createFromCart carrying dates and times in the URL.
  */
 const GlobalCheckoutModal = () => {
     const {
         isCheckoutOpen,
         closeCheckout,
         saveBookingInterval,
+        buildTimeParams,
         timeType,
         setTimeType,
         startDate,
@@ -25,32 +28,29 @@ const GlobalCheckoutModal = () => {
         selectedOsraDate,
         setSelectedOsraDate,
     } = useBooking();
-    // FIX: previously read only { auth, osra_info } and hardcoded
-    // `const can_go_outside = true`, so every user saw "Custom Time" as an
-    // option regardless of their cart's categories. can_go_outside is now
-    // shared globally from HandleInertiaRequests (mirrors the same logic
-    // CartController::index already used), so it's read here for real.
-    // cart_items_count is also read here now to block checkout on an empty cart.
-    const { auth, osra_info, can_go_outside, cart_items_count } = usePage().props;
+
+    const { auth, osra_info, cart_items_count, cart } = usePage().props;
     const user = auth?.user;
     const osraTime = osra_info?.osra_time;
     const osraNumericTime = osra_info?.osra_numeric_time;
     const nextSameDay = osra_info?.next_same_day;
     const osraCode = osra_info?.osra_code;
+
+    const [idCode, setIdCode] = useState(osraCode || "");
     const [loading, setLoading] = useState(false);
     const [showOsraChoice, setShowOsraChoice] = useState(false);
+
     const today = new Date().toISOString().split("T")[0];
+
     if (!isCheckoutOpen) return null;
-    // FIX: nothing previously stopped "Confirm Booking" from being clicked
-    // with an empty cart. The server now rejects that too (see
-    // RequestController::createFromCart), but blocking it here avoids a
-    // pointless round trip and gives the user an inline explanation.
-    const cartEmpty = !cart_items_count || cart_items_count <= 0;
-    // ── Save Time Interval ───────────────────────────────────────────────────
+
+    const cartProducts = cart?.products ?? [];
+    const cartTotal = cartProducts.reduce((acc, p) => acc + Number(p.pr_price), 0);
+    const hasCartItems = (cart_items_count > 0) && (cartProducts.length > 0);
 
     const validateCustomTime = () => {
         if (!startDate || !startTime || !endDate || !endTime) {
-            alert("Please select a complete date and time interval.");
+            alert("Please select a complete start date, start time, end date, and end time.");
             return false;
         }
 
@@ -65,42 +65,65 @@ const GlobalCheckoutModal = () => {
         return true;
     };
 
-    const handleSaveCustomTime = () => {
-        if (!validateCustomTime()) return;
+    const validateFamilyTime = () => {
+        const dateToUse = selectedOsraDate || nextSameDay;
+        if (!dateToUse) {
+            alert("Please select a booking day for Family Time.");
+            return false;
+        }
+        return true;
+    };
+
+    const handleConfirmBooking = () => {
+        if (timeType === "customTime") {
+            if (!validateCustomTime()) return;
+        } else {
+            if (!validateFamilyTime()) return;
+        }
 
         setLoading(true);
 
-        saveBookingInterval();
+        if (hasCartItems) {
+            const timeParams = buildTimeParams();
 
-        setLoading(false);
+            const payload = timeType === "customTime" ? {
+                full_name: user?.full_name || "",
+                osra_code: null,
+                start_date: startDate,
+                start_time: startTime,
+                end_date: endDate,
+                end_time: endTime,
+                total_price: cartTotal,
+            } : {
+                full_name: user?.full_name || "",
+                osra_code: idCode.trim() || osraCode || null,
+                osra_time: osraTime || "",
+                osra_date: selectedOsraDate || nextSameDay || "",
+                osra_numeric_time: osraNumericTime || "",
+                total_price: cartTotal,
+            };
+
+            router.post(route("requests.createFromCart", timeParams), payload, {
+                onSuccess: () => {
+                    closeCheckout();
+                },
+                onFinish: () => setLoading(false),
+            });
+        } else {
+            saveBookingInterval().finally(() => setLoading(false));
+        }
     };
 
-    const handleSaveFamilyTime = (dateValue) => {
+    const handleSaveFamilyDate = (dateValue) => {
         if (!dateValue) {
-            alert("Please choose a booking date.");
+            alert("Please select a booking date.");
             return;
         }
-
         setSelectedOsraDate(dateValue);
-
-        setLoading(true);
-
-        saveBookingInterval();
-
         setShowOsraChoice(false);
-
-        setLoading(false);
+        saveBookingInterval();
     };
 
-    const handleCheckoutClick = () => {
-        if (timeType === "familyTime") {
-            setShowOsraChoice(true);
-            return;
-        }
-
-        handleSaveCustomTime();
-    };
-    // ── Render ───────────────────────────────────────────────────────────────
     return (
         <div className={styles.modalOverlay} onClick={closeCheckout}>
             <div
@@ -125,13 +148,9 @@ const GlobalCheckoutModal = () => {
                         </svg>
                     </button>
                 </div>
+
                 <div className={styles.modalBody}>
-                    {cartEmpty && (
-                        <div className="mb-4 text-sm text-amber-700 bg-amber-50 border border-amber-200 px-4 py-3 rounded-xl">
-                            Your cart is empty — add items before checking out.
-                        </div>
-                    )}
-                    {/* Time type selector */}
+                    {/* Option Selector */}
                     <div className={styles.optionGroup}>
                         <input
                             type="radio"
@@ -142,37 +161,65 @@ const GlobalCheckoutModal = () => {
                             onChange={() => setTimeType("familyTime")}
                         />
                         <label htmlFor="global_osra_Time">Family Time</label>
-                        {!!can_go_outside && (
-                            <>
-                                <input
-                                    type="radio"
-                                    id="global_Custom_time"
-                                    name="globalTimeOption"
-                                    value="customTime"
-                                    checked={timeType === "customTime"}
-                                    onChange={() => setTimeType("customTime")}
-                                />
-                                <label htmlFor="global_Custom_time">
-                                    Custom Time
-                                </label>
-                            </>
-                        )}
+
+                        <input
+                            type="radio"
+                            id="global_Custom_time"
+                            name="globalTimeOption"
+                            value="customTime"
+                            checked={timeType === "customTime"}
+                            onChange={() => setTimeType("customTime")}
+                        />
+                        <label htmlFor="global_Custom_time">Custom Time</label>
                     </div>
-                    {/* Family time display */}
+
+                    {/* Option 1: Family Time */}
                     {timeType === "familyTime" && (
                         <>
-                            <label htmlFor="global_osra_time_display">
-                                Family Time
-                            </label>
+                            <label htmlFor="global_osra_time_display">Family Time</label>
                             <input
                                 type="text"
                                 id="global_osra_time_display"
                                 value={osraTime || "—"}
                                 readOnly
                             />
+
+                            <label htmlFor="global_osra_code_input">Family Code</label>
+                            <input
+                                type="text"
+                                id="global_osra_code_input"
+                                value={idCode}
+                                onChange={(e) => setIdCode(e.target.value)}
+                                placeholder="Enter Family Code"
+                            />
+
+                            <label htmlFor="global_osra_date_picker">Booking Date</label>
+                            <div className="flex flex-col gap-2 mb-3">
+                                {nextSameDay && (
+                                    <button
+                                        type="button"
+                                        className={`btn btn-sm ${
+                                            (selectedOsraDate || nextSameDay) === nextSameDay
+                                                ? "btn-success"
+                                                : "btn-outline-success"
+                                        }`}
+                                        onClick={() => setSelectedOsraDate(nextSameDay)}
+                                    >
+                                        Next Same Day ({nextSameDay})
+                                    </button>
+                                )}
+                                <input
+                                    type="date"
+                                    id="global_osra_date_picker"
+                                    min={today}
+                                    value={selectedOsraDate || nextSameDay || ""}
+                                    onChange={(e) => setSelectedOsraDate(e.target.value)}
+                                />
+                            </div>
                         </>
                     )}
-                    {/* Custom time inputs */}
+
+                    {/* Option 2: Custom Time */}
                     {timeType === "customTime" && (
                         <>
                             <label htmlFor="global_start_date">Start Date</label>
@@ -183,6 +230,7 @@ const GlobalCheckoutModal = () => {
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
                             />
+
                             <label htmlFor="global_start_time">Start Time</label>
                             <input
                                 id="global_start_time"
@@ -190,6 +238,7 @@ const GlobalCheckoutModal = () => {
                                 value={startTime}
                                 onChange={(e) => setStartTime(e.target.value)}
                             />
+
                             <label htmlFor="global_end_date">End Date</label>
                             <input
                                 type="date"
@@ -198,6 +247,7 @@ const GlobalCheckoutModal = () => {
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
                             />
+
                             <label htmlFor="global_end_time">End Time</label>
                             <input
                                 id="global_end_time"
@@ -207,28 +257,34 @@ const GlobalCheckoutModal = () => {
                             />
                         </>
                     )}
-                    {/* Cart total note */}
-                    <div className="mt-4 text-sm text-[#6b7280] bg-[#f9fafb] border border-[#e5e7eb] px-4 py-3 rounded-xl">
-                        The selected booking interval will be saved and used to filter available products. Your booking request will be created from the Cart page.
-                    </div>
+
+                    {hasCartItems && (
+                        <div className="mt-4 text-lg font-bold text-[#10b981] bg-[#ecfdf5] border border-[#10b981]/20 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
+                            <span>Total Amount</span>
+                            <span>EGP {cartTotal}</span>
+                        </div>
+                    )}
                 </div>
+
                 <div className={styles.modalFooter}>
                     <button
-                        disabled={loading || cartEmpty}
+                        disabled={loading}
                         className="btn btn-success"
-                        onClick={handleCheckoutClick}
+                        onClick={handleConfirmBooking}
                     >
-                        {loading ? "Saving..." : "Save Time Interval"}
+                        {loading ? "Processing..." : hasCartItems ? "Confirm Booking" : "Save Time Interval"}
                     </button>
                     <button
                         className="btn btn-outline-secondary"
                         onClick={closeCheckout}
+                        disabled={loading}
                     >
                         Cancel
                     </button>
                 </div>
             </div>
-            {/* Osra date picker sub-modal */}
+
+            {/* Osra choice modal */}
             {showOsraChoice && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in"
@@ -246,9 +302,7 @@ const GlobalCheckoutModal = () => {
                                             ? "active"
                                             : ""
                                     }`}
-                                    onClick={() =>
-                                        setSelectedOsraDate(nextSameDay)
-                                    }
+                                    onClick={() => setSelectedOsraDate(nextSameDay)}
                                 >
                                     Next Same Day ({nextSameDay})
                                 </button>
@@ -257,26 +311,19 @@ const GlobalCheckoutModal = () => {
                                 type="date"
                                 className="form-control form-control-sm bg-gray-50 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-300 transition-all"
                                 min={today}
-                                value={selectedOsraDate}
-                                onChange={(e) =>
-                                    setSelectedOsraDate(e.target.value)
-                                }
+                                value={selectedOsraDate || nextSameDay || ""}
+                                onChange={(e) => setSelectedOsraDate(e.target.value)}
                             />
                             <button
                                 className="btn btn-success btn-sm"
-                                disabled={!selectedOsraDate || loading}
-                                onClick={() =>
-                                    handleSaveFamilyTime(selectedOsraDate)
-                                }
+                                disabled={!selectedOsraDate && !nextSameDay}
+                                onClick={() => handleSaveFamilyDate(selectedOsraDate || nextSameDay)}
                             >
-                                {loading
-                                    ? "Saving..."
-                                    : "Save Selected Date"}
+                                Save Selected Date
                             </button>
                             <button
                                 className="btn btn-outline-secondary btn-sm"
                                 onClick={() => setShowOsraChoice(false)}
-                                disabled={loading}
                             >
                                 Back
                             </button>
@@ -287,4 +334,5 @@ const GlobalCheckoutModal = () => {
         </div>
     );
 };
+
 export default GlobalCheckoutModal;

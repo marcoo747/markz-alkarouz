@@ -1,0 +1,1 @@
+import{c as o,r as s}from"./app-B-GCB92Q.js";const u=({initialProducts:r=[]}={})=>{const{buildTimeParams:e}=o();return{products:s.useMemo(()=>r,[r]),loading:!1,refetch:()=>{},bookingParams:e()}};export{u};

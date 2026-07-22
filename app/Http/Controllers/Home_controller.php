@@ -8,23 +8,23 @@ use Illuminate\Support\Facades\Auth;
 
 class Home_controller extends Controller
 {
-    public function index($date = null, $time = null)
+    public function index()
     {
-        $date = $date ?: request()->input('date', now()->format('Y-m-d'));
-        $time = $time ?: request()->input('time', now()->format('H:i'));
         $perPage = request()->input('per_page', 12);
 
+
         $productsPaginated = Product::with(['images', 'colors', 'sizes'])
-            ->availableAt($date, $time)
+            ->withAvailableInWindow(request())
             ->latest()
             ->paginate($perPage);
 
         $products = $productsPaginated->map(function ($product) {
+            $availQty = max(0, $product->inventory_quantity - ($product->requested_quantity ?? 0));
             return [
                 'id'          => $product->product_id,
                 'title'       => $product->pr_name,
                 'description' => $product->pr_description,
-                'inventory_quantity' => $product->inventory_quantity,
+                'inventory_quantity' => $availQty,
                 'price'       => $product->pr_price,
                 'image'       => $product->images->first()
                     ? '/markaz_alkarouz/public/storage/' . $product->images->first()->photo

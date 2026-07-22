@@ -26,16 +26,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 // temporarly untill i have the date and time from the front-end inputs
 Route::get('/', function () {
-    $timezone = config('app.timezone');
+    return redirect()->route('home');
+})->name('home.root');
+Route::get('/home', [Home_controller::class, 'index'])->name('home');
 
-    $localTime = now()->setTimezone($timezone);
-
-    return redirect()->route('home.date', [
-        'date' => $localTime->format('Y-m-d'),
-        'time' => str_replace(':', '-', $localTime->format('H:i:s')),
-    ]);
-})->name('home');
-Route::get('/home/{date?}/{time?}', [Home_controller::class, 'index'])->name('home.date');
 
 // Carousel Photos (public access for home page)
 Route::get('/carousel-photos', [Carousel_photos_controller::class, 'index'])->name('carousel.photos.index');
