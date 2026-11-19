@@ -29,8 +29,8 @@ const SearchResult = () => {
     inventory_quantity: p.inventory_quantity,
     image:
       p.images && p.images.length > 0
-        ? `/markaz_alkarouz/public/storage/${p.images[0].photo}`
-        : "/markaz_alkarouz/public/imgs/shopping.webp",
+        ? `/storage/${p.images[0].photo}`
+        : "/imgs/shopping.webp",
   }));
 
   const { products: results, loading: loadingProducts } = useTimeFilteredProducts({

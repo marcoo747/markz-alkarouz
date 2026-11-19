@@ -37,7 +37,7 @@ class CategoriesController extends Controller
                 'path'          => $categoriesPaginated->path(),
             ],
             'cart_items_count' => $cart_items_count,
-            'linkBase' => '/markaz_alkarouz/public',
+            'linkBase' => '',
         ]);
     }
 
@@ -81,8 +81,8 @@ class CategoriesController extends Controller
                 'price'       => $product->pr_price,
                 'inventory_quantity' => $availQty,
                 'rating'      => 5,
-                'image'       => $product->images->first()
-                    ? '/markaz_alkarouz/public/storage/' . $product->images->first()->photo
+                'image'       => ($product->images->first() && Storage::disk('public')->exists($product->images->first()->photo))
+                    ? asset('storage/' . $product->images->first()->photo)
                     : $defaultImage,
                 'color'       => optional($firstColor)->color,
                 'color_id'    => optional($firstColor)->color_id,
@@ -114,7 +114,7 @@ class CategoriesController extends Controller
             'default_image' => $defaultImage,
             'cart_items_count' => $cart_items_count,
             'cartItems'     => $cartItems,
-            'linkBase' => '/markaz_alkarouz/public',
+            'linkBase' => '',
         ]);
     }
 
@@ -254,7 +254,7 @@ class CategoriesController extends Controller
                 'total'         => $categoriesPaginated->total(),
                 'path'          => $categoriesPaginated->path(),
             ],
-            'linkBase' => '/markaz_alkarouz/public',
+            'linkBase' => '',
             'cart_items_count' => $cart_items_count,
             'main_category_id'=> $main_category_id,
         ]);

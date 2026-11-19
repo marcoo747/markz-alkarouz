@@ -13,7 +13,9 @@ class Carousel_photos_controller extends Controller
         $photos = Carousel_photos::all()->map(function ($photo) {
             return [
                 'id' => $photo->id,
-                'url' => asset('storage/' . $photo->photo),
+                'url' => ($photo->photo && Storage::disk('public')->exists($photo->photo))
+                    ? asset('storage/' . $photo->photo)
+                    : asset('imgs/img1.jpg'),
                 'path' => $photo->photo,
             ];
         });

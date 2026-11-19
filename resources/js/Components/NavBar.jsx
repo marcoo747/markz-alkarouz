@@ -31,7 +31,7 @@ const NavBar = ({ page_name, linkBase }) => {
     const [imgError, setImgError] = useState(false);
 
     const imageSrc = user?.user_photo
-        ? `/markaz_alkarouz/public/storage/${user.user_photo}`
+        ? `/storage/${user.user_photo}`
         : null;
     return (
         <>

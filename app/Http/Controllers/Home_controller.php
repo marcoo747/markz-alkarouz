@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class Home_controller extends Controller
 {
@@ -26,9 +27,9 @@ class Home_controller extends Controller
                 'description' => $product->pr_description,
                 'inventory_quantity' => $availQty,
                 'price'       => $product->pr_price,
-                'image'       => $product->images->first()
-                    ? '/markaz_alkarouz/public/storage/' . $product->images->first()->photo
-                    : '/markaz_alkarouz/public/imgs/shopping.webp',
+                'image'       => ($product->images->first() && Storage::disk('public')->exists($product->images->first()->photo))
+                    ? asset('storage/' . $product->images->first()->photo)
+                    : asset('imgs/shopping.webp'),
                 'color_id'    => optional($product->colors->first())->color_id,
                 'color'       => optional($product->colors->first())->color,
                 'size_id'     => optional($product->sizes->first())->size_id,

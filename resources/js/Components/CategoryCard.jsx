@@ -17,6 +17,10 @@ const CategoryCard = ({ id, title, description, image, onEdit, onDelete, onClick
         className="w-full object-cover aspect-[4/3] max-h-32 sm:max-h-none"
         alt={title}
         onClick={handleClick}
+        onError={(e) => {
+          e.currentTarget.onerror = null;
+          e.currentTarget.src = "/imgs/shopping.webp";
+        }}
       />
       <div className="p-4 sm:p-3 text-center">
         <div onClick={handleClick}>

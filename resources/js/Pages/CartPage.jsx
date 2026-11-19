@@ -133,8 +133,8 @@ const CartPage = () => {
                     {products.map((product) => {
                         const image =
                             product.images && product.images.length > 0
-                                ? `/markaz_alkarouz/public/storage/${product.images[0].photo}`
-                                : "/markaz_alkarouz/public/imgs/shopping.webp";
+                                ? `/storage/${product.images[0].photo}`
+                                : "/imgs/shopping.webp";
 
                         return (
                             <div

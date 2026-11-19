@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Carousel_photos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\JsonResponse;
@@ -17,7 +18,9 @@ class AuthenticatedSessionController extends Controller
     public function create()
     {
         $carouselPhotos = Carousel_photos::all()->map(function ($photo) {
-            return asset('storage/' . $photo->photo);
+            return ($photo->photo && Storage::disk('public')->exists($photo->photo))
+                ? asset('storage/' . $photo->photo)
+                : asset('imgs/img1.jpg');
         })->values();
 
         return Inertia::render('Auth/Login', [

@@ -113,8 +113,8 @@ const MainCategories = () => {
                   description={cleanDesc}
                   image={
                     cat.category_photo
-                      ? `/markaz_alkarouz/public/storage/${cat.category_photo}`
-                      : "/markaz_alkarouz/public/imgs/shopping.webp"
+                      ? `/storage/${cat.category_photo}`
+                      : "/imgs/shopping.webp"
                   }
                   onClick={() =>
                     router.visit(route("show_main_category", cat.category_id))
@@ -137,8 +137,8 @@ const MainCategories = () => {
                     description={cleanDesc}
                     image={
                       cat.category_photo
-                        ? `/markaz_alkarouz/public/storage/${cat.category_photo}`
-                        : "/markaz_alkarouz/public/imgs/shopping.webp"
+                        ? `/storage/${cat.category_photo}`
+                        : "/imgs/shopping.webp"
                     }
                     onClick={() =>
                       router.visit(route("show_main_category", cat.category_id))

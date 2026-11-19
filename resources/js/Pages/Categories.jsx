@@ -82,7 +82,7 @@ const Categories = () => {
               id={cat.category_id}
               title={cat.category_name}
               description={cleanDesc}
-              image={cat.category_photo ? `/markaz_alkarouz/public/storage/${cat.category_photo}` : "/markaz_alkarouz/public/imgs/shopping.webp"}
+              image={cat.category_photo ? `/storage/${cat.category_photo}` : "/imgs/shopping.webp"}
               onEdit={() => handleEdit({ ...cat, category_description: cleanDesc })}
               onDelete={() => handleDelete({ ...cat, category_description: cleanDesc })}
             />

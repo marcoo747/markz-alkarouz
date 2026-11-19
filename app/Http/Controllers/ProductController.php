@@ -144,7 +144,9 @@ class ProductController extends Controller
                         'description' => $product->pr_description,
                         'inventory_quantity' => $product->inventory_quantity,
                         'price' => $product->pr_price,
-                        'image' => $product->images->first() ? '/markaz_alkarouz/public/storage/' . $product->images->first()->photo : '/markaz_alkarouz/public/imgs/shopping.webp',
+                        'image' => ($product->images->first() && Storage::disk('public')->exists($product->images->first()->photo))
+                            ? asset('storage/' . $product->images->first()->photo)
+                            : asset('imgs/shopping.webp'),
                         'color_id' => optional($product->colors->first())->color_id,
                         'color' => optional($product->colors->first())->color,
                         'size_id' => optional($product->sizes->first())->size_id,
@@ -343,9 +345,9 @@ class ProductController extends Controller
                 'description'        => $product->pr_description ?? '',
                 'price'              => $product->pr_price,
                 'inventory_quantity' => $availQty,
-                'image'              => $product->images->first()
-                    ? '/markaz_alkarouz/public/storage/' . $product->images->first()->photo
-                    : '/markaz_alkarouz/public/imgs/shopping.webp',
+                'image'              => ($product->images->first() && Storage::disk('public')->exists($product->images->first()->photo))
+                    ? asset('storage/' . $product->images->first()->photo)
+                    : asset('imgs/shopping.webp'),
                 'color'              => optional($firstColor)->color,
                 'color_id'           => optional($firstColor)->color_id,
                 'size'               => optional($firstSize)->size,

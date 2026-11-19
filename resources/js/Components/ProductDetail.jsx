@@ -47,7 +47,7 @@ export default function ProductDetail({ product }) {
         product?.images?.length > 0
             ? product.images
                   .sort((a, b) => a.photo_id - b.photo_id)
-                  .map((p) => `/markaz_alkarouz/public/storage/${p.photo}`)
+                  .map((p) => `/storage/${p.photo}`)
             : [];
 
     const handleAddToCart = () => {
