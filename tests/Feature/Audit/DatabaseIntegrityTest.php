@@ -12,6 +12,7 @@ use App\Models\Size;
 use App\Models\TermsAndPenalty;
 use App\Models\User;
 use App\Models\UserRequest;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -151,5 +152,68 @@ class DatabaseIntegrityTest extends TestCase
         $this->assertNull($cartPivot->size_id);
         $this->assertNull($reqPivot->color_id);
         $this->assertNull($reqPivot->size_id);
+    }
+
+    public function test_performance_indexes_unsigned_inventory_and_unique_mobile_constraints(): void
+    {
+        $requestIndexes = collect(DB::select('SHOW INDEX FROM `requests`'))->pluck('Key_name')->unique()->all();
+        $this->assertContains('requests_status_expiry_idx', $requestIndexes);
+        $this->assertContains('requests_status_dates_idx', $requestIndexes);
+        $this->assertContains('requests_osra_date_idx', $requestIndexes);
+        $this->assertContains('requests_created_at_idx', $requestIndexes);
+
+        $productIndexes = collect(DB::select('SHOW INDEX FROM `products`'))->pluck('Key_name')->unique()->all();
+        $this->assertContains('products_pr_name_idx', $productIndexes);
+        $this->assertContains('products_brand_idx', $productIndexes);
+
+        $userIndexes = collect(DB::select('SHOW INDEX FROM `users`'))->pluck('Key_name')->unique()->all();
+        $this->assertContains('users_mobile_unique', $userIndexes);
+
+        $inventoryCol = DB::selectOne("SHOW COLUMNS FROM `products` LIKE 'inventory_quantity'");
+        $this->assertNotNull($inventoryCol);
+        $this->assertStringContainsString('unsigned', strtolower($inventoryCol->Type));
+
+        // DB must reject negative inventory_quantity
+        $main = Main_Category::create([
+            'category_name' => 'Unsigned Main ' . uniqid(),
+            'category_description' => 'Desc',
+            'category_photo' => 'main_categories/test.png',
+            'can_go_outside' => 1,
+        ]);
+        $sub = Category::create([
+            'main_category_id' => $main->category_id,
+            'category_name' => 'Unsigned Sub ' . uniqid(),
+            'category_description' => 'Desc',
+            'category_photo' => 'categories/test.png',
+        ]);
+        $product = Product::create([
+            'main_category_id' => $main->category_id,
+            'category_id' => $sub->category_id,
+            'pr_name' => 'Unsigned Item',
+            'brand' => 'BrandU',
+            'pr_description' => 'Desc',
+            'pr_price' => 10,
+            'inventory_quantity' => 5,
+        ]);
+
+        $negativeRejected = false;
+        try {
+            DB::statement('UPDATE `products` SET `inventory_quantity` = -1 WHERE `product_id` = ?', [$product->product_id]);
+        } catch (QueryException $e) {
+            $negativeRejected = true;
+        }
+        $this->assertTrue($negativeRejected, 'Expected MariaDB to reject negative inventory_quantity.');
+
+        // DB must reject duplicate non-null mobile
+        $mobile = '012' . str_pad((string) random_int(10000000, 99999999), 8, '0', STR_PAD_LEFT);
+        User::factory()->create(['mobile' => $mobile]);
+
+        $duplicateMobileRejected = false;
+        try {
+            User::factory()->create(['mobile' => $mobile]);
+        } catch (QueryException $e) {
+            $duplicateMobileRejected = true;
+        }
+        $this->assertTrue($duplicateMobileRejected, 'Expected MariaDB unique constraint to reject duplicate mobile.');
     }
 }
