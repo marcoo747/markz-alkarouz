@@ -46,16 +46,22 @@ class RequestController extends Controller
 
     public function show($id)
     {
-        $request = UserRequest::with([
+        $userRequest = UserRequest::with([
             'user:user_id,full_name',
             'osra:osra_code,osra_name',
             'products.images'
         ])->findOrFail($id);
 
-        $request->products->each(function ($product) {
+        $user = Auth::user();
+        $isStaff = $user && in_array($user->user_type, ['admin', 'manager'], true);
+
+        if (!$isStaff && (int) $userRequest->user_id !== (int) $user?->user_id) {
+            abort(403, 'You do not have permission to view this request.');
+        }
+
+        $userRequest->products->each(function ($product) {
             $product->pivot->loadMissing(['color', 'size']);
         });
-        $user = Auth::user();
         $cartItems = [];
 
         if ($user && $user->cart) {
@@ -67,7 +73,7 @@ class RequestController extends Controller
         $cart_items_count = count($cartItems);
 
         return inertia('RequestShow', [
-            'request' => $request,
+            'request' => $userRequest,
             'cart_items_count' => $cart_items_count,
         ]);
     }
