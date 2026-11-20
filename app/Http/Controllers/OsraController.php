@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Osra;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -51,7 +52,7 @@ class OsraController extends Controller
 
         Osra::create($validated);
 
-        return back()->with('success', 'success', 'Osra added successfully!');
+        return back()->with('success', 'Osra added successfully!');
     }
 
     public function update(Request $request, Osra $osra)
@@ -72,12 +73,27 @@ class OsraController extends Controller
 
         $osra->update($validated);
 
-        return back()->with('success', 'success', 'Osra updated successfully!');
+        return back()->with('success', 'Osra updated successfully!');
     }
 
-    public function destroy(Osra $osra)
+    public function destroy(Request $request, Osra $osra)
     {
+        $assignedCount = User::where('osra_id', $osra->osra_id)->count();
+
+        if ($assignedCount > 0 && !$request->boolean('force')) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Cannot delete this Osra while users are assigned to it.',
+                ], 422);
+            }
+
+            return back()->withErrors([
+                'osra' => 'Cannot delete this Osra while users are assigned to it.',
+            ]);
+        }
+
         $osra->delete();
-        return back()->with('success', 'success', 'Osra deleted successfully!');
+
+        return back()->with('success', 'Osra deleted successfully!');
     }
 }
