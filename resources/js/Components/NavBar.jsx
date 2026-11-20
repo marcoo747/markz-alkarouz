@@ -35,19 +35,6 @@ const NavBar = ({ page_name, linkBase }) => {
         : null;
     return (
         <>
-            {user && (
-                <Link
-                    href={route("cart")}
-                    className="mobile-floating-cart"
-                    aria-label="Cart"
-                >
-                    <img src={cartIcon} alt="Cart" className="cart-icon" />
-                    <span className="badge">
-                        {cart_items_count}
-                        <span className="visually-hidden">items in cart</span>
-                    </span>
-                </Link>
-            )}
             {open && (
                 <div
                     className="fixed inset-0 bg-slate-900/25 backdrop-blur-[1px] z-[790]"
@@ -78,13 +65,38 @@ const NavBar = ({ page_name, linkBase }) => {
                                                 : "ar";
                                         i18n.changeLanguage(nextLang);
                                     }}
-                                    className="mobile-lang-btn flex items-center justify-center font-bold bg-transparent border border-[#6c757d] text-[#6c757d] rounded-full p-0 !w-[24px] !min-w-[24px] h-[35px] text-[13px] cursor-pointer hover:bg-[#6c757d] hover:text-white"
+                                    className="mobile-lang-btn flex items-center justify-center font-bold bg-transparent border border-[#6c757d] text-[#6c757d] rounded-full p-0 !w-[36px] !min-w-[36px] h-[36px] text-[13px] cursor-pointer hover:bg-[#6c757d] hover:text-white"
                                     aria-label="Toggle language"
                                 >
                                     {i18n.language.startsWith("ar")
                                         ? "EN"
                                         : "عر"}
                                 </button>
+                                {/* Mobile Cart Icon */}
+                                {user && (
+                                    <Link
+                                        href={route("cart")}
+                                        className={`nav-link position-relative flex items-center justify-center !w-[38px] !h-[38px] p-0 ${page_name === "cart" ? "active" : ""}`}
+                                        onClick={() => setOpen(false)}
+                                        aria-label={t("cart.title") || "Cart"}
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            fill="currentColor"
+                                            viewBox="0 0 16 16"
+                                        >
+                                            <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
+                                        </svg>
+                                        <span className="badge position-absolute rounded-circle bg-primary top-0 end-0 translate-x-[25%] -translate-y-[25%] text-[0.65rem] px-[0.38rem] py-[0.22rem]">
+                                            {cart_items_count ?? 0}
+                                            <span className="visually-hidden">
+                                                {cart_items_count === 1 ? "item in cart" : "items in cart"}
+                                            </span>
+                                        </span>
+                                    </Link>
+                                )}
                                 {/* Mobile Profile Icon */}
                                 {user && (
                                     <Link
@@ -328,8 +340,9 @@ const NavBar = ({ page_name, linkBase }) => {
                                     {user ? (
                                         <Link
                                             href={route("cart")}
-                                            className={`nav-link position-relative ml-2.5 flex items-center justify-center w-[38px] h-[38px] p-0 ${page_name === "cart" ? "active" : ""}`}
+                                            className={`nav-link position-relative hide-on-mobile ml-2.5 flex items-center justify-center w-[38px] h-[38px] p-0 ${page_name === "cart" ? "active" : ""}`}
                                             onClick={() => setOpen(false)}
+                                            aria-label={t("cart.title") || "Cart"}
                                         >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"

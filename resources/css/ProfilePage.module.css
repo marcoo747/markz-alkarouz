@@ -5,7 +5,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1050;
+  z-index: 1200;
+  padding: 12px;
 }
 
 .modalDialogCentered {
@@ -18,6 +19,7 @@
 .editModal {
   padding: 20px;
   width: 420px;
+  max-width: calc(100vw - 24px);
   background: #f0f5ff;
   border-radius: 14px;
   box-shadow: 0 20px 40px rgba(13, 110, 253, 0.2);
