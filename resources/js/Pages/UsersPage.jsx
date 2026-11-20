@@ -304,7 +304,7 @@ const UsersPage = () => {
 
       {showDeleteModal && userToDelete && (
         <DeleteUserModal
-          userNmae={userToDelete.full_name}
+          userName={userToDelete.full_name}
           onConfirm={handleConfirmDelete}
           onClose={() => setShowDeleteModal(false)}
         />
