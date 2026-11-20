@@ -105,11 +105,11 @@ export default function Register({ osras }) {
                     value={data.password}
                     onChange={handleChange}
                     placeholder={t('auth.password_placeholder')}
-                    className={`w-full px-5 py-3 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20 ${errors.password ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-blue-500 group-hover:border-blue-300"}`}
+                    className={`w-full ps-5 pe-12 py-3 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20 ${errors.password ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-blue-500 group-hover:border-blue-300"}`}
                   />
                   <button
                     type="button"
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors duration-200 p-1 focus:outline-none"
+                    className="absolute end-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors duration-200 p-1 focus:outline-none"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -136,11 +136,11 @@ export default function Register({ osras }) {
                     value={data.password_confirmation}
                     onChange={handleChange}
                     placeholder={t('auth.confirm_password_placeholder')}
-                    className="w-full px-5 py-3 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 group-hover:border-blue-300"
+                    className="w-full ps-5 pe-12 py-3 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 group-hover:border-blue-300"
                   />
                   <button
                     type="button"
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors duration-200 p-1 focus:outline-none"
+                    className="absolute end-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors duration-200 p-1 focus:outline-none"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (

@@ -1,6 +1,7 @@
 import React from "react";
 import { usePage } from "@inertiajs/react";
 import { useBooking } from "@/Components/BookingContext";
+import { useTranslation } from "react-i18next";
 
 const formatTime = (time24) => {
     if (!time24) return "";
@@ -24,6 +25,7 @@ const CalendarIcon = () => (
 );
 
 const OsraTimeBar = () => {
+    const { t } = useTranslation();
     const { auth, osra_info } = usePage().props;
     const user = auth?.user;
 
@@ -42,16 +44,16 @@ const OsraTimeBar = () => {
             if (startDate && endDate) {
                 return `${startDate} ${startTime ? formatTime(startTime) : ""} — ${endDate} ${endTime ? formatTime(endTime) : ""}`;
             }
-            return "Custom Time — Click to select dates";
+            return t("booking_bar.custom_time_prompt") || "Custom Time — Click to select dates";
         }
 
         if (selectedOsraDate) {
-            return `${selectedOsraDate} • ${osraTime || "Family Time"}`;
+            return `${selectedOsraDate} • ${osraTime || t("booking_bar.family_time") || "Family Time"}`;
         }
         if (osraTime) {
             return osraTime;
         }
-        return "Family Time — Click to select dates";
+        return t("booking_bar.family_time_prompt") || "Family Time — Click to select dates";
     };
 
     return (
@@ -64,10 +66,10 @@ const OsraTimeBar = () => {
                     <div>
                         <div className="text-xs font-semibold text-emerald-800 uppercase tracking-wider">
                             {timeType === "customTime"
-                                ? "Custom Booking Interval"
+                                ? (t("booking_bar.custom_interval") || "Custom Booking Interval")
                                 : osraName
                                 ? osraName
-                                : "Family Booking Interval"}
+                                : (t("booking_bar.family_interval") || "Family Booking Interval")}
                         </div>
                         <div className="text-sm font-bold text-slate-800">
                             {getSummary()}
@@ -76,12 +78,13 @@ const OsraTimeBar = () => {
                 </div>
 
                 <button
+                    type="button"
                     onClick={openCheckout}
                     className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-4 py-2 rounded-xl transition-all shadow-sm hover:shadow active:scale-95 flex items-center gap-2"
-                    aria-label="Select booking dates and time"
+                    aria-label={t("booking_bar.select_dates") || "Select booking dates and time"}
                 >
                     <CalendarIcon />
-                    <span>Select Booking Dates</span>
+                    <span>{t("booking_bar.select_dates") || "Select Booking Dates"}</span>
                 </button>
             </div>
         </div>

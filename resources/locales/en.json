@@ -237,7 +237,20 @@
     "upload_photo": "Upload Photo",
     "add_user_btn": "Add User",
     "already_have_account": "Already have an account?",
-    "login_link": "Log In"
+    "login_link": "Log In",
+    "welcome_heading": "Welcome Back to\nMarkaz Al-Karouz",
+    "welcome_subtitle": "Sign in to manage your orders, explore our catalogue, and connect with your family group.",
+    "signing_in": "Signing in…",
+    "no_account": "Don't have an account?",
+    "create_account": "Create an account →"
+  },
+  "booking_bar": {
+    "custom_interval": "Custom Booking Interval",
+    "family_interval": "Family Booking Interval",
+    "custom_time_prompt": "Custom Time — Click to select dates",
+    "family_time_prompt": "Family Time — Click to select dates",
+    "family_time": "Family Time",
+    "select_dates": "Select Booking Dates"
   },
   "errors": {
     "403_title": "Access Restricted",

@@ -238,7 +238,20 @@
     "upload_photo": "رفع صورة",
     "add_user_btn": "إضافة مستخدم",
     "already_have_account": "لديك حساب بالفعل؟",
-    "login_link": "تسجيل الدخول"
+    "login_link": "تسجيل الدخول",
+    "welcome_heading": "مرحباً بعودتك إلى\nمركز الكاروز",
+    "welcome_subtitle": "سجّل الدخول لإدارة طلباتك، واستكشاف وسائل الإيضاح، والتواصل مع أسرتك.",
+    "signing_in": "جاري تسجيل الدخول…",
+    "no_account": "ليس لديك حساب؟",
+    "create_account": "إنشاء حساب جديد ←"
+  },
+  "booking_bar": {
+    "custom_interval": "فترة حجز مخصصة",
+    "family_interval": "فترة حجز الأسرة",
+    "custom_time_prompt": "وقت مخصص — اضغط لاختيار التواريخ",
+    "family_time_prompt": "ميعاد الأسرة — اضغط لاختيار التواريخ",
+    "family_time": "ميعاد الأسرة",
+    "select_dates": "اختر تواريخ الحجز"
   },
   "errors": {
     "403_title": "تم تقييد الوصول",

@@ -110,7 +110,10 @@ const Carousel = ({ images, interval = 3000 }) => {
       </div>
 
       {/* Slide Counter */}
-      <div className="absolute top-4 right-4 z-10 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm font-medium">
+      <div
+        dir="ltr"
+        className="absolute top-4 right-4 z-10 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm font-medium"
+      >
         {activeIndex + 1} / {images.length}
       </div>
     </div>

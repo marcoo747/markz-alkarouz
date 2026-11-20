@@ -79,11 +79,11 @@ export default function Login({ carouselPhotos = [] }) {
               alt="Alkarooz"
               className="w-[130px] mb-7 object-contain drop-shadow-xl"
             />
-            <h2 className="text-3xl font-extrabold leading-tight tracking-tight mb-3.5 drop-shadow-md">
-              Welcome Back to<br />Markaz Al-Karouz
+            <h2 className="text-3xl font-extrabold leading-tight tracking-tight mb-3.5 drop-shadow-md whitespace-pre-line">
+              {t("auth.welcome_heading") || "Welcome Back to\nMarkaz Al-Karouz"}
             </h2>
             <p className="text-[15px] text-white/80 leading-relaxed max-w-[360px] drop-shadow">
-              Sign in to manage your orders, explore our catalogue, and connect with your family group.
+              {t("auth.welcome_subtitle") || "Sign in to manage your orders, explore our catalogue, and connect with your family group."}
             </p>
           </div>
 
@@ -178,10 +178,10 @@ export default function Login({ carouselPhotos = [] }) {
                     placeholder="••••••••"
                     value={data.password}
                     onChange={(e) => setData("password", e.target.value)}
-                    className={`w-full pl-4 pr-[46px] py-3 border-2 rounded-xl text-sm text-slate-900 transition-all duration-180 outline-none placeholder:text-gray-400 ${errors.password ? "border-red-500 bg-white focus:ring-4 focus:ring-red-500/10" : "border-gray-200 bg-gray-50 focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/10"}`}
+                    className={`w-full ps-4 pe-[46px] py-3 border-2 rounded-xl text-sm text-slate-900 transition-all duration-180 outline-none placeholder:text-gray-400 ${errors.password ? "border-red-500 bg-white focus:ring-4 focus:ring-red-500/10" : "border-gray-200 bg-gray-50 focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/10"}`}
                     required
                   />
-                  <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-slate-400 p-1 flex items-center transition-colors duration-180 hover:text-blue-600 leading-none" onClick={togglePassword} aria-label="Toggle password visibility">
+                  <button type="button" className="absolute end-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-slate-400 p-1 flex items-center transition-colors duration-180 hover:text-blue-600 leading-none" onClick={togglePassword} aria-label="Toggle password visibility">
                     {showPassword ? (
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
@@ -211,8 +211,8 @@ export default function Login({ carouselPhotos = [] }) {
 
               {/* Submit */}
               <button id="login-submit-btn" type="submit" className="w-full p-3.5 bg-gradient-to-br from-blue-700 to-blue-500 text-white text-[15px] font-bold border-none rounded-xl cursor-pointer shadow-[0_4px_14px_rgba(37,99,235,0.38)] transition-all duration-200 tracking-wide hover:-translate-y-[1px] hover:shadow-[0_7px_20px_rgba(37,99,235,0.48)] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed" disabled={processing}>
-                {processing && <span className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin align-middle mr-2" />}
-                {processing ? "Signing in…" : t("auth.login_btn") || "Sign In"}
+                {processing && <span className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin align-middle me-2" />}
+                {processing ? (t("auth.signing_in") || "Signing in…") : (t("auth.login_btn") || "Sign In")}
               </button>
 
               {errors.general && (
@@ -221,10 +221,10 @@ export default function Login({ carouselPhotos = [] }) {
             </form>
 
             <div className="flex items-center gap-3 my-5">
-              <span className="flex-1 h-px bg-gray-200" /><p className="text-xs text-gray-400 m-0 whitespace-nowrap">Don't have an account?</p><span className="flex-1 h-px bg-gray-200" />
+              <span className="flex-1 h-px bg-gray-200" /><p className="text-xs text-gray-400 m-0 whitespace-nowrap">{t("auth.no_account") || "Don't have an account?"}</p><span className="flex-1 h-px bg-gray-200" />
             </div>
             <div className="text-center text-[13.5px] text-slate-500">
-              <Link className="text-blue-600 font-bold no-underline ml-1 transition-colors duration-180 hover:text-blue-700 hover:underline" href={route("sign_up")}>Create an account →</Link>
+              <Link className="text-blue-600 font-bold no-underline ms-1 transition-colors duration-180 hover:text-blue-700 hover:underline" href={route("sign_up")}>{t("auth.create_account") || "Create an account →"}</Link>
             </div>
 
           </div>
