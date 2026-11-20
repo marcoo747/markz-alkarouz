@@ -70,7 +70,11 @@ const NavBar = ({ page_name, linkBase }) => {
                                         i18n.changeLanguage(nextLang);
                                     }}
                                     className="mobile-lang-btn flex items-center justify-center font-bold bg-transparent border border-[#6c757d] text-[#6c757d] rounded-full p-0 !w-[44px] !min-w-[44px] h-[44px] text-[13px] cursor-pointer hover:bg-[#6c757d] hover:text-white"
-                                    aria-label="Toggle language"
+                                    aria-label={
+                                        i18n.language.startsWith("ar")
+                                            ? "EN - Switch to English"
+                                            : "عر - التبديل إلى العربية"
+                                    }
                                 >
                                     {i18n.language.startsWith("ar")
                                         ? "EN"
@@ -297,7 +301,11 @@ const NavBar = ({ page_name, linkBase }) => {
                                             i18n.changeLanguage(nextLang);
                                         }}
                                         className="btn btn-outline-secondary d-flex align-items-center justify-content-center fw-bold hide-on-mobile rounded-full p-0 h-[35px] !w-[100px] !min-w-[100px] text-[13px] shrink-0"
-                                        aria-label="Toggle language"
+                                        aria-label={
+                                            i18n.language.startsWith("ar")
+                                                ? "EN - Switch to English"
+                                                : "عر - التبديل إلى العربية"
+                                        }
                                     >
                                         {i18n.language.startsWith("ar")
                                             ? "EN"

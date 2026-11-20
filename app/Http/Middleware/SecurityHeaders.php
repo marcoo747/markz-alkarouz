@@ -26,7 +26,7 @@ class SecurityHeaders
             "script-src 'self' 'unsafe-inline'{$viteScript}",
             "style-src 'self' 'unsafe-inline' https://fonts.bunny.net{$viteScript}",
             "font-src 'self' data: https://fonts.bunny.net",
-            "img-src 'self' data: blob:",
+            "img-src 'self' data: blob:{$viteScript}",
             "connect-src 'self'{$viteConnect}",
             "frame-ancestors 'none'",
             "base-uri 'self'",

@@ -244,7 +244,12 @@
     "welcome_subtitle": "Sign in to manage your orders, explore our catalogue, and connect with your family group.",
     "signing_in": "Signing in…",
     "no_account": "Don't have an account?",
-    "create_account": "Create an account →"
+    "create_account": "Create an account →",
+    "pw_min_len": "At least 8 characters",
+    "pw_lower": "Lowercase letter",
+    "pw_upper": "Uppercase letter",
+    "pw_digit": "A number",
+    "pw_match": "Passwords match"
   },
   "booking_bar": {
     "custom_interval": "Custom Booking Interval",
