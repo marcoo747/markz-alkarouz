@@ -12,10 +12,15 @@ const EditMainCategoryModal = ({ category, onClose, onConfirm }) => {
     category.can_go_outside ? true : false
   );
   const [processing, setProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleConfirm = () => {
-    if (!name) return alert("Category name is required");
+    if (!name.trim()) {
+      setErrorMessage("Category name is required");
+      return;
+    }
 
+    setErrorMessage("");
     setProcessing(true);
 
     // Send back to parent
@@ -38,6 +43,11 @@ const EditMainCategoryModal = ({ category, onClose, onConfirm }) => {
         </div>
 
         <div className="px-7 pt-4 pb-6 overflow-y-auto max-h-[65vh] flex-1 text-slate-600 text-[0.95rem]">
+          {errorMessage && (
+            <div className="mb-3 rounded-xl bg-red-50 border border-red-200 px-3.5 py-2 text-sm font-medium text-red-700" role="alert">
+              {errorMessage}
+            </div>
+          )}
           <label className="font-semibold text-[0.9rem] text-slate-700 block mt-0">Category Name</label>
           <input 
             className="w-full mt-2 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 transition-all duration-200 text-[0.95rem] text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/15"
@@ -78,8 +88,10 @@ const EditMainCategoryModal = ({ category, onClose, onConfirm }) => {
                 type="file"
                 hidden
                 onChange={(e) => {
-                  setPhoto(e.target.files[0]);
-                  setFileName(e.target.files[0].name);
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  setPhoto(file);
+                  setFileName(file.name);
                 }}
               />
             </label>

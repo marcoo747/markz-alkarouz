@@ -36,7 +36,8 @@ const ProfilePage = () => {
   // --- Handle profile change ---
   const handleEditChange = (e) => {
     if (e.target.name === "profilePhoto") {
-      setEditData({ ...editData, profilePhoto: e.target.files[0] });
+      const file = e.target.files?.[0] || null;
+      setEditData({ ...editData, profilePhoto: file });
     } else {
       setEditData({ ...editData, [e.target.name]: e.target.value });
     }
@@ -364,7 +365,7 @@ const ProfilePage = () => {
                           name="profilePhoto"
                           hidden
                           onChange={(e) => {
-                            const file = e.target.files[0];
+                            const file = e.target.files?.[0];
                             if (!file) return;
 
                             setEditData((prev) => ({

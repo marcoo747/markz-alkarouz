@@ -62,8 +62,10 @@ const EditCategoryModal = ({ category, onClose }) => {
                                 type="file"
                                 hidden
                                 onChange={(e) => {
-                                    setPhoto(e.target.files[0]);
-                                    setFileName(e.target.files[0].name);
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+                                    setPhoto(file);
+                                    setFileName(file.name);
                                 }}
                             />
                         </label>
