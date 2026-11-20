@@ -53,4 +53,37 @@ class RequestAuthorizationTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page->component('RequestShow'));
     }
+
+    public function test_staff_requests_index_lists_all_users_requests(): void
+    {
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+        $admin = User::factory()->admin()->create();
+        $manager = User::factory()->manager()->create();
+
+        $reqA = UserRequest::create([
+            'user_id' => $userA->user_id,
+            'request_status' => 'pending',
+            'total_price' => 0,
+        ]);
+
+        $reqB = UserRequest::create([
+            'user_id' => $userB->user_id,
+            'request_status' => 'accepted',
+            'total_price' => 0,
+        ]);
+
+        $this->actingAs($userA)->get(route('requests'))->assertStatus(403);
+
+        foreach ([$admin, $manager] as $staff) {
+            $this->actingAs($staff)
+                ->get(route('requests'))
+                ->assertOk()
+                ->assertInertia(function (Assert $page) use ($reqA, $reqB) {
+                    $ids = collect($page->toArray()['props']['requests'])->pluck('request_id')->all();
+                    $this->assertContains($reqA->request_id, $ids);
+                    $this->assertContains($reqB->request_id, $ids);
+                });
+        }
+    }
 }

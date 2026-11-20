@@ -20,7 +20,6 @@ class RequestController extends Controller
             'products:product_id,pr_name',
             'osra:osra_code,osra_name'
         ])
-        ->where('user_id', Auth::id())
         ->orderBy('created_at', 'desc')
         ->get()
         ->map(function ($req) {
