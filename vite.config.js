@@ -3,7 +3,7 @@ import laravel from "laravel-vite-plugin";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-    base: "/markaz_alkarouz/public/",
+    base: process.env.VITE_BASE_URL || "/build/",
     build: {
         outDir: "public/build"
     },
