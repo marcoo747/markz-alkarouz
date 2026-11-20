@@ -149,7 +149,7 @@ class ProfileController extends Controller
                 Rule::unique('users', 'email')->ignore($user->user_id, 'user_id'),
             ],
             'user_type'    => 'required|string|in:user,admin,manager',
-            'osra_code'    => 'nullable|string',
+            'osra_code'    => 'nullable|string|exists:osra,osra_code',
             'profilePhoto' => 'nullable|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
         ]);
 
@@ -165,25 +165,21 @@ class ProfileController extends Controller
             $osraId = DB::table('osra')
                 ->where('osra_code', $validated['osra_code'])
                 ->value('osra_id');
-
-            if (!$osraId) {
-                return back()->withErrors([
-                    'osra_code' => 'Osra code is invalid.',
-                ])->withInput();
-            }
         }
         $user->osra_id = $osraId;
 
+        $oldPhoto = $user->user_photo;
+        $newPhoto = null;
         if ($request->hasFile('profilePhoto')) {
-            if ($user->user_photo && Storage::disk('public')->exists($user->user_photo)) {
-                Storage::disk('public')->delete($user->user_photo);
-            }
-
-            $path = $request->file('profilePhoto')->store('user_photos', 'public');
-            $user->user_photo = $path;
+            $newPhoto = $request->file('profilePhoto')->store('user_photos', 'public');
+            $user->user_photo = $newPhoto;
         }
 
         $user->save();
+
+        if ($newPhoto && $oldPhoto && $oldPhoto !== $newPhoto && Storage::disk('public')->exists($oldPhoto)) {
+            Storage::disk('public')->delete($oldPhoto);
+        }
 
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
@@ -194,11 +190,12 @@ class ProfileController extends Controller
             abort(403, 'You cannot delete your own account.');
         }
 
-        if ($user->user_photo && Storage::disk('public')->exists($user->user_photo)) {
-            Storage::disk('public')->delete($user->user_photo);
-        }
-
+        $oldPhoto = $user->user_photo;
         $user->delete();
+
+        if ($oldPhoto && Storage::disk('public')->exists($oldPhoto)) {
+            Storage::disk('public')->delete($oldPhoto);
+        }
 
         return back()->with('success', 'User deleted successfully');
     }
@@ -218,36 +215,32 @@ class ProfileController extends Controller
                 'digits:11',
                 Rule::unique('users', 'mobile')->ignore(Auth::id(), 'user_id'),
             ],
-            'user_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
-            'osra_code'  => ['nullable', 'string'],
+            'user_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'osra_code'  => ['nullable', 'string', 'exists:osra,osra_code'],
         ]);
 
         $user = Auth::user();
-
-        if ($request->hasFile('user_photo')) {
-            if ($user->user_photo && Storage::disk('public')->exists($user->user_photo)) {
-                Storage::disk('public')->delete($user->user_photo);
-            }
-
-            $path = $request->file('user_photo')->store('profile_photos', 'public');
-            $validated['user_photo'] = $path;
-        }
 
         $osraId = null;
         if (!empty($validated['osra_code'])) {
             $osraId = DB::table('osra')
                 ->where('osra_code', $validated['osra_code'])
                 ->value('osra_id');
-
-            if (!$osraId) {
-                return back()->withErrors([
-                    'osra_code' => 'Osra code is invalid.',
-                ])->withInput();
-            }
         }
         $validated['osra_id'] = $osraId;
 
+        $oldPhoto = $user->user_photo;
+        $newPhoto = null;
+        if ($request->hasFile('user_photo')) {
+            $newPhoto = $request->file('user_photo')->store('user_photos', 'public');
+            $validated['user_photo'] = $newPhoto;
+        }
+
         $user->update($validated);
+
+        if ($newPhoto && $oldPhoto && $oldPhoto !== $newPhoto && Storage::disk('public')->exists($oldPhoto)) {
+            Storage::disk('public')->delete($oldPhoto);
+        }
 
         return back()->with('success', 'Profile updated successfully!');
     }

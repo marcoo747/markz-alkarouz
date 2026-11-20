@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Main_Category;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CategoriesController extends Controller
@@ -163,17 +164,28 @@ class CategoriesController extends Controller
 
     public function destroy(Category $category)
     {
+        $filesToDelete = [];
         if ($category->category_photo) {
-            Storage::disk('public')->delete($category->category_photo);
+            $filesToDelete[] = $category->category_photo;
         }
 
         foreach ($category->products as $product) {
             foreach ($product->images as $image) {
-                Storage::disk('public')->delete($image->photo);
+                if ($image->photo) {
+                    $filesToDelete[] = $image->photo;
+                }
             }
         }
 
-        $category->delete();
+        DB::transaction(function () use ($category) {
+            $category->delete();
+        });
+
+        foreach (array_unique($filesToDelete) as $filePath) {
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+        }
 
         return redirect()->back()->with('success', 'Category Deleted!');
     }
@@ -289,30 +301,43 @@ class CategoriesController extends Controller
 
     public function destroy_main(Main_Category $category)
     {
+        $filesToDelete = [];
         if ($category->category_photo) {
-            Storage::disk('public')->delete($category->category_photo);
+            $filesToDelete[] = $category->category_photo;
         }
 
         foreach ($category->products as $product) {
             foreach ($product->images as $image) {
-                Storage::disk('public')->delete($image->photo);
-            }
-        }
-
-        $sub_categories = Category::where("main_category_id", $category->category_id)->get();
-        foreach($sub_categories as $sub_category){
-            if($sub_category->category_photo){
-                Storage::disk('public')->delete($sub_category->category_photo);
-            }
-
-            foreach ($sub_category->products as $product) {
-                foreach ($product->images as $image) {
-                    Storage::disk('public')->delete($image->photo);
+                if ($image->photo) {
+                    $filesToDelete[] = $image->photo;
                 }
             }
         }
 
-        $category->delete();
+        $sub_categories = Category::where('main_category_id', $category->category_id)->get();
+        foreach ($sub_categories as $sub_category) {
+            if ($sub_category->category_photo) {
+                $filesToDelete[] = $sub_category->category_photo;
+            }
+
+            foreach ($sub_category->products as $product) {
+                foreach ($product->images as $image) {
+                    if ($image->photo) {
+                        $filesToDelete[] = $image->photo;
+                    }
+                }
+            }
+        }
+
+        DB::transaction(function () use ($category) {
+            $category->delete();
+        });
+
+        foreach (array_unique($filesToDelete) as $filePath) {
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+        }
 
         return redirect()->back()->with('success', 'Main Category Deleted!');
     }
