@@ -182,8 +182,12 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::fallback(function () {
-    return Inertia::render('404')
-        ->toResponse(request())
+Route::fallback(function (\Illuminate\Http\Request $request) {
+    if ($request->expectsJson()) {
+        return response()->json(['message' => 'Not Found.'], Response::HTTP_NOT_FOUND);
+    }
+
+    return Inertia::render('Errors/404', ['status' => Response::HTTP_NOT_FOUND])
+        ->toResponse($request)
         ->setStatusCode(Response::HTTP_NOT_FOUND);
 });
