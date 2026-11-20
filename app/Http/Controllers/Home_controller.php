@@ -11,7 +11,7 @@ class Home_controller extends Controller
 {
     public function index()
     {
-        $perPage = request()->input('per_page', 12);
+        $perPage = $this->resolvePerPage(12);
 
 
         $productsPaginated = Product::visibleTo(Auth::user())

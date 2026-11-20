@@ -23,7 +23,7 @@ class OsraController extends Controller
         }
 
         $cart_items_count = count($cartItems);
-        $perPage = request()->input('per_page', 12);
+        $perPage = $this->resolvePerPage(12);
         $osrasPaginated = Osra::orderBy('updated_at', 'desc')->paginate($perPage);
         
         return Inertia::render('OsraPage', [

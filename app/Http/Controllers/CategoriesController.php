@@ -24,7 +24,7 @@ class CategoriesController extends Controller
 
         $cart_items_count = count($cartItems);
 
-        $perPage = request()->input('per_page', 12);
+        $perPage = $this->resolvePerPage(12);
         $categoriesPaginated = Category::visibleTo($user)->paginate($perPage);
         $mainCategories = Main_Category::visibleTo($user)
             ->select('category_id', 'category_name')
@@ -54,7 +54,7 @@ class CategoriesController extends Controller
 
         $date = $date ?: request()->input('date', now()->format('Y-m-d'));
         $time = $time ?: request()->input('time', now()->format('H:i'));
-        $perPage = request()->input('per_page', 12);
+        $perPage = $this->resolvePerPage(12);
 
         $productsPaginated = $category->products()
             ->visibleTo(Auth::user())
@@ -205,7 +205,7 @@ class CategoriesController extends Controller
 
     public function show_main()
     {
-        $perPage = request()->input('per_page', 12);
+        $perPage = $this->resolvePerPage(12);
         $main_categoriesPaginated = Main_Category::visibleTo(Auth::user())->paginate($perPage);
         
         $user = Auth::user();
@@ -235,7 +235,7 @@ class CategoriesController extends Controller
     {
         $mainCategory = Main_Category::visibleTo(Auth::user())->findOrFail($main_category_id);
 
-        $perPage = request()->input('per_page', 12);
+        $perPage = $this->resolvePerPage(12);
         $categoriesPaginated = Category::visibleTo(Auth::user())
             ->where('main_category_id', $mainCategory->category_id)
             ->paginate($perPage);

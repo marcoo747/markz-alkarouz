@@ -134,7 +134,7 @@ class ProductController extends Controller
 
         $flashMessage = session('success') ?? null;
 
-        $perPage = request()->input('per_page', 8);
+        $perPage = $this->resolvePerPage(8);
         $relatedProductsPaginated = Product::visibleTo(Auth::user())
             ->withAvailableInWindow(request())
             ->with(['images', 'colors', 'sizes'])
@@ -187,8 +187,8 @@ class ProductController extends Controller
     public function upload_image(Request $request)
     {
         $request->validate([
-            'photos' => 'required|array',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photos' => 'required|array|max:5',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'product_id' => 'required|exists:products,product_id',
         ]);
 
@@ -196,18 +196,31 @@ class ProductController extends Controller
         $incomingCount = count($request->file('photos'));
 
         if ($currentCount + $incomingCount > 5) {
-            return response()->json([
-                'message' => 'Maximum of 5 images allowed per product. You can only add ' . (5 - $currentCount) . ' more.',
-                'errors' => ['photos' => ['Exceeded maximum 5 images limit.']]
-            ], 422);
+            $message = 'Maximum of 5 images allowed per product. You can only add ' . max(0, 5 - $currentCount) . ' more.';
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => $message,
+                    'errors' => ['photos' => [$message]],
+                ], 422);
+            }
+
+            return back()->withErrors(['photos' => $message]);
         }
 
+        $created = [];
         foreach ($request->file('photos') as $photoFile) {
             $photoPath = $photoFile->store('products', 'public');
-            Product_photos::create([
+            $created[] = Product_photos::create([
                 'product_id' => $request->product_id,
                 'photo' => $photoPath,
             ]);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Photos added successfully!',
+                'photos' => $created,
+            ], 201);
         }
 
         return back()->with('success', 'Photos added successfully!');
@@ -263,7 +276,7 @@ class ProductController extends Controller
         $date = $date ?: $request->input('date', now()->format('Y-m-d'));
         $time = $time ?: $request->input('time', now()->format('H:i'));
         $query = $request->input('query');
-        $perPage = request()->input('per_page', 12);
+        $perPage = $this->resolvePerPage(12);
 
         $resultsPaginated = Product::visibleTo(Auth::user())
             ->withAvailableInWindow($request)

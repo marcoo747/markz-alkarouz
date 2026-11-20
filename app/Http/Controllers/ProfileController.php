@@ -21,7 +21,7 @@ class ProfileController extends Controller
 
         $osra = $user->osra;
 
-        $perPage = request()->input('per_page', 3);
+        $perPage = $this->resolvePerPage(3);
         $requestsPaginated = $user->requests()
             ->latest()
             ->with('osra')
