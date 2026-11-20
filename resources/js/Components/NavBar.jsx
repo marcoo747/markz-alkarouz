@@ -48,6 +48,13 @@ const NavBar = ({ page_name, linkBase }) => {
                     </span>
                 </Link>
             )}
+            {open && (
+                <div
+                    className="fixed inset-0 bg-slate-900/25 backdrop-blur-[1px] z-[790]"
+                    onClick={() => setOpen(false)}
+                    aria-hidden="true"
+                />
+            )}
             <header className="site-header">
                 <Container>
                     <nav className="site-nav" aria-label="Main navigation">
@@ -126,43 +133,61 @@ const NavBar = ({ page_name, linkBase }) => {
                                 aria-label={open ? "Close menu" : "Open menu"}
                                 onClick={() => setOpen((s) => !s)}
                             >
-                                <svg
-                                    className="hamburger"
-                                    width="100%"
-                                    height="100%"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    aria-hidden="true"
-                                >
-                                    <rect
-                                        className="bar bar1"
-                                        x="3"
-                                        y="6"
-                                        width="18"
-                                        height="2"
-                                        rx="1"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        className="bar bar2"
-                                        x="3"
-                                        y="11"
-                                        width="18"
-                                        height="2"
-                                        rx="1"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        className="bar bar3"
-                                        x="3"
-                                        y="16"
-                                        width="18"
-                                        height="2"
-                                        rx="1"
-                                        fill="currentColor"
-                                    />
-                                </svg>
+                                {open ? (
+                                    <svg
+                                        className="hamburger"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2.2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        aria-hidden="true"
+                                    >
+                                        <line x1="18" y1="6" x2="6" y2="18" />
+                                        <line x1="6" y1="6" x2="18" y2="18" />
+                                    </svg>
+                                ) : (
+                                    <svg
+                                        className="hamburger"
+                                        width="100%"
+                                        height="100%"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        aria-hidden="true"
+                                    >
+                                        <rect
+                                            className="bar bar1"
+                                            x="3"
+                                            y="6"
+                                            width="18"
+                                            height="2"
+                                            rx="1"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            className="bar bar2"
+                                            x="3"
+                                            y="11"
+                                            width="18"
+                                            height="2"
+                                            rx="1"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            className="bar bar3"
+                                            x="3"
+                                            y="16"
+                                            width="18"
+                                            height="2"
+                                            rx="1"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                )}
                             </button>
 
                             <div
@@ -328,7 +353,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                         <>
                                             <Link
                                                 href={route("login")}
-                                                className="btn btn-outline-primary btn-sm"
+                                                className="btn btn-outline-primary btn-sm col-span-2 w-full"
                                                 onClick={() => setOpen(false)}
                                             >
                                                 {t("navbar.login")}

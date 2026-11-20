@@ -137,25 +137,29 @@
 
     .nav-links {
         position: absolute;
-        top: 100%;
+        top: calc(100% + 4px);
         right: 1rem;
+        left: auto;
         background-color: #ffffff;
         flex-direction: column;
         align-items: stretch;
         width: clamp(220px, 90vw, 360px);
-        max-width: 90%;
+        max-width: calc(100vw - 2rem);
         padding: 1rem;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-        border-radius: 8px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 12px;
         opacity: 0;
         pointer-events: none;
         transform: translateY(-10px);
-        margin-left: 5%;
+        margin: 0;
+        z-index: 810;
     }
 
     [dir="rtl"] .nav-links {
-        margin-left: auto;
-        margin-right: 5%;
+        right: auto;
+        left: 1rem;
+        margin: 0;
     }
 
     .nav-links.open {
@@ -225,12 +229,15 @@
 
 /* Very small screens use full-width mobile menu */
 @media (max-width: 420px) {
-    .nav-links {
-        right: 0;
-        left: 0;
-        width: 100%;
-        border-radius: 0;
-        padding: 0.75rem;
+    .nav-links,
+    [dir="rtl"] .nav-links {
+        right: 0.75rem;
+        left: 0.75rem;
+        width: auto;
+        max-width: calc(100vw - 1.5rem);
+        border-radius: 12px;
+        padding: 0.875rem;
+        margin: 0;
     }
 }
 
@@ -245,7 +252,8 @@
 
 @media (max-width: 1000px) {
     .nav-actions .btn-sm {
-        min-width: 380px;    /* same width for all buttons */
+        width: 100%;
+        min-width: 0;
     }
 }
 
