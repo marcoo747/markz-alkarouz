@@ -72,4 +72,19 @@ class SeoAndPwaTest extends TestCase
         $response->assertDontSee("/categories/{$hiddenSub->category_id}", false);
         $response->assertDontSee("/main_categories/{$hiddenMain->category_id}", false);
     }
+
+    public function test_manifest_and_service_worker_only_reference_existing_static_files(): void
+    {
+        $manifest = json_decode((string) file_get_contents(public_path('manifest.json')), true);
+        $this->assertIsArray($manifest);
+
+        foreach ($manifest['icons'] ?? [] as $icon) {
+            $path = ltrim((string) ($icon['src'] ?? ''), '/');
+            $this->assertFileExists(public_path($path));
+        }
+
+        $sw = (string) file_get_contents(public_path('sw.js'));
+        $this->assertStringNotContainsString('icon192.png', $sw);
+        $this->assertStringNotContainsString('"/"', $sw);
+    }
 }
