@@ -10,12 +10,25 @@ class CheckRole
 {
     public function handle($request, Closure $next, ...$roles)
     {
-        $role = Auth::user()?->user_type;
+        $user = Auth::user();
 
-        if (!$role || !in_array($role, $roles)) {
+        if (!$user) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
+
+            return redirect()->guest(route('login'));
+        }
+
+        if (!in_array($user->user_type, $roles, true)) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Forbidden.'], 403);
+            }
+
             return Inertia::render('Errors/403', [
-                'message' => 'Sorry, you do not have permission to view this page.'
-            ]);
+                'status' => 403,
+                'message' => 'Sorry, you do not have permission to view this page.',
+            ])->toResponse($request)->setStatusCode(403);
         }
 
         return $next($request);
