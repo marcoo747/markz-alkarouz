@@ -28,6 +28,8 @@ const CategoryCard = ({ id, title, description, image, onEdit, onDelete, onClick
           src={image}
           className="w-full h-full object-cover"
           alt={title}
+          loading="lazy"
+          decoding="async"
           onClick={handleClick}
           onError={(e) => {
             e.currentTarget.onerror = null;

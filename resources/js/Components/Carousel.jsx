@@ -62,6 +62,8 @@ const Carousel = ({ images, interval = 3000 }) => {
             <img
               src={src}
               alt={`Carousel slide ${index + 1}`}
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
               className="w-full h-full object-cover"
             />
           </div>

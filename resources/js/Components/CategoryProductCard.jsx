@@ -82,6 +82,7 @@ const ProductCard = ({
                 src={image.startsWith('http') || image.startsWith('/') ? image : `/${image}`}
                 alt={title}
                 loading="lazy"
+                decoding="async"
                 className="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105"
                 onError={(e) => { e.target.style.display = 'none'; }}
               />
