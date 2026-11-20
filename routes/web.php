@@ -21,9 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 |--------------------------------------------------------------------------
 */
 
-// temporarly untill i have the date and time from the front-end inputs
 Route::get('/', function () {
-    return redirect()->route('home');
+    return redirect()->route('home', [], 301);
 })->name('home.root');
 Route::get('/home', [Home_controller::class, 'index'])->name('home');
 
