@@ -22,20 +22,24 @@ const ProductCard = ({
 
   return (
     <article
-      className="group relative bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 h-100 flex flex-col overflow-hidden"
+      className="group relative bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col overflow-hidden"
     >
       {image && !image.includes('shopping.webp') ? (
-        <img
-          src={image.startsWith('http') || image.startsWith('/') ? image : `/${image}`}
-          alt={title}
-          loading="lazy"
+        <div
+          className="w-full h-48 overflow-hidden bg-white p-4 border-b border-slate-100 flex items-center justify-center cursor-pointer"
           onClick={handleOpen}
-          className="rounded w-full h-48 object-cover"
-          onError={(e) => { e.target.style.display = 'none'; }}
-        />
+        >
+          <img
+            src={image.startsWith('http') || image.startsWith('/') ? image : `/${image}`}
+            alt={title}
+            loading="lazy"
+            className="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        </div>
       ) : (
         <div 
-          className="w-full h-[220px] bg-slate-50 flex flex-col items-center justify-center text-slate-300 border-b border-slate-100 cursor-pointer overflow-hidden group-hover:bg-slate-100 transition-colors"
+          className="w-full h-48 bg-slate-50 flex flex-col items-center justify-center text-slate-300 border-b border-slate-100 cursor-pointer overflow-hidden group-hover:bg-slate-100 transition-colors"
           onClick={handleOpen}
         >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mb-2 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

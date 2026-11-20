@@ -11,26 +11,29 @@ const CategoryCard = ({ id, title, description, image, onEdit, onDelete, onClick
   };
 
   return (
-    <div className="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow hover:scale-105 bg-white cursor-pointer">
-      <img
-        src={image}
-        className="w-full object-cover aspect-[4/3] max-h-32 sm:max-h-none"
-        alt={title}
-        onClick={handleClick}
-        onError={(e) => {
-          e.currentTarget.onerror = null;
-          e.currentTarget.src = "/imgs/shopping.webp";
-        }}
-      />
-      <div className="p-4 sm:p-3 text-center">
-        <div onClick={handleClick}>
-          <h5 className="text-lg sm:text-base font-bold mb-2 text-gray-800">{title}</h5>
-          <p className="text-sm sm:text-xs text-gray-600">{description}</p>
+    <div className="h-full flex flex-col rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white cursor-pointer">
+      <div className="w-full aspect-[4/3] overflow-hidden bg-slate-50 border-b border-slate-100">
+        <img
+          src={image}
+          className="w-full h-full object-cover"
+          alt={title}
+          onClick={handleClick}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = "/imgs/shopping.webp";
+          }}
+        />
+      </div>
+      <div className="p-4 flex-1 flex flex-col text-center">
+        <div onClick={handleClick} className="flex-1 flex flex-col">
+          <h3 className="text-lg font-bold mb-1.5 text-slate-900 line-clamp-1">{title}</h3>
+          <p className="text-sm text-slate-500 line-clamp-2 mb-0">{description}</p>
         </div>
         {manager ? (
-          <div className="mt-2.5 flex gap-1 justify-center">
+          <div className="mt-3 pt-3 border-t border-slate-100 flex gap-2 justify-center">
             <button
-              className="btn btn-primary btn-sm"
+              type="button"
+              className="btn btn-primary btn-sm flex-1"
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit();
@@ -39,7 +42,8 @@ const CategoryCard = ({ id, title, description, image, onEdit, onDelete, onClick
               Edit
             </button>
             <button
-              className="btn btn-danger btn-sm"
+              type="button"
+              className="btn btn-danger btn-sm flex-1"
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete();
