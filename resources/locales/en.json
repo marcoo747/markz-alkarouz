@@ -236,6 +236,7 @@
     "confirm_password_placeholder": "Confirm Password",
     "upload_photo": "Upload Photo",
     "add_user_btn": "Add User",
+    "sign_up_btn": "Create Account",
     "already_have_account": "Already have an account?",
     "login_link": "Log In",
     "welcome_heading": "Welcome Back to\nMarkaz Al-Karouz",
@@ -325,7 +326,9 @@
   "missings": {
     "page_title": "Missings Management",
     "heading": "Missing Products",
+    "subtitle": "Manage missing items and recover borrowed products",
     "no_missings": "No missing products at the moment.",
+    "no_missings_desc": "All borrowed items and products have been returned.",
     "product": "Product",
     "family": "Family",
     "user": "User",
@@ -336,5 +339,21 @@
     "comment": "Comment",
     "success_return": "Products returned successfully!",
     "error_qty": "Invalid quantity"
+  },
+  "checkout_modal": {
+    "title": "Booking Details",
+    "family_time": "Family Time",
+    "custom_time": "Custom Time",
+    "booking_date": "Booking Date",
+    "next_same_day": "Next Same Day",
+    "start_date": "Start Date",
+    "start_time": "Start Time",
+    "end_date": "End Date",
+    "end_time": "End Time",
+    "total_amount": "Total Amount",
+    "processing": "Processing...",
+    "confirm_booking": "Confirm Booking",
+    "confirm_clear_cart": "Confirm & Clear Cart",
+    "save_interval": "Save Time Interval"
   }
 }

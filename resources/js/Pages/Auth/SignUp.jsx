@@ -173,7 +173,7 @@ export default function Register({ osras }) {
                   type="submit" 
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform transition-all duration-300 active:scale-95 text-lg mt-4"
                 >
-                  {t('auth.add_user_btn')}
+                  {t('auth.sign_up_btn') || t('auth.add_user_btn')}
                 </button>
               </form>
               

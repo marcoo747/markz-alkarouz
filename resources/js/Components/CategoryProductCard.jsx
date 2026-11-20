@@ -104,7 +104,7 @@ const ProductCard = ({
             <h3>{title}</h3>
             <h6>{brand}</h6>
             <p className="text-muted">{description}</p>
-            <p className="price fw-bold mt-auto">EGP {price}</p>
+            <p className="price fw-bold mt-auto">{t("terms.currency") || "EGP"} {price}</p>
 
             {color && getSafeColorCss(color) && (
               <p className="d-flex align-items-center">

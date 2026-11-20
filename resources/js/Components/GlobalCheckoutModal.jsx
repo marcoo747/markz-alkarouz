@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { router, usePage } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 import { useBooking } from "@/Components/BookingContext";
 import styles from "../../css/CheckoutModal.module.css";
 
@@ -10,6 +11,7 @@ import styles from "../../css/CheckoutModal.module.css";
  * Submits directly to requests.createFromCart carrying dates and times in the URL.
  */
 const GlobalCheckoutModal = () => {
+    const { t } = useTranslation();
     const {
         isCheckoutOpen,
         closeCheckout,
@@ -154,8 +156,8 @@ const GlobalCheckoutModal = () => {
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className={styles.modalHeader}>
-                    <h3>Booking Details</h3>
-                    <button className={styles.closeBtn} onClick={closeCheckout}>
+                    <h3>{t("checkout_modal.title") || "Booking Details"}</h3>
+                    <button type="button" className={styles.closeBtn} onClick={closeCheckout} aria-label={t("terms.close_button") || "Close"}>
                         <svg
                             className="w-6 h-6"
                             fill="none"
@@ -183,7 +185,7 @@ const GlobalCheckoutModal = () => {
                             checked={timeType === "familyTime"}
                             onChange={() => setTimeType("familyTime")}
                         />
-                        <label htmlFor="global_osra_Time">Family Time</label>
+                        <label htmlFor="global_osra_Time">{t("checkout_modal.family_time") || "Family Time"}</label>
 
                         <input
                             type="radio"
@@ -193,13 +195,13 @@ const GlobalCheckoutModal = () => {
                             checked={timeType === "customTime"}
                             onChange={() => setTimeType("customTime")}
                         />
-                        <label htmlFor="global_Custom_time">Custom Time</label>
+                        <label htmlFor="global_Custom_time">{t("checkout_modal.custom_time") || "Custom Time"}</label>
                     </div>
 
                     {/* Option 1: Family Time */}
                     {timeType === "familyTime" && (
                         <>
-                            <label htmlFor="global_osra_time_display">Family Time</label>
+                            <label htmlFor="global_osra_time_display">{t("checkout_modal.family_time") || "Family Time"}</label>
                             <input
                                 type="text"
                                 id="global_osra_time_display"
@@ -207,16 +209,16 @@ const GlobalCheckoutModal = () => {
                                 readOnly
                             />
 
-                            <label htmlFor="global_osra_code_input">Family Code</label>
+                            <label htmlFor="global_osra_code_input">{t("profile.family_code") || "Family Code"}</label>
                             <input
                                 type="text"
                                 id="global_osra_code_input"
                                 value={idCode}
                                 onChange={(e) => setIdCode(e.target.value)}
-                                placeholder="Enter Family Code"
+                                placeholder={t("profile.enter_family_code") || "Enter Family Code"}
                             />
 
-                            <label htmlFor="global_osra_date_picker">Booking Date</label>
+                            <label htmlFor="global_osra_date_picker">{t("checkout_modal.booking_date") || "Booking Date"}</label>
                             <div className="flex flex-col gap-2 mb-3">
                                 {nextSameDay && (
                                     <button
@@ -228,7 +230,7 @@ const GlobalCheckoutModal = () => {
                                         }`}
                                         onClick={() => setSelectedOsraDate(nextSameDay)}
                                     >
-                                        Next Same Day ({nextSameDay})
+                                        {t("checkout_modal.next_same_day") || "Next Same Day"} ({nextSameDay})
                                     </button>
                                 )}
                                 <input
@@ -245,7 +247,7 @@ const GlobalCheckoutModal = () => {
                     {/* Option 2: Custom Time */}
                     {timeType === "customTime" && (
                         <>
-                            <label htmlFor="global_start_date">Start Date</label>
+                            <label htmlFor="global_start_date">{t("checkout_modal.start_date") || "Start Date"}</label>
                             <input
                                 id="global_start_date"
                                 type="date"
@@ -254,7 +256,7 @@ const GlobalCheckoutModal = () => {
                                 onChange={(e) => setStartDate(e.target.value)}
                             />
 
-                            <label htmlFor="global_start_time">Start Time</label>
+                            <label htmlFor="global_start_time">{t("checkout_modal.start_time") || "Start Time"}</label>
                             <input
                                 id="global_start_time"
                                 type="time"
@@ -262,7 +264,7 @@ const GlobalCheckoutModal = () => {
                                 onChange={(e) => setStartTime(e.target.value)}
                             />
 
-                            <label htmlFor="global_end_date">End Date</label>
+                            <label htmlFor="global_end_date">{t("checkout_modal.end_date") || "End Date"}</label>
                             <input
                                 type="date"
                                 id="global_end_date"
@@ -271,7 +273,7 @@ const GlobalCheckoutModal = () => {
                                 onChange={(e) => setEndDate(e.target.value)}
                             />
 
-                            <label htmlFor="global_end_time">End Time</label>
+                            <label htmlFor="global_end_time">{t("checkout_modal.end_time") || "End Time"}</label>
                             <input
                                 id="global_end_time"
                                 type="time"
@@ -297,8 +299,8 @@ const GlobalCheckoutModal = () => {
 
                     {hasCartItems && (
                         <div className="mt-4 text-lg font-bold text-[#10b981] bg-[#ecfdf5] border border-[#10b981]/20 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
-                            <span>Total Amount</span>
-                            <span>EGP {cartTotal}</span>
+                            <span>{t("checkout_modal.total_amount") || "Total Amount"}</span>
+                            <span>{t("terms.currency") || "EGP"} {cartTotal}</span>
                         </div>
                     )}
                 </div>
@@ -311,12 +313,12 @@ const GlobalCheckoutModal = () => {
                         onClick={handleConfirmBooking}
                     >
                         {loading
-                            ? "Processing..."
+                            ? (t("checkout_modal.processing") || "Processing...")
                             : hasCartItems
-                            ? "Confirm Booking"
+                            ? (t("checkout_modal.confirm_booking") || "Confirm Booking")
                             : confirmClearCart
-                            ? "Confirm & Clear Cart"
-                            : "Save Time Interval"}
+                            ? (t("checkout_modal.confirm_clear_cart") || "Confirm & Clear Cart")
+                            : (t("checkout_modal.save_interval") || "Save Time Interval")}
                     </button>
                     <button
                         type="button"
@@ -328,7 +330,7 @@ const GlobalCheckoutModal = () => {
                         }}
                         disabled={loading}
                     >
-                        Cancel
+                        {t("terms.cancel_button") || "Cancel"}
                     </button>
                 </div>
             </div>

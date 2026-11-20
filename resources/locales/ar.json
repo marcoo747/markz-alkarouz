@@ -237,6 +237,7 @@
     "confirm_password_placeholder": "تأكيد كلمة المرور",
     "upload_photo": "رفع صورة",
     "add_user_btn": "إضافة مستخدم",
+    "sign_up_btn": "إنشاء حساب",
     "already_have_account": "لديك حساب بالفعل؟",
     "login_link": "تسجيل الدخول",
     "welcome_heading": "مرحباً بعودتك إلى\nمركز الكاروز",
@@ -326,7 +327,9 @@
   "missings": {
     "page_title": "إدارة المفقودات",
     "heading": "المفقودات",
+    "subtitle": "إدارة المفقودات واسترداد المنتجات المستعارة",
     "no_missings": "لا توجد مفقودات حالياً.",
+    "no_missings_desc": "جميع المواد والمنتجات المستعارة تم إرجاعها بنجاح.",
     "product": "المنتج",
     "family": "الأسرة",
     "user": "المستلم",
@@ -337,5 +340,21 @@
     "comment": "الملاحظات",
     "success_return": "تم إرجاع المنتجات بنجاح!",
     "error_qty": "الكمية غير صالحة"
+  },
+  "checkout_modal": {
+    "title": "تفاصيل الحجز",
+    "family_time": "ميعاد الأسرة",
+    "custom_time": "وقت مخصص",
+    "booking_date": "تاريخ الحجز",
+    "next_same_day": "ميعاد الأسرة القادم",
+    "start_date": "تاريخ البداية",
+    "start_time": "وقت البداية",
+    "end_date": "تاريخ النهاية",
+    "end_time": "وقت النهاية",
+    "total_amount": "الإجمالي",
+    "processing": "جاري المعالجة...",
+    "confirm_booking": "تأكيد الحجز",
+    "confirm_clear_cart": "تأكيد ومسح العربة",
+    "save_interval": "حفظ فترة الحجز"
   }
 }

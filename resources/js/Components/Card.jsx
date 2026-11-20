@@ -92,7 +92,7 @@ const ProductCard = ({
                     
                     <div className="mt-auto flex flex-col gap-3">
                         <div className="flex items-center justify-between">
-                            <span className="text-lg font-extrabold text-green-600">EGP {price}</span>
+                            <span className="text-lg font-extrabold text-green-600">{t("terms.currency") || "EGP"} {price}</span>
                             
                             <div className="flex items-center gap-2">
                             {color && getSafeColorCss(color) && (

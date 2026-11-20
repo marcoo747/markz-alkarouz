@@ -147,7 +147,7 @@ const Missings = () => {
                     <div>
                         <h2 className="mb-1 fw-bold text-dark">{t("missings.heading") || "المفقودات"}</h2>
                         <p className="text-secondary mb-0 small">
-                            {t("users.subtitle") || "إدارة المفقودات واسترداد المنتجات المستعارة"}
+                            {t("missings.subtitle") || "إدارة المفقودات واسترداد المنتجات المستعارة"}
                         </p>
                     </div>
                     <span className="badge bg-danger fs-6 px-3 py-2 rounded-pill">
@@ -160,7 +160,7 @@ const Missings = () => {
                     <div className="alert alert-success border-0 rounded-xl p-5 text-center shadow-sm">
                         <span className="fs-1 d-block mb-3">🎉</span>
                         <h4 className="fw-bold">{t("missings.no_missings") || "لا توجد مفقودات حالياً"}</h4>
-                        <p className="text-muted mb-0">جميع المواد والمنتجات المستعارة تم إرجاعها بنجاح.</p>
+                        <p className="text-muted mb-0">{t("missings.no_missings_desc") || "جميع المواد والمنتجات المستعارة تم إرجاعها بنجاح."}</p>
                     </div>
                 ) : (
                     /* Missing Items List */
