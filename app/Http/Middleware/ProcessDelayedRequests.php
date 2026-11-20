@@ -2,13 +2,18 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\RequestLifecycleService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\UserRequest;
 
 class ProcessDelayedRequests
 {
+    public function __construct(
+        private readonly RequestLifecycleService $lifecycleService
+    ) {
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -16,12 +21,7 @@ class ProcessDelayedRequests
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check for any pending requests that should be updated
-        UserRequest::where('request_status', 'pending')
-            ->where('expiry_time', '<=', now())
-            ->where('expiry_time', '!=', null)
-            ->where('request_status', '=', 'pending')
-            ->update(['request_status' => 'accepted']);
+        $this->lifecycleService->processDelayedPendingRequests();
 
         return $next($request);
     }
