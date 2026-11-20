@@ -54,33 +54,33 @@ const Home = () => {
 
       <NavBar page_name="home" />
 
-      <section className="py-12 md:py-20 px-4 bg-gradient-to-b from-blue-50 to-white">
+      <section className="py-12 md:py-16 px-4 bg-gradient-to-b from-blue-50 to-white">
         <Container>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="md:col-start-2 md:col-span-1 text-center">
-              <p className="text-sm font-semibold text-blue-600 mb-2">{t('home.welcome')}</p>
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">{t('home.hero_title')}</h1>
-              <p className="text-gray-600 mb-8">
-                {t('home.hero_desc')}
-              </p>
+          <div className="max-w-2xl mx-auto text-center">
+            <p className="text-sm font-semibold text-blue-600 mb-2">{t('home.welcome')}</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">{t('home.hero_title')}</h1>
+            <p className="text-gray-600 mb-8">
+              {t('home.hero_desc')}
+            </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => router.visit(route("categories"))}
-                >
-                  {t('home.get_started')}
-                </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <button
+                type="button"
+                className="btn btn-primary whitespace-nowrap w-full sm:w-auto px-8"
+                onClick={() => router.visit(route("categories"))}
+              >
+                {t('home.get_started')}
+              </button>
 
-                <button
-                  className="btn btn-outline"
-                  onClick={() =>
-                    window.scrollTo({ top: 600, behavior: "smooth" })
-                  }
-                >
-                  {t('home.learn_more')}
-                </button>
-              </div>
+              <button
+                type="button"
+                className="btn btn-outline whitespace-nowrap w-full sm:w-auto px-8"
+                onClick={() =>
+                  window.scrollTo({ top: 600, behavior: "smooth" })
+                }
+              >
+                {t('home.learn_more')}
+              </button>
             </div>
           </div>
         </Container>
