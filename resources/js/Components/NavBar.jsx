@@ -69,7 +69,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                                 : "ar";
                                         i18n.changeLanguage(nextLang);
                                     }}
-                                    className="mobile-lang-btn flex items-center justify-center font-bold bg-transparent border border-[#6c757d] text-[#6c757d] rounded-full p-0 !w-[36px] !min-w-[36px] h-[36px] text-[13px] cursor-pointer hover:bg-[#6c757d] hover:text-white"
+                                    className="mobile-lang-btn flex items-center justify-center font-bold bg-transparent border border-[#6c757d] text-[#6c757d] rounded-full p-0 !w-[44px] !min-w-[44px] h-[44px] text-[13px] cursor-pointer hover:bg-[#6c757d] hover:text-white"
                                     aria-label="Toggle language"
                                 >
                                     {i18n.language.startsWith("ar")
@@ -80,7 +80,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                 {user && (
                                     <Link
                                         href={route("cart")}
-                                        className={`nav-link position-relative flex items-center justify-center !w-[38px] !h-[38px] p-0 ${page_name === "cart" ? "active" : ""}`}
+                                        className={`nav-link position-relative flex items-center justify-center !w-[44px] !h-[44px] p-0 ${page_name === "cart" ? "active" : ""}`}
                                         onClick={() => setOpen(false)}
                                         aria-label={t("cart.title") || "Cart"}
                                     >

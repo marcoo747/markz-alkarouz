@@ -292,9 +292,9 @@
     justify-content: center;
     width: auto;
     height: auto;
-    padding: clamp(6px, 1.5vw, 10px);
-    min-width: 40px; /* ensures accessible touch target */
-    min-height: 40px;
+    padding: clamp(8px, 1.5vw, 10px);
+    min-width: 44px; /* ensures accessible 44x44px touch target */
+    min-height: 44px;
     border-radius: 6px;
 }
 

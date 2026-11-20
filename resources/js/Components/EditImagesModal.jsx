@@ -8,7 +8,27 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
   const [confirmDeleteIndex, setConfirmDeleteIndex] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
   const fileInputRef = useRef();
+  const objectUrlsRef = useRef([]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (confirmDeleteIndex !== null) {
+          setConfirmDeleteIndex(null);
+        } else if (onClose) {
+          onClose();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      objectUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+      objectUrlsRef.current = [];
+    };
+  }, [confirmDeleteIndex, onClose]);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -30,16 +50,19 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
   }, []);
 
   const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
+    const selectedFiles = Array.from(e.target.files || []);
     if (!selectedFiles.length) return;
+    setErrorMessage("");
 
-    // Create object URLs for selected files to show preview
-    const newImages = selectedFiles.map((file) => URL.createObjectURL(file));
-    setImages((prev) => [...prev, ...newImages]);
+    // Create a single object URL per selected file and track it for cleanup
+    const newEntries = selectedFiles.map((file) => {
+      const url = URL.createObjectURL(file);
+      objectUrlsRef.current.push(url);
+      return { url, id: null, file };
+    });
+    setImages((prev) => [...prev, ...newEntries.map((entry) => entry.url)]);
     setFiles((prev) => [...prev, ...selectedFiles]);
-    // Add placeholder data for new files (they don't have IDs yet)
-    const newImageData = selectedFiles.map((file) => ({ url: URL.createObjectURL(file), id: null }));
-    setImageData((prev) => [...prev, ...newImageData]);
+    setImageData((prev) => [...prev, ...newEntries.map(({ url, id }) => ({ url, id }))]);
     
     // Clear input so same file can be selected again
     e.target.value = null;
@@ -47,8 +70,11 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
 
   const handleRemoveImage = async (indexToRemove) => {
     const imageToRemove = images[indexToRemove];
+    setErrorMessage("");
 
-    if (imageToRemove.startsWith('blob:')) {
+    if (imageToRemove && imageToRemove.startsWith('blob:')) {
+      URL.revokeObjectURL(imageToRemove);
+      objectUrlsRef.current = objectUrlsRef.current.filter((u) => u !== imageToRemove);
       setImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
       setFiles((prev) => prev.filter((_, idx) => idx !== indexToRemove));
       setImageData((prev) => prev.filter((_, idx) => idx !== indexToRemove));
@@ -60,7 +86,7 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
             method: 'DELETE',
             headers: {
               'Accept': 'application/json',
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
             },
           });
 
@@ -68,11 +94,11 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
             setImages((prevImages) => prevImages.filter((_, idx) => idx !== indexToRemove));
             setImageData((prevImageData) => prevImageData.filter((_, idx) => idx !== indexToRemove));
           } else {
-            alert('Failed to delete image. Please try again.');
+            setErrorMessage('Failed to delete image. Please try again.');
           }
         } catch (error) {
           console.error('Delete error:', error);
-          alert('An error occurred while deleting the image.');
+          setErrorMessage('An error occurred while deleting the image.');
         }
       }
     }
@@ -110,15 +136,14 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
             setFiles([]);
           }
         } else {
-          // Handle error
           console.error('Upload failed');
-          alert('Failed to upload images. Please try again.');
-          return; // Don't close modal on error
+          setErrorMessage('Failed to upload images. Please ensure files are valid images under 5MB.');
+          return;
         }
       } catch (error) {
         console.error('Upload error:', error);
-        alert('An error occurred while uploading images.');
-        return; // Don't close modal on error
+        setErrorMessage('An error occurred while uploading images.');
+        return;
       } finally {
         setUploading(false);
       }
@@ -130,11 +155,21 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-[9999] p-5 box-border">
+    <div
+      className="fixed top-0 left-0 w-full h-full bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-[9999] p-5 box-border"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="edit-carousel-title"
+    >
       <div className="w-full max-w-[600px] bg-white rounded-[20px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden border border-black/5 animate-in zoom-in-95 duration-200">
         <div className="bg-white px-7 pt-6 pb-4 flex justify-between items-center shrink-0 border-b border-black/5">
-          <h3 className="m-0 text-[1.35rem] font-bold text-blue-600 tracking-[-0.02em]">Manage Carousel Images</h3>
-          <button className="bg-transparent border-none text-slate-400 text-[28px] leading-none cursor-pointer transition-all duration-200 p-1 flex items-center justify-center rounded-full hover:text-slate-900 hover:bg-black/5" onClick={onClose}>
+          <h3 id="edit-carousel-title" className="m-0 text-[1.35rem] font-bold text-blue-600 tracking-[-0.02em]">Manage Carousel Images</h3>
+          <button
+            type="button"
+            aria-label="Close modal"
+            className="bg-transparent border-none text-slate-400 text-[28px] leading-none cursor-pointer transition-all duration-200 min-w-[44px] min-h-[44px] p-2 flex items-center justify-center rounded-full hover:text-slate-900 hover:bg-black/5"
+            onClick={onClose}
+          >
              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
              </svg>
@@ -142,6 +177,11 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
         </div>
 
         <div className="px-7 pt-4 pb-6 overflow-y-auto max-h-[65vh] flex-1 text-slate-600 text-[0.95rem]">
+          {errorMessage && (
+            <div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-medium text-red-700" role="alert">
+              {errorMessage}
+            </div>
+          )}
           {loading ? (
             <div className="flex justify-center items-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
@@ -153,17 +193,20 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
                 <div key={imageData[idx]?.id || `new-${idx}`} className="relative rounded-xl overflow-hidden shadow-sm border border-slate-200 aspect-square group">
                   <img 
                     src={img} 
-                    alt={`carousel-img-${idx}`} 
+                    alt={`Carousel slide ${idx + 1}`} 
                     className="w-full h-full object-cover" 
                   />
-                  <div 
-                    className={`absolute inset-0 bg-red-500/85 flex items-center justify-center cursor-pointer opacity-0 transition-opacity duration-200 ease-in-out ${uploading ? 'cursor-not-allowed' : 'group-hover:opacity-100'}`}
+                  <button
+                    type="button"
+                    aria-label={`Delete carousel image ${idx + 1}`}
+                    disabled={uploading}
+                    className={`absolute top-2 end-2 min-w-[40px] min-h-[40px] rounded-full bg-red-600/90 hover:bg-red-700 text-white shadow-md flex items-center justify-center border-0 transition-opacity duration-200 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 ${uploading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
                     onClick={() => !uploading && setConfirmDeleteIndex(idx)}
                   >
-                    <svg className="w-12 h-12 text-white drop-shadow-md scale-75 transition-transform duration-200 group-hover:scale-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                  </div>
+                  </button>
                 </div>
               ))}
               

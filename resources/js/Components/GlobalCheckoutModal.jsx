@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { router, usePage } from "@inertiajs/react";
 import { useTranslation } from "react-i18next";
 import { useBooking } from "@/Components/BookingContext";
@@ -46,6 +46,17 @@ const GlobalCheckoutModal = () => {
 
     const nowLocal = new Date();
     const today = `${nowLocal.getFullYear()}-${String(nowLocal.getMonth() + 1).padStart(2, "0")}-${String(nowLocal.getDate()).padStart(2, "0")}`;
+
+    useEffect(() => {
+        if (!isCheckoutOpen) return;
+        const onKeyDown = (e) => {
+            if (e.key === "Escape") {
+                closeCheckout();
+            }
+        };
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, [isCheckoutOpen, closeCheckout]);
 
     if (!isCheckoutOpen) return null;
 
@@ -150,13 +161,19 @@ const GlobalCheckoutModal = () => {
     };
 
     return (
-        <div className={styles.modalOverlay} onClick={closeCheckout}>
+        <div
+            className={styles.modalOverlay}
+            onClick={closeCheckout}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="global-checkout-title"
+        >
             <div
                 className={styles.addModal}
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className={styles.modalHeader}>
-                    <h3>{t("checkout_modal.title") || "Booking Details"}</h3>
+                    <h3 id="global-checkout-title">{t("checkout_modal.title") || "Booking Details"}</h3>
                     <button type="button" className={styles.closeBtn} onClick={closeCheckout} aria-label={t("terms.close_button") || "Close"}>
                         <svg
                             className="w-6 h-6"
