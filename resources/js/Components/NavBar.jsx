@@ -47,7 +47,7 @@ const NavBar = ({ page_name, linkBase }) => {
                     <nav className="site-nav" aria-label="Main navigation">
                         <Link
                             href={route("home")}
-                            className={`nav-link ${page_name === "home" ? "active" : ""} site-logo`}
+                            className="site-logo"
                             onClick={() => setOpen(false)}
                         >
                             <img src={logo} alt="Alkarooz" />
