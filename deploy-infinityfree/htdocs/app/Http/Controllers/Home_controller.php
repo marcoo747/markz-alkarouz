@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Inertia\Inertia;
+use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
+class Home_controller extends Controller
+{
+    public function index()
+    {
+        $perPage = request()->input('per_page', 12);
+
+
+        $productsPaginated = Product::with(['images', 'colors', 'sizes'])
+            ->withAvailableInWindow(request())
+            ->latest()
+            ->paginate($perPage);
+
+        $products = $productsPaginated->map(function ($product) {
+            $availQty = max(0, $product->inventory_quantity - ($product->requested_quantity ?? 0));
+            return [
+                'id'          => $product->product_id,
+                'title'       => $product->pr_name,
+                'description' => $product->pr_description,
+                'inventory_quantity' => $availQty,
+                'price'       => $product->pr_price,
+                'image'       => ($product->images->first() && Storage::disk('public')->exists($product->images->first()->photo))
+                    ? asset('storage/' . $product->images->first()->photo)
+                    : asset('imgs/shopping.webp'),
+                'color_id'    => optional($product->colors->first())->color_id,
+                'color'       => optional($product->colors->first())->color,
+                'size_id'     => optional($product->sizes->first())->size_id,
+                'size'        => optional($product->sizes->first())->size,
+            ];
+        });
+
+        $user = Auth::user();
+        $cartItems = [];
+
+        if ($user && $user->cart) {
+            $cartItems = $user->cart->products()
+                ->pluck('products.product_id')
+                ->toArray();
+        }
+
+        $cart_items_count = count($cartItems);
+
+        return Inertia::render('Home', [
+            'products'          => $products,
+            'pagination'        => [
+                'current_page'  => $productsPaginated->currentPage(),
+                'last_page'     => $productsPaginated->lastPage(),
+                'per_page'      => $productsPaginated->perPage(),
+                'total'         => $productsPaginated->total(),
+                'path'          => $productsPaginated->path(),
+            ],
+            'cartItems'         => $cartItems,
+            'cart_items_count'  => $cart_items_count,
+        ]);
+    }
+}
