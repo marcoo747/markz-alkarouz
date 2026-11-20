@@ -209,7 +209,6 @@ const NavBar = ({ page_name, linkBase }) => {
                             <div
                                 id="main-navigation"
                                 className={`nav-links ${open ? "open" : ""}`}
-                                role="menu"
                             >
                                 <Link
                                     href={route("categories")}

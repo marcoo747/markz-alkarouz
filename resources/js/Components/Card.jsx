@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { usePage, router } from "@inertiajs/react";
+import { usePage, router, Link } from "@inertiajs/react";
 import { useTranslation } from "react-i18next";
 import { getSafeColorCss, getSafeColorName } from "@/utils/colorName";
 
@@ -62,8 +62,15 @@ const ProductCard = ({
     return (
         <>
             <article
-                className={`flex flex-col h-full bg-white rounded-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group ${inCart ? "cursor-default" : "cursor-pointer"}`}
+                className={`flex flex-col h-full bg-white rounded-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group focus-within:ring-2 focus-within:ring-blue-500 ${inCart ? "cursor-default" : "cursor-pointer"}`}
                 onClick={handleOpen}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                    if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
+                        e.preventDefault();
+                        handleOpen();
+                    }
+                }}
             >
                 {image && !image.includes('shopping.webp') ? (
                     <div className="w-full h-48 sm:h-56 overflow-hidden bg-white relative p-4 border-b border-gray-100 flex items-center justify-center">
@@ -86,7 +93,15 @@ const ProductCard = ({
                 <div className="p-4 flex flex-col flex-grow gap-3">
                     <div className="flex flex-col gap-1">
                         {brand && <span className="text-xs uppercase tracking-widest text-gray-500 font-bold">{brand}</span>}
-                        <h3 className="text-lg font-bold text-gray-900 line-clamp-2 leading-tight">{title}</h3>
+                        <h3 className="text-lg font-bold text-gray-900 line-clamp-2 leading-tight">
+                            <Link
+                                href={route("items.show", id)}
+                                className="text-gray-900 hover:text-blue-600 no-underline"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {title}
+                            </Link>
+                        </h3>
                         {description && <p className="text-sm text-gray-500 line-clamp-2">{description}</p>}
                     </div>
                     

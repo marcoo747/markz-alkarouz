@@ -51,7 +51,18 @@ const ProductCard = ({
       )}
 
       <div className="p-5 flex flex-col flex-1">
-        <div onClick={handleOpen} className="cursor-pointer mb-4">
+        <div
+          onClick={handleOpen}
+          tabIndex={0}
+          role="link"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleOpen();
+            }
+          }}
+          className="cursor-pointer mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
+        >
           <h3 className="text-lg font-bold text-slate-800 leading-tight mb-1">{title}</h3>
           <h6 className="text-sm font-semibold text-indigo-500 uppercase tracking-wide mb-3">{brand}</h6>
           <p className="text-2xl font-extrabold text-slate-900">{description}</p>

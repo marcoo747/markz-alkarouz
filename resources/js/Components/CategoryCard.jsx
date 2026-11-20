@@ -11,7 +11,18 @@ const CategoryCard = ({ id, title, description, image, onEdit, onDelete, onClick
   };
 
   return (
-    <div className="h-full flex flex-col rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white cursor-pointer">
+    <div
+      className="h-full flex flex-col rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+      tabIndex={0}
+      role="link"
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+    >
       <div className="w-full aspect-[4/3] overflow-hidden bg-slate-50 border-b border-slate-100">
         <img
           src={image}
