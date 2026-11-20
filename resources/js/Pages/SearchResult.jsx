@@ -61,18 +61,13 @@ const SearchResult = () => {
               <span className="text-slate-500">Updating results...</span>
             </div>
           ) : results.length > 0 ? (
-            <div className="grid gap-5">
-              {results.map((p) => (
-                <ItemPack
-                  key={p.id || p.product_id}
-                  category_name=""
-                  products={[p]}
-                  onEdit={() => {}}
-                  onDelete={() => {}}
-                  setAlertMessage={setAlertMessage}
-                />
-              ))}
-            </div>
+            <ItemPack
+              category_name=""
+              products={results}
+              onEdit={() => {}}
+              onDelete={() => {}}
+              setAlertMessage={setAlertMessage}
+            />
           ) : (
             <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white rounded-3xl shadow-sm border border-gray-100 max-w-3xl mx-auto mt-8">
               <div className="w-40 h-40 bg-blue-50 rounded-full flex items-center justify-center mb-6">
