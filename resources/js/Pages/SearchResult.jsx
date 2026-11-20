@@ -6,8 +6,6 @@ import ItemPack from "@/Components/Item-pack";
 import PaginationControls from "@/Components/PaginationControls";
 import TopAlert from "@/Components/TopAlert";
 import { useTranslation } from "react-i18next";
-import useTimeFilteredProducts from "@/Components/useTimeFilteredProducts";
-import { useBooking } from "@/Components/BookingContext";
 
 const SearchResult = () => {
   const { t } = useTranslation();
@@ -19,10 +17,8 @@ const SearchResult = () => {
   const { cart_items_count, auth } = props;
   const user = auth?.user;
 
-  const { openCheckout } = useBooking();
-
   // Map initial results to the standard product shape
-  const initialProducts = initialResults.map((p) => ({
+  const results = initialResults.map((p) => ({
     id: p.product_id,
     title: p.pr_name,
     brand: p.brand,
@@ -34,11 +30,6 @@ const SearchResult = () => {
         ? `/storage/${p.images[0].photo}`
         : "/imgs/shopping.webp",
   }));
-
-  const { products: results, loading: loadingProducts } = useTimeFilteredProducts({
-    initialProducts,
-    searchQuery: query,
-  });
 
   return (
     <div className="min-h-screen bg-gray-50 pb-12">
@@ -55,12 +46,7 @@ const SearchResult = () => {
         </div>
 
         <div className="mt-0">
-          {loadingProducts ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mr-3"></div>
-              <span className="text-slate-500">Updating results...</span>
-            </div>
-          ) : results.length > 0 ? (
+          {results.length > 0 ? (
             <ItemPack
               category_name=""
               products={results}

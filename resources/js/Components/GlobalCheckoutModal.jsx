@@ -42,7 +42,8 @@ const GlobalCheckoutModal = () => {
     const [validationError, setValidationError] = useState("");
     const [confirmClearCart, setConfirmClearCart] = useState(false);
 
-    const today = new Date().toISOString().split("T")[0];
+    const nowLocal = new Date();
+    const today = `${nowLocal.getFullYear()}-${String(nowLocal.getMonth() + 1).padStart(2, "0")}-${String(nowLocal.getDate()).padStart(2, "0")}`;
 
     if (!isCheckoutOpen) return null;
 

@@ -39,14 +39,20 @@ export const BookingProvider = ({ children }) => {
     |--------------------------------------------------------------------------
     */
     const defaults = React.useMemo(() => {
+        const toLocalDateStr = (d) => {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, "0");
+            const day = String(d.getDate()).padStart(2, "0");
+            return `${y}-${m}-${day}`;
+        };
         const now = new Date();
-        const todayStr = now.toISOString().split("T")[0];
+        const todayStr = toLocalDateStr(now);
         const h = String(now.getHours()).padStart(2, "0");
         const m = String(now.getMinutes()).padStart(2, "0");
         const startT = `${h}:${m}`;
 
         const endNow = new Date(now.getTime() + 60 * 60 * 1000);
-        const endD = endNow.toISOString().split("T")[0];
+        const endD = toLocalDateStr(endNow);
         const endH = String(endNow.getHours()).padStart(2, "0");
         const endM = String(endNow.getMinutes()).padStart(2, "0");
         const endT = `${endH}:${endM}`;

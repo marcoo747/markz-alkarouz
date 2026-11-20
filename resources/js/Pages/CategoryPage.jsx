@@ -10,26 +10,18 @@ import PaginationControls from "@/Components/PaginationControls";
 import AddItemModal from "@/Components/AddItemModal";
 import EditItemModal from "@/Components/EditItemModal";
 import DeleteItemModal from "@/Components/DeleteItemModal";
-import useTimeFilteredProducts from "@/Components/useTimeFilteredProducts";
-import { useBooking } from "@/Components/BookingContext";
 
 const CategoryPage = () => {
   const { t } = useTranslation();
   const page = usePage();
   const category = page.props.category || {};
-  const initialProducts = page.props.products || [];
+  const products = page.props.products || [];
   const pagination = page.props.pagination || null;
   const { cart_items_count } = page.props;
 
-  const { openCheckout } = useBooking();
   const { auth } = usePage().props;
   const user = auth.user;
   const manager = user?.user_type === "manager";
-
-  const { products, loading: loadingProducts } = useTimeFilteredProducts({
-    initialProducts,
-    categoryId: category.category_id,
-  });
 
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [showEditItemModal, setShowEditItemModal] = useState(false);
@@ -99,44 +91,37 @@ const CategoryPage = () => {
           </div>
         ) : null}
 
-        {loadingProducts ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mr-3"></div>
-            <span className="text-slate-500">Updating products...</span>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-6">
-            {products.map((product) => (
-              <div
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-6">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="h-full"
+            >
+              <ProductCard
                 key={product.id}
-                className="h-full"
-              >
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  title={product.title}
-                  brand={product.brand}
-                  description={product.description}
-                  price={product.price}
-                  color={product.color}
-                  color_id={product.color_id}
-                  size={product.size}
-                  size_id={product.size_id}
-                  image={product.image}
-                  inventory_quantity={product.inventory_quantity}
-                  onEdit={() => {
-                    setSelectedItem(product);
-                    setShowEditItemModal(true);
-                  }}
-                  onDelete={() => {
-                    setSelectedItem(product);
-                    setShowDeleteItemModal(true);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+                id={product.id}
+                title={product.title}
+                brand={product.brand}
+                description={product.description}
+                price={product.price}
+                color={product.color}
+                color_id={product.color_id}
+                size={product.size}
+                size_id={product.size_id}
+                image={product.image}
+                inventory_quantity={product.inventory_quantity}
+                onEdit={() => {
+                  setSelectedItem(product);
+                  setShowEditItemModal(true);
+                }}
+                onDelete={() => {
+                  setSelectedItem(product);
+                  setShowDeleteItemModal(true);
+                }}
+              />
+            </div>
+          ))}
+        </div>
 
         <PaginationControls pagination={pagination} />
 

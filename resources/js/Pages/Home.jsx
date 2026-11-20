@@ -10,8 +10,6 @@ import LoginMessage from "@/Components/LoginMessage";
 import EditImagesModal from "@/Components/EditImagesModal";
 import PaginationControls from "@/Components/PaginationControls";
 import { useTranslation } from "react-i18next";
-import useTimeFilteredProducts from "@/Components/useTimeFilteredProducts";
-import { useBooking } from "@/Components/BookingContext";
 
 const Home = () => {
   const { t } = useTranslation();
@@ -24,11 +22,7 @@ const Home = () => {
   const [showEditImages, setShowEditImages] = useState(false);
   const user = auth?.user;
   const manager = user?.user_type === "manager";
-
-  const { openCheckout } = useBooking();
-  const { products, loading: loadingProducts } = useTimeFilteredProducts({
-    initialProducts: initialProducts || [],
-  });
+  const products = initialProducts || [];
 
   useEffect(() => {
     const fetchCarouselImages = async () => {
@@ -135,18 +129,11 @@ const Home = () => {
         </div>
 
         <div className="mt-8">
-          {loadingProducts ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mr-3"></div>
-              <span className="text-slate-500">Updating products...</span>
-            </div>
-          ) : (
-            <ItemPack
-              category_name={t('home.recently_added')}
-              products={products}
-              setAlertMessage={setAlertMessage}
-            />
-          )}
+          <ItemPack
+            category_name={t('home.recently_added')}
+            products={products}
+            setAlertMessage={setAlertMessage}
+          />
         </div>
 
         <PaginationControls pagination={pagination} />
