@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, Head } from "@inertiajs/react";
-import { ShieldAlert, ArrowLeft, Home } from "lucide-react";
+import { Link, Head, usePage } from "@inertiajs/react";
+import { ShieldAlert, ArrowLeft, Home, LogIn } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
@@ -8,6 +8,8 @@ export default function Error403({
   message
 }) {
   const { t } = useTranslation();
+  const { auth } = usePage().props || {};
+  const user = auth?.user;
   const displayMessage = message || t('errors.403_msg');
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-blue-100 to-sky-200 px-4">
@@ -54,7 +56,16 @@ export default function Error403({
           <div className="mx-auto mt-6 h-px w-24 bg-gradient-to-r from-transparent via-sky-400 to-transparent" />
 
           {/* Actions */}
-          <div className="mt-8 flex justify-center gap-4">
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            {!user && (
+              <Link
+                href={route("login")}
+                className="inline-flex items-center gap-2 rounded-xl bg-blue-700 px-6 py-3 text-sm font-medium text-white shadow-lg hover:bg-blue-800 hover:scale-105 hover:shadow-xl transition text-decoration-none"
+              >
+                <LogIn className="h-4 w-4" />
+                {t('navbar.login') || "Log In"}
+              </Link>
+            )}
             <Link
               href={route("home")}
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-6 py-3 text-sm font-medium text-white shadow-lg hover:scale-105 hover:shadow-xl transition text-decoration-none"
@@ -64,6 +75,7 @@ export default function Error403({
             </Link>
 
             <button
+              type="button"
               onClick={() => window.history.back()}
               className="inline-flex items-center gap-2 rounded-xl border border-sky-300 bg-white/60 px-6 py-3 text-sm font-medium text-slate-700 hover:bg-white hover:scale-105 transition"
             >

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { usePage, router, Head } from "@inertiajs/react";
+import { usePage, router, Head, Link } from "@inertiajs/react";
 import { useTranslation } from "react-i18next";
 import NavBar from "@/Components/NavBar";
 import Container from "@/Components/Container";
@@ -171,7 +171,7 @@ const CartPage = () => {
                 </div>
 
                 {products.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+                    <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200">
                         <svg
                             className="w-16 h-16 text-slate-300 mb-4"
                             fill="none"
@@ -185,9 +185,15 @@ const CartPage = () => {
                                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                             />
                         </svg>
-                        <p className="text-slate-500 text-lg font-medium">
+                        <p className="text-slate-600 text-lg font-medium mb-4">
                             {t("cart.empty")}
                         </p>
+                        <Link
+                            href={route("categories")}
+                            className="btn btn-primary px-6 py-2.5 text-sm font-bold no-underline"
+                        >
+                            {t("navbar.categories") || "Browse Categories"}
+                        </Link>
                     </div>
                 )}
 

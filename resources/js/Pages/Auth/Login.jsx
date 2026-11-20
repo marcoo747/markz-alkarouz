@@ -16,6 +16,7 @@ export default function Login({ carouselPhotos = [] }) {
   const [showPassword, setShowPassword] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showForgotModal, setShowForgotModal] = useState(false);
+  const [clientError, setClientError] = useState("");
 
   const { data, setData, post, processing, errors } = useForm({
     mobile: "",
@@ -41,12 +42,13 @@ export default function Login({ carouselPhotos = [] }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setClientError("");
     if (!data.mobile || data.mobile.replace(/\D/g, "").length !== 11) {
-      alert(t("auth.mobile_11_digits"));
+      setClientError(t("auth.mobile_11_digits"));
       return;
     }
     if (!data.password) {
-      alert(t("auth.password_required"));
+      setClientError(t("auth.password_required"));
       return;
     }
     post(route("login.store"), {
@@ -217,8 +219,8 @@ export default function Login({ carouselPhotos = [] }) {
                 {processing ? (t("auth.signing_in") || "Signing in…") : (t("auth.login_btn") || "Sign In")}
               </button>
 
-              {errors.general && (
-                <Message type="error">{t("auth.failed") || errors.general}</Message>
+              {(clientError || errors.general) && (
+                <Message type="error">{clientError || t("auth.failed") || errors.general}</Message>
               )}
             </form>
 

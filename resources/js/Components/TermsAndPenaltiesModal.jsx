@@ -20,9 +20,13 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
   });
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [feedback, setFeedback] = useState(null);
 
   useEffect(() => {
     if (isOpen) {
+      setFeedback(null);
+      setConfirmDeleteId(null);
       fetchData();
     }
   }, [isOpen]);
@@ -71,28 +75,33 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
 
   const handleDelete = async (item) => {
     if (!isManager) return;
-    if (!confirm(t("terms.confirm_delete"))) return;
+    if (confirmDeleteId !== item.id) {
+      setConfirmDeleteId(item.id);
+      setFeedback({ type: "error", text: `${t("terms.confirm_delete")} Click delete again to confirm.` });
+      return;
+    }
 
+    setConfirmDeleteId(null);
     setDeletingId(item.id);
     try {
       const response = await fetch(route("api.terms-penalties.destroy", item.id), {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
           'Content-Type': 'application/json',
         },
       });
 
       if (response.ok) {
-        alert(t("terms.success_delete"));
+        setFeedback({ type: "success", text: t("terms.success_delete") });
         fetchData();
       } else {
-        alert(t("terms.error_delete"));
+        setFeedback({ type: "error", text: t("terms.error_delete") });
       }
     } catch (error) {
       console.error("Error deleting item:", error);
-      alert(t("terms.error_delete"));
+      setFeedback({ type: "error", text: t("terms.error_delete") });
     } finally {
       setDeletingId(null);
     }
@@ -101,12 +110,12 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
   const handleSave = async () => {
     if (!isManager) return;
     if (!formData.title.trim() || !formData.content.trim()) {
-      alert("Please fill in all required fields");
+      setFeedback({ type: "error", text: "Please fill in all required fields" });
       return;
     }
 
     if (formData.type === 'penalty' && !formData.amount) {
-      alert("Please enter an amount for penalties");
+      setFeedback({ type: "error", text: "Please enter an amount for penalties" });
       return;
     }
 
@@ -122,22 +131,22 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
         method,
         headers: {
           'Accept': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        alert(editingItem ? t("terms.success_update") : t("terms.success_create"));
+        setFeedback({ type: "success", text: editingItem ? t("terms.success_update") : t("terms.success_create") });
         setShowForm(false);
         fetchData();
       } else {
-        alert(editingItem ? t("terms.error_update") : t("terms.error_create"));
+        setFeedback({ type: "error", text: editingItem ? t("terms.error_update") : t("terms.error_create") });
       }
     } catch (error) {
       console.error("Error saving item:", error);
-      alert(editingItem ? t("terms.error_update") : t("terms.error_create"));
+      setFeedback({ type: "error", text: editingItem ? t("terms.error_update") : t("terms.error_create") });
     } finally {
       setSaving(false);
     }
@@ -207,6 +216,18 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
           </div>
 
           {/* Tab Navigation */}
+          {feedback && (
+            <div
+              role="status"
+              className={`mx-6 mt-3 px-4 py-2.5 rounded-xl text-sm font-medium border ${
+                feedback.type === "success"
+                  ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+                  : "bg-red-50 border-red-200 text-red-700"
+              }`}
+            >
+              {feedback.text}
+            </div>
+          )}
           {!showForm && (
             <div className="border-b border-gray-200 bg-gray-50">
               <div className="flex">

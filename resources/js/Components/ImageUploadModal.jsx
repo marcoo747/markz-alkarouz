@@ -23,8 +23,14 @@ const ImageUploadModal = ({ product, onClose, onUploaded }) => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (photos.length === 0) return alert("Please select a photo!");
-    if (photos.length > maxAllowed) return alert(`Maximum ${maxAllowed} photos allowed.`);
+    if (photos.length === 0) {
+      setErrorMsg("Please select at least one photo!");
+      return;
+    }
+    if (photos.length > maxAllowed) {
+      setErrorMsg(`Maximum ${maxAllowed} photos allowed.`);
+      return;
+    }
 
     const formData = new FormData();
     photos.forEach(photo => formData.append("photos[]", photo));
