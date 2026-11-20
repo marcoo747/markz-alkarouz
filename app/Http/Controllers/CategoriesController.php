@@ -96,14 +96,6 @@ class CategoriesController extends Controller
             ];
         });
 
-        $cartItems = [];
-
-        if ($user && $user->cart) {
-            $cartItems = $user->cart->products()
-                ->pluck('products.product_id')
-                ->toArray();
-        }
-
         $cart_items_count = count($cartItems);
 
         return Inertia::render('CategoryPage', [

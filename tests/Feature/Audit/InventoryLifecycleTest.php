@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\UserRequest;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class InventoryLifecycleTest extends TestCase
@@ -249,5 +250,43 @@ class InventoryLifecycleTest extends TestCase
         $pivotAfter = DB::table('request_products')->where('request_product_id', $pivotId2)->first();
         $this->assertSame(4, (int) $pivotAfter->checked_qnty);
         $this->assertSame(1, (int) $pivotAfter->unchecked_qnty);
+    }
+
+    public function test_damaged_shortfall_persists_on_request_product_and_reloads_on_done_form(): void
+    {
+        $manager = User::factory()->manager()->create();
+        $user = User::factory()->create();
+        $product = $this->createProduct(10, 'Fragile Lens');
+
+        [$req, $pivotId] = $this->createRequestWithProduct($user, $product, 4, 'pending');
+        $this->actingAs($manager)->post(route('requests.accept', $req->request_id));
+
+        $this->actingAs($manager)
+            ->post(route('requests.done', $req->request_id), [
+                'products' => [[
+                    'request_product_id' => $pivotId,
+                    'product_id' => $product->product_id,
+                    'checked_qnty' => 3,
+                    'shortfall_reason' => 'damaged',
+                    'comment' => 'Cracked outer ring',
+                ]],
+            ])
+            ->assertRedirect(route('requests'));
+
+        // Stock: 10 - 4 + 3 = 9; Missings must NOT be created for damaged items
+        $this->assertSame(9, (int) $product->fresh()->inventory_quantity);
+        $this->assertSame(0, Missings::where('request_id', $req->request_id)->count());
+
+        $pivot = DB::table('request_products')->where('request_product_id', $pivotId)->first();
+        $this->assertSame('damaged', $pivot->shortfall_reason);
+        $this->assertSame(1, (int) $pivot->unchecked_qnty);
+
+        $this->actingAs($manager)
+            ->get(route('doneRequest', $req->request_id))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('DoneRequest')
+                ->where('requestDetails.products.0.pivot.shortfall_reason', 'damaged')
+            );
     }
 }

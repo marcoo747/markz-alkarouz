@@ -181,13 +181,16 @@ class RequestLifecycleService
 
                     $uncheckedQnty = $rentedQty - $checkedQnty;
                     $comment = $pData['comment'] ?? null;
-                    $shortfallReason = $pData['shortfall_reason'] ?? 'missing';
+                    $shortfallReason = $uncheckedQnty > 0
+                        ? (($pData['shortfall_reason'] ?? null) ?: 'missing')
+                        : null;
 
                     DB::table('request_products')
                         ->where('request_product_id', $pivot->request_product_id)
                         ->update([
                             'checked_qnty' => $checkedQnty,
                             'unchecked_qnty' => $uncheckedQnty,
+                            'shortfall_reason' => $shortfallReason,
                             'comment' => $comment,
                             'updated_at' => now(),
                         ]);

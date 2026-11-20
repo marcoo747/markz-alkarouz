@@ -222,8 +222,9 @@ const DoneRequest = () => {
         const color_name = product.pivot?.color?.color || null;
         const size_name = product.pivot?.size?.size || null;
 
-        // If returned is less than rented, default shortfall reason is "missing"
-        const shortfall_reason = quantity_returned < quantity_rented ? "missing" : null;
+        const shortfall_reason = quantity_returned < quantity_rented
+            ? (product.pivot?.shortfall_reason || "missing")
+            : null;
 
         return {
             request_product_id: product.pivot?.request_product_id || product.product_id,
