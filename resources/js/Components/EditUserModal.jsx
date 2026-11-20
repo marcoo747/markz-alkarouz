@@ -1,6 +1,8 @@
 import React from "react";
 
-const EditUserModal = ({ editData, editErrors, onChange, onSubmit, onClose }) => {
+const EditUserModal = ({ editData, editErrors, osras = [], onChange, onSubmit, onClose }) => {
+  const availableOsras = osras.length > 0 ? osras : (editData?.osras || []);
+
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-[9999] p-5 box-border">
       <div className="w-full max-w-[480px] bg-white rounded-[20px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden border border-black/5 animate-in zoom-in-95 duration-200">
@@ -55,13 +57,19 @@ const EditUserModal = ({ editData, editErrors, onChange, onSubmit, onClose }) =>
           {editErrors.user_type && <div className="text-red-500 text-sm mt-1">{editErrors.user_type}</div>}
 
           {/* Family Code */}
-          <label className="font-semibold mt-[18px] text-[0.9rem] text-slate-700 block">Family Code</label>
-          <input
-            type="text"
+          <label className="font-semibold mt-[18px] text-[0.9rem] text-slate-700 block">Family (Osra)</label>
+          <select
             value={editData.osra_code || ""}
             onChange={(e) => onChange("osra_code", e.target.value)}
             className={`w-full mt-2 px-4 py-3 rounded-xl border bg-slate-50 transition-all duration-200 text-[0.95rem] text-slate-900 focus:outline-none focus:bg-white focus:ring-4 ${editErrors.osra_code ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200 focus:border-blue-600 focus:ring-blue-600/15'}`}
-          />
+          >
+            <option value="">None</option>
+            {availableOsras.map((osra) => (
+              <option key={osra.osra_id} value={osra.osra_code}>
+                {osra.osra_name} ({osra.osra_code})
+              </option>
+            ))}
+          </select>
           {editErrors.osra_code && <div className="text-red-500 text-sm mt-1">{editErrors.osra_code}</div>}
 
           {/* Profile Photo */}
@@ -71,7 +79,10 @@ const EditUserModal = ({ editData, editErrors, onChange, onSubmit, onClose }) =>
               <input
                 type="file"
                 hidden
-                onChange={(e) => onChange("profilePhoto", e.target.files[0])}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) onChange("profilePhoto", file);
+                }}
               />
             </label>
             {editData.profilePhoto && <span className="text-[0.9rem] text-slate-500 font-medium">{editData.profilePhoto.name}</span>}

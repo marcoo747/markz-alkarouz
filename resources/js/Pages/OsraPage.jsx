@@ -9,42 +9,12 @@ import PaginationControls from "@/Components/PaginationControls";
 
 const OsraPage = ({ osras: initialOsras }) => {
   const { t } = useTranslation();
-  const { pagination } = usePage().props;
-  const [osras, setOsras] = useState(initialOsras || []);
+  const { pagination, errors } = usePage().props;
+  const osras = initialOsras || [];
   const [selectedOsra, setSelectedOsra] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-
-  // Add Osra
-  const handleAdd = (data) => {
-    const formData = new FormData();
-    formData.append("osra_name", data.name);
-    formData.append("osra_code", data.code);
-    formData.append("osra_place", data.osra_place);
-    formData.append("osra_time", data.osra_time);
-    formData.append("example_date", data.example_date);
-
-    router.post(route("osra.store"), formData, { onSuccess: () => router.reload() });
-  };
-
-  // Edit Osra
-  const handleEdit = (data) => {
-    const formData = new FormData();
-    formData.append("osra_name", data.name);
-    formData.append("osra_code", data.code);
-    formData.append("osra_place", data.osra_place);
-    formData.append("osra_time", data.osra_time);
-    formData.append("example_date", data.example_date);
-    formData.append("_method", "PUT");
-
-    router.post(route("osra.update", data.osra_id), formData, { onSuccess: () => router.reload() });
-  };
-
-  // Delete Osra
-  const handleDelete = (osra) => {
-    router.delete(route("osra.destroy", osra.osra_id), { onSuccess: () => router.reload() });
-  };
 
   return (
     <>
@@ -53,6 +23,10 @@ const OsraPage = ({ osras: initialOsras }) => {
 
       <div className="container mt-4">
         <h2>{t('osra.title')}</h2>
+
+        {errors?.osra && (
+          <div className="alert alert-danger mt-2 mb-2">{errors.osra}</div>
+        )}
 
         <button className="btn btn-success mt-2 mb-3" onClick={() => setShowAdd(true)}>{t('osra.add_family')}</button>
 
@@ -78,9 +52,9 @@ const OsraPage = ({ osras: initialOsras }) => {
 
         <PaginationControls pagination={pagination} />
 
-        {showAdd && <AddOsraModal onClose={() => setShowAdd(false)} onConfirm={handleAdd} />}
-        {showEdit && selectedOsra && <EditOsraModal osra={selectedOsra} onClose={() => setShowEdit(false)} onConfirm={handleEdit} />}
-        {showDelete && selectedOsra && <DeleteOsraModal osra={selectedOsra} onClose={() => setShowDelete(false)} onConfirm={() => handleDelete(selectedOsra)} />}
+        {showAdd && <AddOsraModal onClose={() => setShowAdd(false)} />}
+        {showEdit && selectedOsra && <EditOsraModal osra={selectedOsra} onClose={() => setShowEdit(false)} />}
+        {showDelete && selectedOsra && <DeleteOsraModal osra={selectedOsra} onClose={() => setShowDelete(false)} />}
       </div>
     </>
   );

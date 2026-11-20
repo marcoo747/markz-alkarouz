@@ -7,6 +7,7 @@ use App\Models\Main_Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class ProductCrudTest extends TestCase
@@ -69,5 +70,34 @@ class ProductCrudTest extends TestCase
             ])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['price', 'inventory_quantity']);
+    }
+
+    public function test_all_categories_includes_main_categories_prop_and_category_store_validates_main_category_id(): void
+    {
+        $manager = User::factory()->manager()->create();
+
+        Main_Category::create([
+            'category_name' => 'AllCat Main ' . uniqid(),
+            'category_description' => 'Desc',
+            'category_photo' => 'main_categories/test.png',
+            'can_go_outside' => 1,
+        ]);
+
+        $this->actingAs($manager)
+            ->get(route('categories.all'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Categories')
+                ->has('main_categories')
+            );
+
+        $this->actingAs($manager)
+            ->postJson(route('categories.store'), [
+                'category_name' => 'Bad Sub',
+                'category_description' => 'Desc',
+                'main_category_id' => 999999999,
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['main_category_id', 'category_photo']);
     }
 }

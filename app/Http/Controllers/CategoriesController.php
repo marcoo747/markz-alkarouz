@@ -26,9 +26,14 @@ class CategoriesController extends Controller
 
         $perPage = request()->input('per_page', 12);
         $categoriesPaginated = Category::visibleTo($user)->paginate($perPage);
+        $mainCategories = Main_Category::visibleTo($user)
+            ->select('category_id', 'category_name')
+            ->orderBy('category_name')
+            ->get();
         
         return Inertia::render('Categories', [
             'categories' => $categoriesPaginated->items(),
+            'main_categories' => $mainCategories,
             'pagination'    => [
                 'current_page'  => $categoriesPaginated->currentPage(),
                 'last_page'     => $categoriesPaginated->lastPage(),
@@ -120,7 +125,7 @@ class CategoriesController extends Controller
         $request->validate([
             'category_name' => 'required|string|max:100',
             'category_description' => 'required|string',
-            'main_category_id' => 'required',
+            'main_category_id' => 'required|integer|exists:main_categories,category_id',
             'category_photo' => 'required|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
         ]);
 

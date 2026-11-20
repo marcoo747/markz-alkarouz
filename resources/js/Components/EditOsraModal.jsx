@@ -17,7 +17,8 @@ const EditOsraModal = ({ osra, onClose }) => {
 
   const handleConfirm = () => {
     put(route("osra.update", osra.osra_id), {
-      onSuccess: () => { onClose(); window.location.reload(); }
+      preserveScroll: true,
+      onSuccess: () => { onClose(); }
     });
   };
 

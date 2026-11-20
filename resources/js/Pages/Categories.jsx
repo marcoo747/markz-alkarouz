@@ -11,13 +11,12 @@ import DeleteCategoryModal from "@/Components/DeleteCategoryModal";
 
 const Categories = () => {
   const { t } = useTranslation();
-  const { categories, type, main_category_id, pagination } = usePage().props;
+  const { categories, main_categories = [], type, main_category_id, pagination } = usePage().props;
   const { auth } = usePage().props;
   const user = auth.user;
   const manager = user?.user_type === "manager";
 
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedMainCategoryId, setSelectedMainCategoryId] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -25,20 +24,6 @@ const Categories = () => {
   const handleAdd = () => setShowAddModal(true);
   const handleEdit = (cat) => { setSelectedCategory(cat); setShowEditModal(true); };
   const handleDelete = (cat) => { setSelectedCategory(cat); setShowDeleteModal(true); };
-
-  // ADD
-  const handleAddConfirm = ({ name, description, photo }) => {
-    const formData = new FormData();
-    formData.append("category_name", name);
-    formData.append("category_description", description + (type ? ` [type:${type}]` : ''));
-    if (photo) formData.append("category_photo", photo);
-
-    router.post(route("categories.store"), formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-
-    setShowAddModal(false);
-  };
 
   const handleEditConfirm = ({ name, description, photo }) => {
     const formData = new FormData();
@@ -97,7 +82,7 @@ const Categories = () => {
           <AddCategoryModal
             onClose={() => setShowAddModal(false)}
             main_category_id={main_category_id}
-            onConfirm={handleAddConfirm}
+            main_categories={main_categories}
           />
         )}
 

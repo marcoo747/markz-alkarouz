@@ -5,6 +5,7 @@ namespace Tests\Feature\Audit;
 use App\Models\Osra;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class OsraAndProfileValidationTest extends TestCase
@@ -113,5 +114,45 @@ class OsraAndProfileValidationTest extends TestCase
             ->assertRedirect();
 
         $this->assertDatabaseMissing('users', ['user_id' => $other->user_id]);
+    }
+
+    public function test_users_index_includes_osra_relation_and_user_update_preserves_osra_by_code(): void
+    {
+        $manager = User::factory()->manager()->create();
+
+        $osra = Osra::create([
+            'osra_name' => 'UsersPage Osra',
+            'osra_place' => 'Hall C',
+            'osra_time' => 'Friday 14:00',
+            'osra_code' => 'USR_OSRA_' . uniqid(),
+            'example_date' => '2026-12-03',
+            'example_time' => '14:00:00',
+        ]);
+
+        $member = User::factory()->create([
+            'osra_id' => $osra->osra_id,
+        ]);
+
+        $this->actingAs($manager)
+            ->get(route('users.index'))
+            ->assertOk()
+            ->assertInertia(function (Assert $page) use ($member, $osra) {
+                $users = collect($page->toArray()['props']['users']);
+                $row = $users->firstWhere('user_id', $member->user_id);
+                $this->assertNotNull($row);
+                $this->assertSame($osra->osra_code, $row['osra']['osra_code'] ?? null);
+            });
+
+        $this->actingAs($manager)
+            ->put(route('users.update', $member->user_id), [
+                'full_name' => 'Member Role Edited',
+                'mobile' => $member->mobile,
+                'email' => $member->email,
+                'user_type' => 'admin',
+                'osra_code' => $osra->osra_code,
+            ])
+            ->assertRedirect(route('users.index'));
+
+        $this->assertSame($osra->osra_id, $member->fresh()->osra_id);
     }
 }

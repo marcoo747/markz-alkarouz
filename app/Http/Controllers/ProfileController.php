@@ -96,12 +96,13 @@ class ProfileController extends Controller
         return Inertia::render('UsersPage', [
             'users' => User::select(
                 'user_id',
+                'osra_id',
                 'full_name',
                 'user_type',
                 'mobile',
                 'email',
                 'user_photo'
-            )->get()->map(fn ($u) => [
+            )->with('osra:osra_id,osra_code,osra_name')->get()->map(fn ($u) => [
                 ...$u->toArray(),
                 'user_photo' => ($u->user_photo && Storage::disk('public')->exists($u->user_photo))
                     ? asset('storage/' . $u->user_photo)

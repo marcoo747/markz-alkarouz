@@ -12,7 +12,8 @@ const AddOsraModal = ({ onClose }) => {
 
   const handleConfirm = () => {
     post(route("osra.store"), {
-      onSuccess: () => { reset(); onClose(); window.location.reload(); }
+      preserveScroll: true,
+      onSuccess: () => { reset(); onClose(); }
     });
   };
 

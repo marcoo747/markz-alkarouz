@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { route } from 'ziggy-js';
-import { Inertia } from "@inertiajs/inertia";
+import { router } from "@inertiajs/react";
 import styles from "../../css/AddModal.module.css";
 
 const AddCategoryModal = ({ onClose }) => {
@@ -10,9 +10,17 @@ const AddCategoryModal = ({ onClose }) => {
   const [fileName, setFileName] = useState("");
   const [canGoOutside, setCanGoOutside] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleConfirm = () => {
-    if (!name || !description || !photo) return alert("All fields are required!");
+    if (!name.trim() || !description.trim() || !photo) {
+      setFormError("All fields are required!");
+      return;
+    }
+
+    setFormError("");
+    setErrors({});
     const formData = new FormData();
     formData.append("category_name", name);
     formData.append("category_description", description);
@@ -20,11 +28,15 @@ const AddCategoryModal = ({ onClose }) => {
     formData.append("can_go_outside", canGoOutside ? 1 : 0);
 
     setProcessing(true);
-    Inertia.post(route("main_categories.store"), formData, {
+    router.post(route("main_categories.store"), formData, {
+      forceFormData: true,
       preserveState: true,
       preserveScroll: true,
       onSuccess: () => { setProcessing(false); onClose(); },
-      onError: () => setProcessing(false),
+      onError: (errs) => {
+        setErrors(errs || {});
+        setProcessing(false);
+      },
     });
   };
 
@@ -37,11 +49,15 @@ const AddCategoryModal = ({ onClose }) => {
         </div>
 
         <div className={styles.modalBody}>
+          {formError && <p className="text-danger small mb-2">{formError}</p>}
+
           <label>Category Name</label>
           <input value={name} onChange={(e) => setName(e.target.value)} />
+          {errors.category_name && <p className="text-danger small">{errors.category_name}</p>}
 
           <label>Category Description</label>
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+          {errors.category_description && <p className="text-danger small">{errors.category_description}</p>}
 
           <div className="flex items-center justify-between mt-2 py-2 border-b border-gray-100 mb-2">
             <span className="font-medium text-slate-700 text-sm">Can Be Requested Outside The Church?</span>
@@ -65,10 +81,21 @@ const AddCategoryModal = ({ onClose }) => {
           <div className={styles.fileUpload}>
             <label className={styles.uploadBtn}>
               Upload Photo
-              <input type="file" hidden onChange={(e) => { setPhoto(e.target.files[0]); setFileName(e.target.files[0].name); }} />
+              <input
+                type="file"
+                hidden
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setPhoto(file);
+                    setFileName(file.name);
+                  }
+                }}
+              />
             </label>
             {fileName && <span className={styles.fileName}>{fileName}</span>}
           </div>
+          {errors.category_photo && <p className="text-danger small">{errors.category_photo}</p>}
         </div>
 
         <div className={styles.modalFooter}>

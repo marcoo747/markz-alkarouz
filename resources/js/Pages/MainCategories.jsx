@@ -32,22 +32,6 @@ const MainCategories = () => {
     setShowDeleteModal(true);
   };
 
-  // ADD CATEGORY
-  const handleAddConfirm = ({ name, description, photo }) => {
-    const formData = new FormData();
-    formData.append("category_name", name);
-    formData.append("category_description", description);
-    if (photo instanceof File) formData.append("category_photo", photo);
-
-    router.post(route("categories.store"), formData, {
-      forceFormData: true,
-      headers: { "Content-Type": "multipart/form-data" },
-      onError: (errors) => console.log(errors),
-    });
-
-    setShowAddModal(false);
-  };
-
   // EDIT CATEGORY
   const handleEditConfirm = ({ name, description, photo, canGoOutside }) => {
     if (!selectedCategory || !selectedCategory.category_id) {

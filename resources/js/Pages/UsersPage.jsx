@@ -31,6 +31,7 @@ const UsersPage = () => {
     phone: "",
     user_type: "user",
     osra_id: "",
+    osra_code: "",
     profilePhoto: null,
   });
 
@@ -68,7 +69,8 @@ const UsersPage = () => {
       email: user.email,
       phone: user.mobile,
       user_type: user.user_type || "user",
-      osra_id: user.osra?.osra_id || "",
+      osra_id: user.osra?.osra_id || user.osra_id || "",
+      osra_code: user.osra?.osra_code || "",
       profilePhoto: null,
     });
     setEditErrors({});
@@ -233,6 +235,7 @@ const UsersPage = () => {
       {showEditModal && (
         <EditUserModal
           editData={{ ...editData, osras }}
+          osras={osras}
           editErrors={editErrors}
           onChange={(field, value) => setEditData({ ...editData, [field]: value })}
           onSubmit={handleEditSubmit}
