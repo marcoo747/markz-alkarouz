@@ -80,8 +80,12 @@ const MissingItemCard = ({ item, onReturn }) => {
                         {/* Return Qty Counter */}
                         <div className="d-flex flex-column align-items-center gap-1">
                             <span className="text-muted small">{t("missings.qty_to_return")}</span>
-                            <div className="d-flex align-items-center gap-2 bg-light p-1 rounded-pill border">
+                            <div
+                                className="d-flex align-items-center gap-2 bg-light p-1 rounded-pill border"
+                                dir="ltr"
+                            >
                                 <button
+                                    type="button"
                                     className="btn btn-sm btn-white rounded-circle shadow-sm"
                                     style={{ width: 28, height: 28, padding: 0 }}
                                     onClick={handleDecrement}
@@ -89,10 +93,15 @@ const MissingItemCard = ({ item, onReturn }) => {
                                 >
                                     −
                                 </button>
-                                <span className="fw-bold px-2 text-dark" style={{ minWidth: 40, textAlign: "center" }}>
+                                <span
+                                    className="fw-bold px-2 text-dark"
+                                    style={{ minWidth: 40, textAlign: "center" }}
+                                    dir="ltr"
+                                >
                                     {returnQty}
                                 </span>
                                 <button
+                                    type="button"
                                     className="btn btn-sm btn-white rounded-circle shadow-sm"
                                     style={{ width: 28, height: 28, padding: 0 }}
                                     onClick={handleIncrement}
@@ -132,7 +141,7 @@ const Missings = () => {
             <Head title={t("missings.page_title") || "المفقودات"} />
             <NavBar page_name="missings" />
 
-            <div className="container my-4" dir="rtl">
+            <div className="container my-4">
                 {/* Header */}
                 <div className="mb-4 p-4 rounded-xl bg-white shadow-sm border border-light animate-fade-in d-flex justify-content-between align-items-center flex-wrap gap-3">
                     <div>

@@ -307,7 +307,7 @@ const DoneRequest = () => {
                 />
             )}
 
-            <div className="container my-4" dir="rtl">
+            <div className="container my-4">
                 {/* Header */}
                 <div className="mb-4 p-4 rounded-xl bg-white shadow-sm border border-light animate-fade-in">
                     <h2 className="mb-2 fw-bold text-dark">{t("done_request.heading")}</h2>
@@ -437,8 +437,12 @@ const DoneRequest = () => {
                                         {/* Controls */}
                                         <div className="d-flex align-items-center gap-3 flex-wrap">
                                             {/* Counter */}
-                                            <div className="d-flex align-items-center gap-2 bg-light p-1 rounded-pill border">
+                                            <div
+                                                className="d-flex align-items-center gap-2 bg-light p-1 rounded-pill border"
+                                                dir="ltr"
+                                            >
                                                 <button
+                                                    type="button"
                                                     className="btn btn-sm btn-white rounded-circle shadow-sm"
                                                     style={{ width: 28, height: 28, padding: 0 }}
                                                     onClick={() =>
@@ -457,11 +461,13 @@ const DoneRequest = () => {
                                                 <span
                                                     className="fw-bold text-center text-dark"
                                                     style={{ minWidth: 50 }}
+                                                    dir="ltr"
                                                 >
                                                     {product.quantity_returned}{" "}
                                                     / {product.quantity_rented}
                                                 </span>
                                                 <button
+                                                    type="button"
                                                     className="btn btn-sm btn-white rounded-circle shadow-sm"
                                                     style={{ width: 28, height: 28, padding: 0 }}
                                                     onClick={() =>
