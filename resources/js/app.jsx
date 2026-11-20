@@ -12,7 +12,6 @@ import { createRoot } from "react-dom/client";
 
 import { BookingProvider } from "@/Components/BookingContext";
 import GlobalCheckoutModal from "@/Components/GlobalCheckoutModal";
-import FloatingSettingsButton from "@/Components/FloatingSettingsButton";
 
 createInertiaApp({
     title: (title) => title || "Markz alkarooz",
@@ -33,7 +32,6 @@ createInertiaApp({
                     <BookingProvider>
                         <Component {...pageProps} key={key} />
                         <GlobalCheckoutModal />
-                        <FloatingSettingsButton />
                     </BookingProvider>
                 )}
             />
