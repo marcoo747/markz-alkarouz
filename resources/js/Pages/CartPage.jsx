@@ -107,13 +107,67 @@ const CartPage = () => {
             <Head title={t("home.page_title")} />
             <NavBar page_name="cart" />
             <Container>
-                <div className="flex flex-col mb-8 mt-8">
-                    <h2 className="text-3xl font-bold text-slate-800 tracking-tight">
-                        {t("cart.title")}
-                    </h2>
-                    <p className="text-slate-500 mt-2 text-lg">
-                        Review your items before proceeding to checkout
-                    </p>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 mt-8">
+                    <div>
+                        <h2 className="text-3xl font-bold text-slate-800 tracking-tight">
+                            {t("cart.title")}
+                        </h2>
+                        <p className="text-slate-500 mt-1 text-base">
+                            {t("cart.review_subtitle") || "Review your items before proceeding to checkout"}
+                        </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <button
+                            type="button"
+                            onClick={() => setShowTermsModal(true)}
+                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition-colors w-auto"
+                            title={t("cart.terms_button") || "Terms & Conditions"}
+                            aria-label="View Terms and Conditions"
+                        >
+                            <svg
+                                className="w-4 h-4 shrink-0"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 7v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7m14 0V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2m14 0H5m0 0l2-3m8 3l-2-3"
+                                />
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 11h8M8 15h6"
+                                />
+                            </svg>
+                            <span>{t("cart.terms_button") || "Terms & Conditions"}</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleOpenManagersModal}
+                            disabled={loadingManagers}
+                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm bg-blue-50 text-blue-800 border border-blue-200 hover:bg-blue-100 disabled:opacity-50 transition-colors w-auto"
+                            title={t("cart.managers_button") || "View Managers"}
+                            aria-label="View Managers Directory"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                                className="shrink-0"
+                                aria-hidden="true"
+                            >
+                                <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                            </svg>
+                            <span>{t("cart.managers_button") || "View Managers"}</span>
+                        </button>
+                    </div>
                 </div>
 
                 {products.length === 0 && (
@@ -137,7 +191,7 @@ const CartPage = () => {
                     </div>
                 )}
 
-                <div className="row">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                     {products.map((product) => {
                         const image =
                             product.images && product.images.length > 0
@@ -150,7 +204,7 @@ const CartPage = () => {
                                     product.pivot?.cart_product_id ??
                                     `${product.product_id}-${product.pivot?.color_id ?? "none"}-${product.pivot?.size_id ?? "none"}`
                                 }
-                                className="col-6 col-md-4 col-lg-3 mb-4"
+                                className="h-full"
                             >
                                 <ProductCard
                                     id={product.product_id}
@@ -221,70 +275,6 @@ const CartPage = () => {
                     isOpen={showTermsModal}
                     onClose={() => setShowTermsModal(false)}
                 />
-
-                {/* Floating Terms Button */}
-                <button
-                    onClick={() => setShowTermsModal(true)}
-                    className="fixed bottom-26 left-8 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-full p-4 shadow-lg hover:shadow-xl z-30 transition-all transform hover:scale-110 active:scale-95"
-                    title={t("cart.terms_button") || "Terms & Conditions"}
-                    aria-label="View Terms and Conditions"
-                >
-                    <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 7v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7m14 0V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2m14 0H5m0 0l2-3m8 3l-2-3"
-                        />
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 11h8M8 15h6"
-                        />
-                    </svg>
-                </button>
-
-                {/* Floating Managers Button */}
-                <button
-                    onClick={handleOpenManagersModal}
-                    disabled={loadingManagers}
-                    className="fixed bottom-8 left-8 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 text-white rounded-full p-4 shadow-lg hover:shadow-xl z-30 transition-all transform hover:scale-110 active:scale-95"
-                    title={t("cart.managers_button") || "View Managers"}
-                    aria-label="View Managers Directory"
-                >
-                    {loadingManagers ? (
-                        <svg
-                            className="w-6 h-6 animate-spin"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                            />
-                        </svg>
-                    ) : (
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="currentColor"
-                            viewBox="0 0 16 16"
-                        >
-                            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
-                        </svg>
-                    )}
-                </button>
             </Container>
         </>
     );
