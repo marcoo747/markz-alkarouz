@@ -25,23 +25,15 @@ export default function Register({ osras }) {
 
   const handleChange = (e) => {
     const { id, value, files } = e.target;
-    setData(id, files ? files[0] : value);
+    setData(id, files ? (files[0] || null) : value);
   };
 
   const submit = (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("full_name", data.full_name);
-    formData.append("email", data.email);
-    formData.append("mobile", data.mobile);
-    formData.append("password", data.password);
-    formData.append("password_confirmation", data.password_confirmation);
-    formData.append("user_type", data.user_type);
-    if (data.osra_code) formData.append("osra_code", data.osra_code);
-    if (data.user_photo) formData.append("user_photo", data.user_photo);
-
-    post(route("register.store"), formData);
+    post(route("register.store"), {
+      forceFormData: true,
+    });
   };
 
   return (
@@ -50,7 +42,7 @@ export default function Register({ osras }) {
       <Container className="container--center">
         <div className="auth-page">
           <div className="signup-container">
-            <img src="imgs/AlkaroozCom.png" className="logo" />
+            <img src="/imgs/AlkaroozCom.png" alt="Markaz Alkarouz logo" className="logo" />
 
             <form onSubmit={submit} className="signup-form">
               {/* Full Name */}
@@ -61,7 +53,7 @@ export default function Register({ osras }) {
                 placeholder={t('auth.full_name_placeholder')}
                 className={errors.full_name && "input-error"}
               />
-              {errors.name && <Message type="error">{errors.name}</Message>}
+              {errors.full_name && <Message type="error">{errors.full_name}</Message>}
 
               {/* Email */}
               <input
@@ -83,6 +75,7 @@ export default function Register({ osras }) {
                 placeholder={t('auth.mobile_placeholder')}
                 className={errors.mobile && "input-error"}
               />
+              {errors.mobile && <Message type="error">{errors.mobile}</Message>}
 
               {/* User Type */}
               <select
@@ -100,8 +93,6 @@ export default function Register({ osras }) {
               {errors.user_type && (
                 <Message type="error">{errors.user_type}</Message>
               )}
-
-              {errors.phone && <Message type="error">{errors.phone}</Message>}
 
               {/* Osra Code (manual input instead of select) */}
               <input
@@ -154,6 +145,7 @@ export default function Register({ osras }) {
                   {showConfirmPassword ? "🙈" : "👁️"}
                 </span>
               </div>
+              {errors.password_confirmation && <Message type="error">{errors.password_confirmation}</Message>}
 
               {/* Photo */}
               <div className="file-input-wrapper">

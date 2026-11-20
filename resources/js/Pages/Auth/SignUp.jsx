@@ -24,27 +24,14 @@ export default function Register({ osras }) {
 
   const handleChange = (e) => {
     const { id, value, files } = e.target;
-    setData(id, files ? files[0] : value);
+    setData(id, files ? (files[0] || null) : value);
   };
 
   const submit = (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("full_name", data.full_name);
-    formData.append("email", data.email);
-    formData.append("mobile", data.mobile);
-    formData.append("password", data.password);
-    formData.append("password_confirmation", data.password_confirmation);
-    formData.append("user_type", data.user_type);
-    if (data.osra_id) formData.append("osra_id", data.osra_id);
-    if (data.user_photo) formData.append("user_photo", data.user_photo);
-
-    post(route("sign_up.store"), formData, {
-      headers: {
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-        "Content-Type": "multipart/form-data"
-      },
+    post(route("sign_up.store"), {
+      forceFormData: true,
     });
   };
 
@@ -56,7 +43,7 @@ export default function Register({ osras }) {
           <div className="auth-page max-w-[520px] w-full mx-auto">
             <div className="bg-white py-10 px-8 shadow-2xl rounded-3xl border border-gray-100 transform transition-all duration-500 hover:shadow-blue-100/50">
               <div className="flex justify-center mb-6 transform transition-transform hover:scale-105 duration-300">
-                <img src="imgs/AlkaroozCom.png" className="h-20 w-auto object-contain" />
+                <img src="/imgs/AlkaroozCom.png" alt="Markaz Alkarouz logo" className="h-20 w-auto object-contain" />
               </div>
 
               <form onSubmit={submit} className="signup-form space-y-4">
@@ -69,7 +56,7 @@ export default function Register({ osras }) {
                     placeholder={t('auth.full_name_placeholder')}
                     className={`w-full px-5 py-3 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20 ${errors.full_name ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-blue-500 group-hover:border-blue-300"}`}
                   />
-                  {errors.name && <Message type="error" className="mt-1 animate-pulse">{errors.name}</Message>}
+                  {errors.full_name && <Message type="error" className="mt-1 animate-pulse">{errors.full_name}</Message>}
                 </div>
 
                 {/* Email */}
@@ -95,7 +82,7 @@ export default function Register({ osras }) {
                     placeholder={t('auth.mobile_placeholder')}
                     className={`w-full px-5 py-3 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20 ${errors.mobile ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-blue-500 group-hover:border-blue-300"}`}
                   />
-                  {errors.phone && <Message type="error" className="mt-1 animate-pulse">{errors.phone}</Message>}
+                  {errors.mobile && <Message type="error" className="mt-1 animate-pulse">{errors.mobile}</Message>}
                 </div>
 
                 {/* Osra Code (manual input instead of select) */}
@@ -163,8 +150,7 @@ export default function Register({ osras }) {
                     )}
                   </button>
                 </div>
-
-                {/* Photo */}
+                {errors.password_confirmation && <Message type="error" className="mt-1 animate-pulse">{errors.password_confirmation}</Message>}
                 <div className="file-input-wrapper mt-4">
                   <label htmlFor="user_photo" className="block w-full px-5 py-3 text-center rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50 text-gray-600 transition-all duration-300 cursor-pointer text-sm font-semibold">
                     <div className="flex items-center justify-center gap-2">
