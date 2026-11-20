@@ -150,6 +150,7 @@ export default function Login({ carouselPhotos = [] }) {
                 <div className="relative">
                   <input
                     id="login-mobile"
+                    name="mobile"
                     type="tel"
                     placeholder="01XXXXXXXXX"
                     value={data.mobile}
@@ -174,6 +175,7 @@ export default function Login({ carouselPhotos = [] }) {
                 <div className="relative">
                   <input
                     id="login-password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     value={data.password}

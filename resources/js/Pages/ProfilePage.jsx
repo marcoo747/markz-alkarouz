@@ -121,14 +121,14 @@ const ProfilePage = () => {
                   />
                 </svg>
               )}
-              <h5 className="mb-1">{user.name}</h5>
+              <h1 className="h5 mb-1 fw-bold">{user.name}</h1>
               <p className="text-muted mb-0">{user.email}</p>
               <p className="text-muted mt-0">{user.phone}</p>
 
               <div className="profile-osra mt-3 p-3 border rounded bg-light text-start mb-4">
                 {user.osra ? (
                   <>
-                    <h6 className="mb-2">🧑‍👩‍👧 {t('profile.family_details')}</h6>
+                    <h2 className="h6 mb-2 fw-bold">🧑‍👩‍👧 {t('profile.family_details')}</h2>
                     <div className="d-flex flex-column gap-1">
                       <span>
                         <strong>{t('profile.name_label')}</strong> {user.osra.osra_name}
@@ -178,7 +178,7 @@ const ProfilePage = () => {
 
           {/* Requests Column */}
           <div className="col-12 col-md-8">
-            <h5 className="mb-3">{t('profile.latest_requests')}</h5>
+            <h2 className="h5 mb-3 fw-bold">{t('profile.latest_requests')}</h2>
 
             {requests.length === 0 && (
               <div className="alert alert-info">{t('profile.no_requests')}</div>
@@ -269,14 +269,15 @@ const ProfilePage = () => {
 
       {/* --- Edit Profile Modal --- */}
       {showEditModal && (
-        <div className={styles.modalOverlay}>
+        <div className={styles.modalOverlay} role="dialog" aria-modal="true" aria-labelledby="edit-profile-modal-title">
           <div className={styles.modalDialogCentered}>
             <div className={styles.editModal}>
               <form onSubmit={handleEditSubmit}>
                 <div className={styles.modalHeader}>
-                  <h3 className="modal-title">{t('profile.edit_profile')}</h3>
+                  <h3 id="edit-profile-modal-title" className="modal-title">{t('profile.edit_profile')}</h3>
                   <button
                     type="button"
+                    aria-label={t('profile.cancel')}
                     className={`${styles.closeBtn} fs-2`}
                     onClick={() => setShowEditModal(false)}
                   >
@@ -286,20 +287,24 @@ const ProfilePage = () => {
 
                 <div className={styles.modalBody}>
                   <div className="mb-3">
-                    <label className="form-label">{t('profile.full_name')}</label>
+                    <label htmlFor="profile-full-name" className="form-label">{t('profile.full_name')}</label>
                     <input
+                      id="profile-full-name"
                       type="text"
                       name="name"
                       value={editData.name}
                       onChange={handleEditChange}
-                      className={`form-control ${editErrors.name ? "is-invalid" : ""}`}
+                      className={`form-control ${(editErrors.name || editErrors.full_name) ? "is-invalid" : ""}`}
                     />
-                    {editErrors.name && <div className="invalid-feedback">{editErrors.name}</div>}
+                    {(editErrors.name || editErrors.full_name) && (
+                      <div className="invalid-feedback">{editErrors.name || editErrors.full_name}</div>
+                    )}
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">{t('profile.email')}</label>
+                    <label htmlFor="profile-email" className="form-label">{t('profile.email')}</label>
                     <input
+                      id="profile-email"
                       type="email"
                       name="email"
                       value={editData.email}
@@ -312,8 +317,9 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">{t('profile.mobile')}</label>
+                    <label htmlFor="profile-mobile" className="form-label">{t('profile.mobile')}</label>
                     <input
+                      id="profile-mobile"
                       type="tel"
                       name="phone"
                       value={editData.phone}
@@ -321,17 +327,20 @@ const ProfilePage = () => {
                         const value = e.target.value.replace(/[^0-9]/g, "");
                         setEditData({ ...editData, phone: value });
                       }}
-                      className={`form-control ${editErrors.phone ? "is-invalid" : ""}`}
+                      className={`form-control ${(editErrors.phone || editErrors.mobile) ? "is-invalid" : ""}`}
                       placeholder="01XXXXXXXXX"
                       inputMode="numeric"
                       maxLength={11}
                     />
-                    {editErrors.phone && <div className="invalid-feedback">{editErrors.phone}</div>}
+                    {(editErrors.phone || editErrors.mobile) && (
+                      <div className="invalid-feedback">{editErrors.phone || editErrors.mobile}</div>
+                    )}
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">{t('profile.family_code')}</label>
+                    <label htmlFor="profile-osra-code" className="form-label">{t('profile.family_code')}</label>
                     <input
+                      id="profile-osra-code"
                       type="text"
                       name="osra_code"
                       value={editData.osra_code}
@@ -398,14 +407,15 @@ const ProfilePage = () => {
 
       {/* --- Password Modal --- */}
       {showPasswordModal && (
-        <div className={styles.modalOverlay}>
+        <div className={styles.modalOverlay} role="dialog" aria-modal="true" aria-labelledby="change-password-modal-title">
           <div className={styles.modalDialogCentered}>
             <div className={styles.editModal}>
               <form onSubmit={handlePasswordSubmit}>
                 <div className={styles.modalHeader}>
-                  <h3 className="modal-title">{t('profile.change_password')}</h3>
+                  <h3 id="change-password-modal-title" className="modal-title">{t('profile.change_password')}</h3>
                   <button
                     type="button"
+                    aria-label={t('profile.cancel')}
                     className={`${styles.closeBtn} fs-2`}
                     onClick={() => setShowPasswordModal(false)}
                   >
@@ -415,8 +425,9 @@ const ProfilePage = () => {
 
                 <div className={styles.modalBody}>
                   <div className="mb-3">
-                    <label className="form-label">{t('profile.current_password')}</label>
+                    <label htmlFor="profile-current-password" className="form-label">{t('profile.current_password')}</label>
                     <input
+                      id="profile-current-password"
                       type="password"
                       name="currentPassword"
                       value={passwordData.currentPassword}
@@ -429,8 +440,9 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">{t('profile.new_password')}</label>
+                    <label htmlFor="profile-new-password" className="form-label">{t('profile.new_password')}</label>
                     <input
+                      id="profile-new-password"
                       type="password"
                       name="newPassword"
                       value={passwordData.newPassword}
@@ -443,8 +455,9 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">{t('profile.confirm_new_password')}</label>
+                    <label htmlFor="profile-confirm-password" className="form-label">{t('profile.confirm_new_password')}</label>
                     <input
+                      id="profile-confirm-password"
                       type="password"
                       name="confirmPassword"
                       value={passwordData.confirmPassword}

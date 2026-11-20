@@ -42,15 +42,22 @@ export default function Register({ osras }) {
         <Container className="container--center">
           <div className="auth-page max-w-[520px] w-full mx-auto">
             <div className="bg-white py-10 px-8 shadow-2xl rounded-3xl border border-gray-100 transform transition-all duration-500 hover:shadow-blue-100/50">
-              <div className="flex justify-center mb-6 transform transition-transform hover:scale-105 duration-300">
+              <div className="flex justify-center mb-4 transform transition-transform hover:scale-105 duration-300">
                 <img src="/imgs/AlkaroozCom.png" alt="Markaz Alkarouz logo" className="h-20 w-auto object-contain" />
               </div>
+              <h1 className="text-2xl font-extrabold text-slate-900 text-center mb-6">
+                {t('auth.sign_up_btn') || "Create Account"}
+              </h1>
 
               <form onSubmit={submit} className="signup-form space-y-4">
                 {/* Full Name */}
                 <div className="group">
+                  <label htmlFor="full_name" className="block text-xs font-semibold text-gray-700 mb-1">
+                    {t('auth.full_name_placeholder')}
+                  </label>
                   <input
                     id="full_name"
+                    name="full_name"
                     value={data.full_name}
                     onChange={handleChange}
                     placeholder={t('auth.full_name_placeholder')}
@@ -61,6 +68,9 @@ export default function Register({ osras }) {
 
                 {/* Email */}
                 <div className="group">
+                  <label htmlFor="email" className="block text-xs font-semibold text-gray-700 mb-1">
+                    {t('auth.email_placeholder')}
+                  </label>
                   <input
                     id="email"
                     type="email"
@@ -75,8 +85,13 @@ export default function Register({ osras }) {
 
                 {/* Phone */}
                 <div className="group">
+                  <label htmlFor="mobile" className="block text-xs font-semibold text-gray-700 mb-1">
+                    {t('auth.mobile_placeholder')}
+                  </label>
                   <input
                     id="mobile"
+                    name="mobile"
+                    type="tel"
                     value={data.mobile}
                     onChange={handleChange}
                     placeholder={t('auth.mobile_placeholder')}
@@ -87,8 +102,12 @@ export default function Register({ osras }) {
 
                 {/* Osra Code (manual input instead of select) */}
                 <div className="group">
+                  <label htmlFor="osra_code" className="block text-xs font-semibold text-gray-700 mb-1">
+                    {t('auth.osra_code_shorter')}
+                  </label>
                   <input
                     id="osra_code"
+                    name="osra_code"
                     value={data.osra_code}
                     onChange={handleChange}
                     placeholder={t('auth.osra_code_shorter')}
@@ -98,26 +117,33 @@ export default function Register({ osras }) {
                 </div>
 
                 {/* Password */}
-                <div className="password-wrapper relative group">
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={data.password}
-                    onChange={handleChange}
-                    placeholder={t('auth.password_placeholder')}
-                    className={`w-full ps-5 pe-12 py-3 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20 ${errors.password ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-blue-500 group-hover:border-blue-300"}`}
-                  />
-                  <button
-                    type="button"
-                    className="absolute end-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors duration-200 p-1 focus:outline-none"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                    )}
-                  </button>
+                <div className="group">
+                  <label htmlFor="password" className="block text-xs font-semibold text-gray-700 mb-1">
+                    {t('auth.password_placeholder')}
+                  </label>
+                  <div className="password-wrapper relative">
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      value={data.password}
+                      onChange={handleChange}
+                      placeholder={t('auth.password_placeholder')}
+                      className={`w-full ps-5 pe-12 py-3 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20 ${errors.password ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-blue-500 group-hover:border-blue-300"}`}
+                    />
+                    <button
+                      type="button"
+                      aria-label="Toggle password visibility"
+                      className="absolute end-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors duration-200 p-1 focus:outline-none"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                      )}
+                    </button>
+                  </div>
                 </div>
                 {errors.password && <Message type="error" className="mt-1 animate-pulse">{errors.password}</Message>}
 
@@ -129,26 +155,33 @@ export default function Register({ osras }) {
                 )}
 
                 {/* Confirm Password */}
-                <div className="password-wrapper relative group">
-                  <input
-                    id="password_confirmation"
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={data.password_confirmation}
-                    onChange={handleChange}
-                    placeholder={t('auth.confirm_password_placeholder')}
-                    className="w-full ps-5 pe-12 py-3 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 group-hover:border-blue-300"
-                  />
-                  <button
-                    type="button"
-                    className="absolute end-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors duration-200 p-1 focus:outline-none"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                    )}
-                  </button>
+                <div className="group">
+                  <label htmlFor="password_confirmation" className="block text-xs font-semibold text-gray-700 mb-1">
+                    {t('auth.confirm_password_placeholder')}
+                  </label>
+                  <div className="password-wrapper relative">
+                    <input
+                      id="password_confirmation"
+                      name="password_confirmation"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={data.password_confirmation}
+                      onChange={handleChange}
+                      placeholder={t('auth.confirm_password_placeholder')}
+                      className="w-full ps-5 pe-12 py-3 rounded-xl border-2 border-gray-200 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 group-hover:border-blue-300"
+                    />
+                    <button
+                      type="button"
+                      aria-label="Toggle confirm password visibility"
+                      className="absolute end-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors duration-200 p-1 focus:outline-none"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                      )}
+                    </button>
+                  </div>
                 </div>
                 {errors.password_confirmation && <Message type="error" className="mt-1 animate-pulse">{errors.password_confirmation}</Message>}
                 <div className="file-input-wrapper mt-4">
