@@ -15,7 +15,10 @@ import GlobalCheckoutModal from "@/Components/GlobalCheckoutModal";
 import Footer from "@/Components/Footer";
 
 createInertiaApp({
-    title: (title) => title || "Markz alkarooz",
+    title: (title) =>
+        title && title !== "Markz alkarooz" && title !== "Markaz Alkarooz" && title !== "مركز وسائل الإيضاح"
+            ? `${title} | Markaz Alkarooz`
+            : title || "Markaz Alkarooz",
 
     resolve: (name) =>
         resolvePageComponent(

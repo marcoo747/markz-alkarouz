@@ -104,7 +104,7 @@ const CartPage = () => {
 
     return (
         <>
-            <Head title={t("home.page_title")} />
+            <Head title={t("cart.title") || t("home.page_title")} />
             <NavBar page_name="cart" />
             <Container>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 mt-8">

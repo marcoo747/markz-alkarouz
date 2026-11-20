@@ -73,7 +73,7 @@ const CategoryPage = () => {
 
   return (
     <>
-      <Head title={t('home.page_title')} />
+      <Head title={category.category_name || t('home.page_title')} />
       <NavBar page_name="categories" />
 
       <Container>

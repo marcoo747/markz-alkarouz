@@ -37,7 +37,7 @@ export default function Register({ osras }) {
 
   return (
     <>
-      <Head title={t('home.page_title')} />
+      <Head title={t('auth.sign_up_btn') || t('home.page_title')} />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 transition-all duration-500">
         <Container className="container--center">
           <div className="auth-page max-w-[520px] w-full mx-auto">

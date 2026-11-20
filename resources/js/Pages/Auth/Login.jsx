@@ -59,7 +59,7 @@ export default function Login({ carouselPhotos = [] }) {
 
   return (
     <>
-      <Head title={t("home.page_title")} />
+      <Head title={t("navbar.login") || t("home.page_title")} />
 
       <div className="min-h-screen flex font-sans">
 

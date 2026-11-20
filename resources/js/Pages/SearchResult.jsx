@@ -33,7 +33,7 @@ const SearchResult = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-12">
-      <Head title={t('home.page_title')} />
+      <Head title={query ? `${t('search.results_for')} "${query}"` : t('navbar.search')} />
       <NavBar page_name="search" />
       <TopAlert message={alertMessage} onClose={() => setAlertMessage("")} />
 

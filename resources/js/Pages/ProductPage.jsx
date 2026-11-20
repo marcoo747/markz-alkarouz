@@ -38,7 +38,7 @@ const ProductPage = () => {
 
     return (
         <>
-            <Head title={t("product.page_title")} />
+            <Head title={product?.pr_name || t("product.page_title")} />
             <NavBar page_name="categories" />
             <TopAlert message={alertMessage} onClose={() => setAlertMessage("")} />
 

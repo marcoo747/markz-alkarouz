@@ -30,6 +30,37 @@ Route::get('/', function () {
 })->name('home.root');
 Route::get('/home', [Home_controller::class, 'index'])->name('home');
 
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        url('/home'),
+        url('/categories'),
+        url('/login'),
+        url('/sign_up'),
+    ];
+
+    foreach (\App\Models\Main_Category::visibleTo(null)->pluck('category_id') as $mainId) {
+        $urls[] = route('show_main_category', ['main_category_id' => $mainId]);
+    }
+
+    foreach (\App\Models\Category::visibleTo(null)->pluck('category_id') as $catId) {
+        $urls[] = route('categories.show', ['category' => $catId]);
+    }
+
+    foreach (\App\Models\Product::visibleTo(null)->pluck('product_id') as $prodId) {
+        $urls[] = route('items.show', ['id' => $prodId]);
+    }
+
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+    foreach (array_unique($urls) as $loc) {
+        $escaped = htmlspecialchars($loc, ENT_XML1 | ENT_COMPAT, 'UTF-8');
+        $xml .= "  <url><loc>{$escaped}</loc></url>\n";
+    }
+    $xml .= '</urlset>';
+
+    return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
+})->name('sitemap');
+
 
 // Carousel Photos (public access for home page)
 Route::get('/carousel-photos', [Carousel_photos_controller::class, 'index'])->name('carousel.photos.index');
