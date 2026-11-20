@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, router, usePage } from "@inertiajs/react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
@@ -12,10 +12,14 @@ import OsraTimeBar from "@/Components/OsraTimeBar";
 
 const NavBar = ({ page_name, linkBase }) => {
     const { t, i18n } = useTranslation();
-    const { auth, cart_items_count } = usePage().props;
+    const { auth, cart_items_count, query } = usePage().props;
     const user = auth.user;
     const [open, setOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState(() => query ?? "");
+
+    useEffect(() => {
+        setSearchTerm(query ?? "");
+    }, [query]);
 
     const handleSearch = (e) => {
         e.preventDefault();

@@ -7,7 +7,8 @@ import styles from "../../css/ProfilePage.module.css";
 import { useTranslation } from "react-i18next";
 
 const ProfilePage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const dateLocale = i18n.language?.startsWith("ar") ? "ar-EG" : "en-US";
   const { user, requests = [], pagination } = usePage().props; // requests from backend
 
   // --- Edit Profile ---
@@ -218,7 +219,7 @@ const ProfilePage = () => {
                     {request.start_date && request.start_time ? (
                       <>
                         <strong>{t('profile.start')}</strong>{" "}
-                        {new Date(request.start_date + "T" + request.start_time).toLocaleString("en-US", {
+                        {new Date(request.start_date + "T" + request.start_time).toLocaleString(dateLocale, {
                           weekday: "short",
                           year: "numeric",
                           month: "short",
@@ -234,7 +235,7 @@ const ProfilePage = () => {
                     {request.end_date && request.end_time && (
                       <>
                         <strong>{t('profile.end')}</strong>{" "}
-                        {new Date(request.end_date + "T" + request.end_time).toLocaleString("en-US", {
+                        {new Date(request.end_date + "T" + request.end_time).toLocaleString(dateLocale, {
                           weekday: "short",
                           year: "numeric",
                           month: "short",
@@ -249,7 +250,7 @@ const ProfilePage = () => {
                   {/* Metadata */}
                   <div className="text-muted small">
                     <strong>{t('profile.ordered_at')}</strong>{" "}
-                    {new Date(request.created_at).toLocaleString("en-US", {
+                    {new Date(request.created_at).toLocaleString(dateLocale, {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
