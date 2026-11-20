@@ -9,13 +9,10 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\OsraController;
-use App\Http\Controllers\ImportController;
 use App\Http\Controllers\Carousel_photos_controller;
 use App\Http\Controllers\TermsAndPenaltiesController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 
 /*
