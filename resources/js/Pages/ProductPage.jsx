@@ -72,13 +72,17 @@ const ProductPage = () => {
                 <ProductDetail product={product} />
 
                 {/* Related Items */}
-                <ItemPack
-                    category_name={t("product.you_might_also_like")}
-                    products={relatedProducts}
-                    setAlertMessage={setAlertMessage}
-                />
+                {Array.isArray(relatedProducts) && relatedProducts.length > 0 && (
+                    <>
+                        <ItemPack
+                            category_name={t("product.you_might_also_like")}
+                            products={relatedProducts}
+                            setAlertMessage={setAlertMessage}
+                        />
 
-                <PaginationControls pagination={pagination} />
+                        <PaginationControls pagination={pagination} />
+                    </>
+                )}
 
                 {/* Modals */}
                 {showEditItemModal && selectedItem && (

@@ -47,7 +47,7 @@ const RequestTimer = ({ createdAt, t }) => {
 
     return (
         <div className="text-warning fw-bold mb-2">
-            auto accept : {timeLeft}
+            {t ? t("requests.auto_accept_in") : "Auto-accept in"}: {timeLeft}
         </div>
     );
 };

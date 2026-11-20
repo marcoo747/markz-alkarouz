@@ -356,7 +356,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                             <span className="badge position-absolute rounded-circle bg-primary top-0 right-0 translate-x-[30%] -translate-y-[30%] text-[0.65rem] px-[0.4rem] py-[0.25rem]">
                                                 {cart_items_count}
                                                 <span className="visually-hidden">
-                                                    items in cart
+                                                    {cart_items_count === 1 ? "item in cart" : "items in cart"}
                                                 </span>
                                             </span>
                                         </Link>

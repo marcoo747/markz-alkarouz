@@ -45,7 +45,7 @@
     "edit_product": "Edit Product",
     "delete_product": "Delete Product",
     "you_might_also_like": "You might also like",
-    "only_limit_left": "there is only {{count}} pieces in stock",
+    "only_limit_left": "Only {{count}} left in stock",
     "out_of_stock": "There is No available pieces right now"
   },
   "cart": {
@@ -159,7 +159,8 @@
     "end_date": "To Date",
     "search": "Search",
     "clear": "Clear",
-    "error_date_range": "Start date cannot be later than end date"
+    "error_date_range": "Start date cannot be later than end date",
+    "auto_accept_in": "Auto-accept in"
   },
   "request_show": {
     "date": "Date:",

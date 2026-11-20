@@ -256,7 +256,7 @@ export default function Login({ carouselPhotos = [] }) {
                 onClick={() => setShowForgotModal(false)}
                 className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors"
               >
-                {t("close") || "Close"}
+                {t("terms.close_button") || "Close"}
               </button>
             </div>
           </div>

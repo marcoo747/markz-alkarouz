@@ -163,7 +163,7 @@ const RequestShow = () => {
                             <>
                                 {request.request_status === 'pending' && timeLeft && timeLeft !== '00:00' && (
                                     <div className="text-warning fw-bold mb-2">
-                                        auto accept : {timeLeft}
+                                        {t("requests.auto_accept_in") || "Auto-accept in"}: {timeLeft}
                                     </div>
                                 )}
 
