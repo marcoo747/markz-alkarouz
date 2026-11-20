@@ -92,9 +92,11 @@ export default function ProductDetail({ product }) {
 
     // Determine stock limit or default to 5 if undefined. If 0, out of stock.
     const stockLimit =
-        product.inventory_quantity !== undefined
-            ? product.inventory_quantity
-            : 5;
+        product.available_quantity !== undefined
+            ? product.available_quantity
+            : product.inventory_quantity !== undefined
+              ? product.inventory_quantity
+              : 5;
     const isOutOfStock =
         stockLimit == 0 || stockLimit == null || stockLimit == "";
 

@@ -95,9 +95,9 @@ const CartPage = () => {
         setShowManagersModal(true);
     };
 
-    const removeItem = (product_id) => {
+    const removeItem = (product_id, cart_product_id = null) => {
         router.delete(route("cart.remove"), {
-            data: { product_id },
+            data: { product_id, cart_product_id },
             preserveScroll: true,
         });
     };
@@ -146,7 +146,10 @@ const CartPage = () => {
 
                         return (
                             <div
-                                key={product.product_id}
+                                key={
+                                    product.pivot?.cart_product_id ??
+                                    `${product.product_id}-${product.pivot?.color_id ?? "none"}-${product.pivot?.size_id ?? "none"}`
+                                }
                                 className="col-6 col-md-4 col-lg-3 mb-4"
                             >
                                 <ProductCard
@@ -159,7 +162,10 @@ const CartPage = () => {
                                     description={`${t("cart.price_egp")} ${product.pr_price}`}
                                     image={image}
                                     onRemove={() =>
-                                        removeItem(product.product_id)
+                                        removeItem(
+                                            product.product_id,
+                                            product.pivot?.cart_product_id,
+                                        )
                                     }
                                 />
                             </div>

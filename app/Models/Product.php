@@ -73,24 +73,43 @@ class Product extends Model
         );
     }
 
-    public function scopeWithAvailableInWindow($query, $request = null)
+    private static function normalizeTime(?string $time, string $fallback = '00:00:00'): string
+    {
+        $value = trim((string) $time);
+        if ($value === '') {
+            return $fallback;
+        }
+
+        if (preg_match('/^(\d{1,2}):(\d{2})$/', $value, $matches)) {
+            return sprintf('%02d:%02d:00', (int) $matches[1], (int) $matches[2]);
+        }
+
+        if (preg_match('/^(\d{1,2}):(\d{2}):(\d{2})$/', $value, $matches)) {
+            return sprintf('%02d:%02d:%02d', (int) $matches[1], (int) $matches[2], (int) $matches[3]);
+        }
+
+        return $fallback;
+    }
+
+    public function scopeWithAvailableInWindow($query, $request = null, bool $onlyAvailable = true)
     {
         $req = $request ?: request();
 
         $timeType        = $req->input('time_type');
         $startDate       = $req->input('start_date') ?: $req->input('date') ?: now()->format('Y-m-d');
-        $startTime       = $req->input('start_time') ?: $req->input('time') ?: now()->format('H:i');
+        $defaultTime     = now()->format('H:i:00');
+        $startTime       = self::normalizeTime($req->input('start_time') ?: $req->input('time'), $defaultTime);
         $endDate         = $req->input('end_date') ?: $startDate;
-        $endTime         = $req->input('end_time') ?: $startTime;
+        $endTime         = self::normalizeTime($req->input('end_time'), $startTime);
         $osraDate        = $req->input('osra_date') ?: $startDate;
-        $osraNumericTime = $req->input('osra_numeric_time') ?: $startTime;
+        $osraNumericTime = self::normalizeTime($req->input('osra_numeric_time'), $startTime);
 
         if ($timeType === 'family' || $timeType === 'familyTime') {
-            $targetStart = "{$osraDate} {$osraNumericTime}:00";
-            $targetEnd   = "{$osraDate} {$osraNumericTime}:00";
+            $targetStart = "{$osraDate} {$osraNumericTime}";
+            $targetEnd   = "{$osraDate} {$osraNumericTime}";
         } else {
-            $targetStart = "{$startDate} {$startTime}:00";
-            $targetEnd   = "{$endDate} {$endTime}:00";
+            $targetStart = "{$startDate} {$startTime}";
+            $targetEnd   = "{$endDate} {$endTime}";
         }
 
         $requestedQtySubquery = DB::table('request_products as rp')
@@ -106,14 +125,14 @@ class Product extends Model
                            ->whereNotNull('r.start_time')
                            ->whereNotNull('r.end_date')
                            ->whereNotNull('r.end_time')
-                           ->whereRaw("CONCAT(r.start_date, ' ', r.start_time, ':00') <= ?", [$targetEnd])
-                           ->whereRaw("CONCAT(r.end_date, ' ', r.end_time, ':00') >= ?", [$targetStart]);
+                           ->whereRaw("TIMESTAMP(r.start_date, r.start_time) <= ?", [$targetEnd])
+                           ->whereRaw("TIMESTAMP(r.end_date, r.end_time) >= ?", [$targetStart]);
                 })
                 ->orWhere(function ($osra) use ($targetStart, $targetEnd) {
                     $osra->whereNotNull('r.osra_date')
                          ->whereNotNull('r.osra_numeric_time')
-                         ->whereRaw("CONCAT(r.osra_date, ' ', r.osra_numeric_time, ':00') <= ?", [$targetEnd])
-                         ->whereRaw("CONCAT(r.osra_date, ' ', r.osra_numeric_time, ':00') >= ?", [$targetStart]);
+                         ->whereRaw("TIMESTAMP(r.osra_date, r.osra_numeric_time) <= ?", [$targetEnd])
+                         ->whereRaw("TIMESTAMP(r.osra_date, r.osra_numeric_time) >= ?", [$targetStart]);
                 });
             })
             ->selectRaw('COALESCE(SUM(rp.quantity), 0)');
@@ -121,9 +140,14 @@ class Product extends Model
         $subSql = $requestedQtySubquery->toSql();
         $bindings = $requestedQtySubquery->getBindings();
 
-        return $query->select('products.*')
-            ->selectSub($requestedQtySubquery, 'requested_quantity')
-            ->whereRaw("(products.inventory_quantity - ({$subSql})) > 0", $bindings);
+        $query->select('products.*')
+            ->selectSub($requestedQtySubquery, 'requested_quantity');
+
+        if ($onlyAvailable) {
+            $query->whereRaw("(COALESCE(products.inventory_quantity, 0) - ({$subSql})) > 0", $bindings);
+        }
+
+        return $query;
     }
 
     public function scopeAvailableAt($query, $date, $time)

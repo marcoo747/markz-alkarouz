@@ -141,19 +141,16 @@ class RequestController extends Controller
                 'expiry_time' => $expiry_time,
             ]);
 
-            $syncData = [];
             foreach ($cart->products as $product) {
                 $quantity = $product->pivot->quantity ?? 0;
-                $syncData[$product->pivot->product_id] = [
-                    'color_id'     => $product->pivot->color_id,
-                    'size_id'      => $product->pivot->size_id,
-                    'quantity'     => $quantity,
-                    'checked_qnty' => 0,
+                $userRequest->products()->attach($product->pivot->product_id, [
+                    'color_id'       => $product->pivot->color_id,
+                    'size_id'        => $product->pivot->size_id,
+                    'quantity'       => $quantity,
+                    'checked_qnty'   => 0,
                     'unchecked_qnty' => $quantity,
-                ];
+                ]);
             }
-
-            $userRequest->products()->sync($syncData);
 
             $cart->products()->detach();
         });

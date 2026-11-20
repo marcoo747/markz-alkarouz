@@ -22,7 +22,7 @@ class Cart extends Model
             'product_id'
         )
         ->using(CartProduct::class)
-        ->withPivot(['color_id', 'size_id', 'quantity'])
+        ->withPivot(['cart_product_id', 'color_id', 'size_id', 'quantity'])
         ->withTimestamps();
     }
 }
