@@ -39,6 +39,8 @@ const GlobalCheckoutModal = () => {
     const [idCode, setIdCode] = useState(osraCode || "");
     const [loading, setLoading] = useState(false);
     const [showOsraChoice, setShowOsraChoice] = useState(false);
+    const [validationError, setValidationError] = useState("");
+    const [confirmClearCart, setConfirmClearCart] = useState(false);
 
     const today = new Date().toISOString().split("T")[0];
 
@@ -56,10 +58,11 @@ const GlobalCheckoutModal = () => {
             .toFixed(2)
     );
     const hasCartItems = (cart_items_count > 0) && (cartProducts.length > 0);
+    const willClearNonEmptyCart = !hasCartItems && Number(cart_items_count || 0) > 0;
 
     const validateCustomTime = () => {
         if (!startDate || !startTime || !endDate || !endTime) {
-            alert("Please select a complete start date, start time, end date, and end time.");
+            setValidationError("Please select a complete start date, start time, end date, and end time.");
             return false;
         }
 
@@ -67,19 +70,21 @@ const GlobalCheckoutModal = () => {
         const end = new Date(`${endDate}T${endTime}`);
 
         if (end <= start) {
-            alert("End date/time must be after start date/time.");
+            setValidationError("End date/time must be after start date/time.");
             return false;
         }
 
+        setValidationError("");
         return true;
     };
 
     const validateFamilyTime = () => {
         const dateToUse = selectedOsraDate || nextSameDay;
         if (!dateToUse) {
-            alert("Please select a booking day for Family Time.");
+            setValidationError("Please select a booking day for Family Time.");
             return false;
         }
+        setValidationError("");
         return true;
     };
 
@@ -88,6 +93,11 @@ const GlobalCheckoutModal = () => {
             if (!validateCustomTime()) return;
         } else {
             if (!validateFamilyTime()) return;
+        }
+
+        if (willClearNonEmptyCart && !confirmClearCart) {
+            setConfirmClearCart(true);
+            return;
         }
 
         setLoading(true);
@@ -112,23 +122,28 @@ const GlobalCheckoutModal = () => {
 
             router.post(route("requests.createFromCart", timeParams), payload, {
                 onSuccess: () => {
+                    setConfirmClearCart(false);
                     closeCheckout();
                 },
                 onFinish: () => setLoading(false),
             });
         } else {
-            saveBookingInterval().finally(() => setLoading(false));
+            saveBookingInterval({ shouldClearCart: willClearNonEmptyCart }).finally(() => {
+                setConfirmClearCart(false);
+                setLoading(false);
+            });
         }
     };
 
     const handleSaveFamilyDate = (dateValue) => {
         if (!dateValue) {
-            alert("Please select a booking date.");
+            setValidationError("Please select a booking date.");
             return;
         }
+        setValidationError("");
         setSelectedOsraDate(dateValue);
         setShowOsraChoice(false);
-        saveBookingInterval();
+        saveBookingInterval({ shouldClearCart: Number(cart_items_count || 0) > 0 });
     };
 
     return (
@@ -265,6 +280,20 @@ const GlobalCheckoutModal = () => {
                         </>
                     )}
 
+                    {validationError && (
+                        <div className="mt-3 rounded-xl bg-red-50 border border-red-200 px-3.5 py-2.5 text-sm font-medium text-red-700" role="alert">
+                            {validationError}
+                        </div>
+                    )}
+
+                    {willClearNonEmptyCart && (
+                        <div className="mt-3 rounded-xl bg-amber-50 border border-amber-200 px-3.5 py-2.5 text-xs font-medium text-amber-800" role="status">
+                            {confirmClearCart
+                                ? `Click "Confirm & Clear Cart" below to apply the new booking time and clear the ${cart_items_count} item(s) currently in your cart.`
+                                : `Note: Changing your booking interval will clear the ${cart_items_count} item(s) currently in your cart so item availability can be recalculated.`}
+                        </div>
+                    )}
+
                     {hasCartItems && (
                         <div className="mt-4 text-lg font-bold text-[#10b981] bg-[#ecfdf5] border border-[#10b981]/20 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
                             <span>Total Amount</span>
@@ -275,15 +304,27 @@ const GlobalCheckoutModal = () => {
 
                 <div className={styles.modalFooter}>
                     <button
+                        type="button"
                         disabled={loading}
                         className="btn btn-success"
                         onClick={handleConfirmBooking}
                     >
-                        {loading ? "Processing..." : hasCartItems ? "Confirm Booking" : "Save Time Interval"}
+                        {loading
+                            ? "Processing..."
+                            : hasCartItems
+                            ? "Confirm Booking"
+                            : confirmClearCart
+                            ? "Confirm & Clear Cart"
+                            : "Save Time Interval"}
                     </button>
                     <button
+                        type="button"
                         className="btn btn-outline-secondary"
-                        onClick={closeCheckout}
+                        onClick={() => {
+                            setConfirmClearCart(false);
+                            setValidationError("");
+                            closeCheckout();
+                        }}
                         disabled={loading}
                     >
                         Cancel

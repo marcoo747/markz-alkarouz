@@ -207,22 +207,24 @@ export const BookingProvider = ({ children }) => {
     | Save booking interval (clears cart & reloads current page with params)
     |--------------------------------------------------------------------------
     */
-    const saveBookingInterval = useCallback(async () => {
+    const saveBookingInterval = useCallback(async ({ shouldClearCart = false } = {}) => {
         const params = buildTimeParams();
 
-        try {
-            await fetch(route("cart.clear"), {
-                method: "DELETE",
-                headers: {
-                    "X-CSRF-TOKEN":
-                        document
-                            .querySelector('meta[name="csrf-token"]')
-                            ?.getAttribute("content") || "",
-                    Accept: "application/json",
-                },
-            });
-        } catch (error) {
-            console.error("Failed to clear cart on date change:", error);
+        if (shouldClearCart) {
+            try {
+                await fetch(route("cart.clear"), {
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRF-TOKEN":
+                            document
+                                .querySelector('meta[name="csrf-token"]')
+                                ?.getAttribute("content") || "",
+                        Accept: "application/json",
+                    },
+                });
+            } catch (error) {
+                console.error("Failed to clear cart on date change:", error);
+            }
         }
 
         router.get(
