@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { usePage } from "@inertiajs/react";
 import { useTranslation } from "react-i18next";
 
 const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
+  const { auth } = usePage().props || {};
+  const isManager = auth?.user?.user_type === "manager";
   const [activeTab, setActiveTab] = useState('terms');
   const [terms, setTerms] = useState([]);
   const [penalties, setPenalties] = useState([]);
@@ -27,7 +30,11 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(route("api.terms-penalties"));
+      const response = await fetch(route("api.terms-penalties"), {
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
       const data = await response.json();
       setTerms(data.terms || []);
       setPenalties(data.penalties || []);
@@ -39,6 +46,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
   };
 
   const handleAdd = () => {
+    if (!isManager) return;
     setEditingItem(null);
     setFormData({
       title: '',
@@ -50,6 +58,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
   };
 
   const handleEdit = (item) => {
+    if (!isManager) return;
     setEditingItem(item);
     setFormData({
       title: item.title,
@@ -61,6 +70,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
   };
 
   const handleDelete = async (item) => {
+    if (!isManager) return;
     if (!confirm(t("terms.confirm_delete"))) return;
 
     setDeletingId(item.id);
@@ -68,6 +78,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
       const response = await fetch(route("api.terms-penalties.destroy", item.id), {
         method: 'DELETE',
         headers: {
+          'Accept': 'application/json',
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
           'Content-Type': 'application/json',
         },
@@ -88,6 +99,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
   };
 
   const handleSave = async () => {
+    if (!isManager) return;
     if (!formData.title.trim() || !formData.content.trim()) {
       alert("Please fill in all required fields");
       return;
@@ -109,6 +121,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
       const response = await fetch(url, {
         method,
         headers: {
+          'Accept': 'application/json',
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
           'Content-Type': 'application/json',
         },
@@ -170,7 +183,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
               </p>
             </div>
             <div className="flex gap-3">
-              {!showForm && (
+              {isManager && !showForm && (
                 <button
                   onClick={handleAdd}
                   className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
@@ -340,6 +353,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
                               )}
                             </div>
                           </div>
+                          {isManager && (
                           <div className="flex gap-2 ml-4">
                             <button
                               onClick={() => handleEdit(item)}
@@ -367,6 +381,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
                               )}
                             </button>
                           </div>
+                          )}
                         </div>
                         <div className="text-gray-700 whitespace-pre-wrap leading-relaxed">
                           {item.content}
