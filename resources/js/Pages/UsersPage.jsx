@@ -16,6 +16,7 @@ const UsersPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const [alertMessage, setAlertMessage] = useState("");
+  const [failedAvatars, setFailedAvatars] = useState({});
 
   useEffect(() => {
     if (flash?.success) {
@@ -167,10 +168,13 @@ const UsersPage = () => {
 
                         <td>
                           <div className="d-flex align-items-center gap-3 py-2">
-                            {user.user_photo ? (
+                            {user.user_photo && !failedAvatars[user.user_id] ? (
                               <img
                                 src={user.user_photo}
                                 alt={user.full_name}
+                                onError={() =>
+                                  setFailedAvatars((prev) => ({ ...prev, [user.user_id]: true }))
+                                }
                                 className="user-avatar rounded-circle border shadow-sm w-[45px] h-[45px] object-cover"
                               />
                             ) : (

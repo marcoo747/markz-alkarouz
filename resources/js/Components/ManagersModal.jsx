@@ -5,16 +5,19 @@ const ManagersModal = ({ isOpen, onClose, managers }) => {
   const { t } = useTranslation();
   const [sortedManagers, setSortedManagers] = useState(managers || []);
   const [searchTerm, setSearchTerm] = useState("");
+  const [failedAvatars, setFailedAvatars] = useState({});
 
   useEffect(() => {
     setSortedManagers(managers || []);
+    setFailedAvatars({});
   }, [managers]);
 
+  const term = searchTerm.toLowerCase();
   const filteredManagers = sortedManagers.filter(
     (manager) =>
-      manager.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      manager.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      manager.mobile.includes(searchTerm)
+      (manager.full_name || "").toLowerCase().includes(term) ||
+      (manager.email || "").toLowerCase().includes(term) ||
+      (manager.mobile || "").includes(searchTerm)
   );
 
   if (!isOpen) return null;
@@ -89,15 +92,18 @@ const ManagersModal = ({ isOpen, onClose, managers }) => {
                     <div className="flex items-start gap-4">
                       {/* Avatar */}
                       <div className="flex-shrink-0">
-                        {manager.user_photo ? (
+                        {manager.user_photo && !failedAvatars[manager.user_id] ? (
                           <img
                             src={manager.user_photo}
                             alt={manager.full_name}
+                            onError={() =>
+                              setFailedAvatars((prev) => ({ ...prev, [manager.user_id]: true }))
+                            }
                             className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                           />
                         ) : (
                           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">
-                            {manager.full_name.charAt(0).toUpperCase()}
+                            {(manager.full_name || "?").charAt(0).toUpperCase()}
                           </div>
                         )}
                       </div>

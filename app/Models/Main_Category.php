@@ -25,17 +25,22 @@ class Main_Category extends Model
     {
         return $this->hasMany(
             Product::class,
-            'category_id',
+            'main_category_id',
             'category_id'
         );
     }
 
     public function sub_category()
     {
-        return $this->belongsTo(
+        return $this->hasMany(
             Category::class,
             'main_category_id',
             'category_id'
         );
+    }
+
+    public function subCategories()
+    {
+        return $this->sub_category();
     }
 }

@@ -57,9 +57,9 @@ class ProfileController extends Controller
                 'name' => $user->full_name,
                 'phone' => $user->mobile,
                 'email' => $user->email,
-                'profilePhoto' => $user->user_photo
+                'profilePhoto' => ($user->user_photo && Storage::disk('public')->exists($user->user_photo))
                     ? asset('storage/' . $user->user_photo)
-                    : 'imgs/AlkarouzCom.png',
+                    : asset('imgs/AlkaroozCom.png'),
                 'osra' => $osra ? [
                     'osra_id' => $osra->osra_id,
                     'osra_name' => $osra->osra_name,
@@ -101,10 +101,10 @@ class ProfileController extends Controller
                 'mobile',
                 'email',
                 'user_photo'
-            )->get()->map(fn ($user) => [
-                ...$user->toArray(),
-                'user_photo' => $user->user_photo
-                    ? asset('storage/' . $user->user_photo)
+            )->get()->map(fn ($u) => [
+                ...$u->toArray(),
+                'user_photo' => ($u->user_photo && Storage::disk('public')->exists($u->user_photo))
+                    ? asset('storage/' . $u->user_photo)
                     : null,
             ]),
             'osras' => $osras,
@@ -270,7 +270,9 @@ class ProfileController extends Controller
                 'full_name' => $user->full_name,
                 'mobile' => $user->mobile,
                 'email' => $user->email,
-                'user_photo' => $user->user_photo ? asset('storage/' . $user->user_photo) : null,
+                'user_photo' => ($user->user_photo && Storage::disk('public')->exists($user->user_photo))
+                    ? asset('storage/' . $user->user_photo)
+                    : null,
                 'osra_name' => $user->osra ? $user->osra->osra_name : 'N/A',
                 'created_at' => $user->created_at,
             ]);
