@@ -8,7 +8,8 @@ import TopAlert from "@/Components/TopAlert";
 
 const UsersPage = () => {
   const { t } = useTranslation();
-  const { users, osras, flash } = usePage().props;
+  const { users, osras, flash, auth } = usePage().props;
+  const currentUserId = auth?.user?.user_id;
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -205,8 +206,10 @@ const UsersPage = () => {
                             </button>
 
                             <button
-                              className="btn btn-sm btn-outline-danger px-3 rounded-pill transition-colors"
+                              className="btn btn-sm btn-outline-danger px-3 rounded-pill transition-colors disabled:opacity-50"
                               onClick={() => deleteUser(user)}
+                              disabled={Number(user.user_id) === Number(currentUserId)}
+                              title={Number(user.user_id) === Number(currentUserId) ? "Cannot delete your own active account" : undefined}
                             >
                               <i className="bi bi-trash-fill me-1"></i> {t('users.delete')}
                             </button>

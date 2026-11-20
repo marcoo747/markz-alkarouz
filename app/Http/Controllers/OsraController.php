@@ -6,6 +6,7 @@ use App\Models\Osra;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class OsraController extends Controller
 {
@@ -39,7 +40,7 @@ class OsraController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'osra_name' => 'required|string|max:255',
             'osra_place' => 'required|string|max:255',
             'osra_time' => 'required|string|max:255',
@@ -48,23 +49,28 @@ class OsraController extends Controller
             'example_time' => 'required',
         ]);
 
-        Osra::create($request->all());
+        Osra::create($validated);
 
         return back()->with('success', 'success', 'Osra added successfully!');
     }
 
     public function update(Request $request, Osra $osra)
     {
-        $request->validate([
+        $validated = $request->validate([
             'osra_name' => 'required|string|max:255',
             'osra_place' => 'required|string|max:255',
             'osra_time' => 'required|string|max:255',
-            'osra_code' => 'required|string|max:255',
+            'osra_code' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('osra', 'osra_code')->ignore($osra->osra_id, 'osra_id'),
+            ],
             'example_date' => 'required',
             'example_time' => 'required',
         ]);
 
-        $osra->update($request->all());
+        $osra->update($validated);
 
         return back()->with('success', 'success', 'Osra updated successfully!');
     }

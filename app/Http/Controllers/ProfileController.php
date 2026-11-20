@@ -137,7 +137,11 @@ class ProfileController extends Controller
     {
         $validated = $request->validate([
             'full_name'    => 'required|string|max:255',
-            'mobile'       => 'required|string|max:20',
+            'mobile'       => [
+                'required',
+                'digits:11',
+                Rule::unique('users', 'mobile')->ignore($user->user_id, 'user_id'),
+            ],
             'email'        => [
                 'required',
                 'email',
@@ -185,6 +189,10 @@ class ProfileController extends Controller
 
     public function destroy(User $user)
     {
+        if ((int) $user->user_id === (int) Auth::id()) {
+            abort(403, 'You cannot delete your own account.');
+        }
+
         if ($user->user_photo && Storage::disk('public')->exists($user->user_photo)) {
             Storage::disk('public')->delete($user->user_photo);
         }
@@ -204,7 +212,11 @@ class ProfileController extends Controller
                 'max:255',
                 'unique:users,email,' . Auth::id() . ',user_id',
             ],
-            'mobile'     => ['required', 'digits:11'],
+            'mobile'     => [
+                'required',
+                'digits:11',
+                Rule::unique('users', 'mobile')->ignore(Auth::id(), 'user_id'),
+            ],
             'user_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
             'osra_code'  => ['nullable', 'string'],
         ]);
