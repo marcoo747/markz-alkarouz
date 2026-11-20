@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { usePage, router, Head } from "@inertiajs/react";
+import { usePage, router, Head, Link } from "@inertiajs/react";
 import { useTranslation } from "react-i18next";
 
 import ProductCard from "@/Components/CategoryProductCard";
@@ -77,9 +77,26 @@ const CategoryPage = () => {
       <NavBar page_name="categories" />
 
       <Container>
-        <h2 className="mt-6">
+        <nav aria-label="Breadcrumb" className="mt-4 mb-2 text-sm text-slate-500 flex items-center gap-2 flex-wrap">
+          <Link href={route("home")} className="text-slate-500 hover:text-blue-600 no-underline">
+            {t("navbar.home") || "Home"}
+          </Link>
+          <span aria-hidden="true">/</span>
+          <Link href={route("categories")} className="text-slate-500 hover:text-blue-600 no-underline">
+            {t("navbar.categories") || "Categories"}
+          </Link>
+          {category.category_name && (
+            <>
+              <span aria-hidden="true">/</span>
+              <span className="font-semibold text-slate-800" aria-current="page">
+                {category.category_name}
+              </span>
+            </>
+          )}
+        </nav>
+        <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-slate-900">
           {category.category_name?.toUpperCase()} {t('category.products')}
-        </h2>
+        </h1>
         {manager ? (
           <div className="action-btns mt-4 mb-8 flex gap-2.5">
             <button

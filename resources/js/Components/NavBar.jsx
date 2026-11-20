@@ -46,7 +46,7 @@ const NavBar = ({ page_name, linkBase }) => {
                     aria-hidden="true"
                 />
             )}
-            <header className="site-header">
+            <header className="site-header" role="banner">
                 <Container>
                     <nav className="site-nav" aria-label="Main navigation">
                         <Link

@@ -54,7 +54,7 @@ const Home = () => {
 
       <NavBar page_name="home" />
 
-      <section className="py-12 md:py-16 px-4 bg-gradient-to-b from-blue-50 to-white">
+      <section className="py-8 md:py-12 px-4 bg-gradient-to-b from-blue-50 to-white">
         <Container>
           <div className="max-w-2xl mx-auto text-center">
             <p className="text-sm font-semibold text-blue-600 mb-2">{t('home.welcome')}</p>

@@ -12,6 +12,7 @@ import { createRoot } from "react-dom/client";
 
 import { BookingProvider } from "@/Components/BookingContext";
 import GlobalCheckoutModal from "@/Components/GlobalCheckoutModal";
+import Footer from "@/Components/Footer";
 
 createInertiaApp({
     title: (title) => title || "Markz alkarooz",
@@ -30,7 +31,12 @@ createInertiaApp({
                 {...props}
                 children={({ Component, props: pageProps, key }) => (
                     <BookingProvider>
-                        <Component {...pageProps} key={key} />
+                        <div className="min-h-screen flex flex-col">
+                            <main id="main-content" className="flex-1">
+                                <Component {...pageProps} key={key} />
+                            </main>
+                            <Footer />
+                        </div>
                         <GlobalCheckoutModal />
                     </BookingProvider>
                 )}

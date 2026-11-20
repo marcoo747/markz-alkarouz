@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { usePage, router, Head } from "@inertiajs/react";
+import { usePage, router, Head, Link } from "@inertiajs/react";
 import { useTranslation } from "react-i18next";
 import NavBar from "@/Components/NavBar";   
 import ItemPack from "@/Components/Item-pack";
@@ -43,6 +43,23 @@ const ProductPage = () => {
             <TopAlert message={alertMessage} onClose={() => setAlertMessage("")} />
 
             <Container>
+                <nav aria-label="Breadcrumb" className="mt-4 mb-2 text-sm text-slate-500 flex items-center gap-2 flex-wrap">
+                    <Link href={route("home")} className="text-slate-500 hover:text-blue-600 no-underline">
+                        {t("navbar.home") || "Home"}
+                    </Link>
+                    <span aria-hidden="true">/</span>
+                    <Link href={route("categories")} className="text-slate-500 hover:text-blue-600 no-underline">
+                        {t("navbar.categories") || "Categories"}
+                    </Link>
+                    {product?.pr_name && (
+                        <>
+                            <span aria-hidden="true">/</span>
+                            <span className="font-semibold text-slate-800" aria-current="page">
+                                {product.pr_name}
+                            </span>
+                        </>
+                    )}
+                </nav>
                 {manager ? (
                     <div className="flex justify-end gap-3 mb-6 mt-2">
                         <button
