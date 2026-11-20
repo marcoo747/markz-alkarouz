@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Concerns\HasOutsideVisibility;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class Main_Category extends Model
 {
-    use HasFactory;
+    use HasFactory, HasOutsideVisibility;
 
     protected $table = 'main_categories';
     protected $primaryKey = 'category_id';

@@ -25,7 +25,7 @@ class CategoriesController extends Controller
         $cart_items_count = count($cartItems);
 
         $perPage = request()->input('per_page', 12);
-        $categoriesPaginated = Category::paginate($perPage);
+        $categoriesPaginated = Category::visibleTo($user)->paginate($perPage);
         
         return Inertia::render('Categories', [
             'categories' => $categoriesPaginated->items(),
@@ -43,11 +43,16 @@ class CategoriesController extends Controller
 
     public function show(Category $category, $date = null, $time = null)
     {
+        if (!Category::visibleTo(Auth::user())->whereKey($category->getKey())->exists()) {
+            abort(404);
+        }
+
         $date = $date ?: request()->input('date', now()->format('Y-m-d'));
         $time = $time ?: request()->input('time', now()->format('H:i'));
         $perPage = request()->input('per_page', 12);
 
         $productsPaginated = $category->products()
+            ->visibleTo(Auth::user())
             ->withAvailableInWindow(request())
             ->with([
                 'images' => function ($q) {
@@ -204,7 +209,7 @@ class CategoriesController extends Controller
     public function show_main()
     {
         $perPage = request()->input('per_page', 12);
-        $main_categoriesPaginated = Main_Category::paginate($perPage);
+        $main_categoriesPaginated = Main_Category::visibleTo(Auth::user())->paginate($perPage);
         
         $user = Auth::user();
         $cartItems = [];
@@ -231,8 +236,12 @@ class CategoriesController extends Controller
 
     public function show_one_main($main_category_id)
     {
+        $mainCategory = Main_Category::visibleTo(Auth::user())->findOrFail($main_category_id);
+
         $perPage = request()->input('per_page', 12);
-        $categoriesPaginated = Category::where('main_category_id', $main_category_id)->paginate($perPage);
+        $categoriesPaginated = Category::visibleTo(Auth::user())
+            ->where('main_category_id', $mainCategory->category_id)
+            ->paginate($perPage);
         
         $user = Auth::user();
         $cartItems = [];

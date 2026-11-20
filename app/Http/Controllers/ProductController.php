@@ -112,7 +112,9 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::with(['images', 'materials', 'colors', 'sizes'])->findOrFail($id);
+        $product = Product::visibleTo(Auth::user())
+            ->with(['images', 'materials', 'colors', 'sizes'])
+            ->findOrFail($id);
 
         $product->materials = $product->materials?->pluck('material_name')->toArray() ?? [];
         $product->colors = $product->colors?->pluck('color_name')->toArray() ?? [];
@@ -131,7 +133,8 @@ class ProductController extends Controller
         $flashMessage = session('success') ?? null;
 
         $perPage = request()->input('per_page', 8);
-        $relatedProductsPaginated = Product::with(['images', 'colors', 'sizes'])
+        $relatedProductsPaginated = Product::visibleTo(Auth::user())
+            ->with(['images', 'colors', 'sizes'])
             ->where('category_id', $product->category_id)
             ->where('product_id', '!=', $product->product_id)
             ->latest()
@@ -263,7 +266,8 @@ class ProductController extends Controller
         $query = $request->input('query');
         $perPage = request()->input('per_page', 12);
 
-        $resultsPaginated = Product::withAvailableInWindow($request)
+        $resultsPaginated = Product::visibleTo(Auth::user())
+            ->withAvailableInWindow($request)
             ->where(function ($q) use ($query) {
                 $q->where('pr_name', 'like', "%{$query}%")
                     ->orWhere('pr_description', 'like', "%{$query}%")
@@ -313,7 +317,8 @@ class ProductController extends Controller
         $categoryId  = $request->input('category_id');
         $searchQuery = $request->input('query');
 
-        $baseQuery = Product::with(['images', 'colors', 'sizes'])
+        $baseQuery = Product::visibleTo(Auth::user())
+            ->with(['images', 'colors', 'sizes'])
             ->withAvailableInWindow($request);
 
         if ($categoryId) {
