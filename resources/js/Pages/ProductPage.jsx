@@ -17,27 +17,6 @@ const ProductPage = () => {
     const [showDeleteItemModal, setShowDeleteItemModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
 
-    const handleEditItem = (itemData) => {
-        if (!selectedItem) return;
-
-        router.put(
-            route("items.update", selectedItem.product_id),
-            {
-                name: itemData.name,
-                brand: itemData.brand,
-                description: itemData.description,
-                price: itemData.price,
-            },
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    setShowEditItemModal(false);
-                    setSelectedItem(null);
-                },
-            },
-        );
-    };
-
     // Delete confirmation handler
     const handleDeleteItem = () => {
         if (!selectedItem) return;
@@ -93,8 +72,6 @@ const ProductPage = () => {
                 <ItemPack
                     category_name={t("product.you_might_also_like")}
                     products={relatedProducts}
-                    onEdit={handleEditItem}
-                    onDelete={handleDeleteItem}
                 />
 
                 <PaginationControls pagination={pagination} />
@@ -103,8 +80,10 @@ const ProductPage = () => {
                 {showEditItemModal && selectedItem && (
                     <EditItemModal
                         currentItem={selectedItem}
-                        onClose={() => setShowEditItemModal(false)}
-                        onConfirm={handleEditItem}
+                        onClose={() => {
+                            setShowEditItemModal(false);
+                            setSelectedItem(null);
+                        }}
                     />
                 )}
 

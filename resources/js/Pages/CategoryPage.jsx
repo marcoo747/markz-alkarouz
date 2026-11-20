@@ -57,28 +57,6 @@ const CategoryPage = () => {
     );
   };
 
-  const handleEditItemConfirm = (itemData) => {
-    if (!selectedItem) return;
-
-    router.put(
-      route("items.update", selectedItem.product_id),
-      {
-        name: itemData.name,
-        brand: itemData.brand,
-        description: itemData.description,
-        price: itemData.price,
-        inventory_quantity: itemData.inventory_quantity,
-      },
-      {
-        preserveScroll: true,
-        onSuccess: () => {
-          setShowEditItemModal(false);
-          setSelectedItem(null);
-        },
-      }
-    );
-  };
-
   const handleDeleteItemConfirm = () => {
     if (!selectedItem) return;
 
@@ -176,7 +154,6 @@ const CategoryPage = () => {
           <EditItemModal
             currentItem={selectedItem}
             onClose={closeEditModal}
-            onConfirm={handleEditItemConfirm}
           />
         )}
 

@@ -7,22 +7,43 @@ const EditItemModal = ({ currentItem, onClose }) => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [inventory_quantity, setQuantity] = useState("");
+  const [errors, setErrors] = useState({});
+  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     if (currentItem) {
-      setName(currentItem.title || "");
-      setBrand(currentItem.brand || "");
-      setDescription(currentItem.description || "");
-      setPrice(currentItem.price || "");
-      setQuantity(currentItem.inventory_quantity || "");
+      setName(currentItem.title ?? currentItem.pr_name ?? "");
+      setBrand(currentItem.brand ?? "");
+      setDescription(currentItem.description ?? currentItem.pr_description ?? "");
+      setPrice(currentItem.price ?? currentItem.pr_price ?? "");
+      setQuantity(currentItem.inventory_quantity ?? "");
+      setErrors({});
     }
   }, [currentItem]);
 
+  const itemId = currentItem?.id ?? currentItem?.product_id;
+
   const handleConfirm = () => {
+    if (!itemId) return;
+
+    setProcessing(true);
+    setErrors({});
+
     router.put(
-      route("items.update", {item: currentItem.id}),
-      { name, brand, description, price: parseFloat(price) || 0, inventory_quantity },
-      { preserveScroll: true, onSuccess: () => onClose() }
+      route("items.update", { item: itemId }),
+      {
+        name,
+        brand,
+        description,
+        price: price === "" ? "" : parseFloat(price),
+        inventory_quantity: inventory_quantity === "" ? "" : parseInt(inventory_quantity, 10),
+      },
+      {
+        preserveScroll: true,
+        onSuccess: () => onClose(),
+        onError: (errs) => setErrors(errs || {}),
+        onFinish: () => setProcessing(false),
+      }
     );
   };
 
@@ -37,22 +58,27 @@ const EditItemModal = ({ currentItem, onClose }) => {
         <div className="px-7 pt-4 pb-6 overflow-y-auto max-h-[65vh] flex-1 text-slate-600 text-[0.95rem]">
           <label className="font-semibold text-[0.9rem] text-slate-700 block mt-0">Item Name</label>
           <input className="w-full mt-2 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 transition-all duration-200 text-[0.95rem] text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/15" value={name} onChange={(e) => setName(e.target.value)} />
+          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
 
           <label className="font-semibold mt-[18px] text-[0.9rem] text-slate-700 block">Item Brand</label>
           <input className="w-full mt-2 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 transition-all duration-200 text-[0.95rem] text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/15" value={brand} onChange={(e) => setBrand(e.target.value)} />
+          {errors.brand && <p className="text-red-500 text-sm mt-1">{errors.brand}</p>}
 
           <label className="font-semibold mt-[18px] text-[0.9rem] text-slate-700 block">Description</label>
           <input className="w-full mt-2 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 transition-all duration-200 text-[0.95rem] text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/15" value={description} onChange={(e) => setDescription(e.target.value)} />
+          {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
 
           <label className="font-semibold mt-[18px] text-[0.9rem] text-slate-700 block">Price</label>
-          <input type="number" min="0" className="w-full mt-2 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 transition-all duration-200 text-[0.95rem] text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/15" value={price} onChange={(e) => setPrice(e.target.value)} />
+          <input type="number" min="0" step="0.01" className="w-full mt-2 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 transition-all duration-200 text-[0.95rem] text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/15" value={price} onChange={(e) => setPrice(e.target.value)} />
+          {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
 
           <label className="font-semibold mt-[18px] text-[0.9rem] text-slate-700 block">Product Quantity</label>
           <input type="number" min="0" className="w-full mt-2 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 transition-all duration-200 text-[0.95rem] text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/15" value={inventory_quantity} onChange={(e) => setQuantity(e.target.value)} />
+          {errors.inventory_quantity && <p className="text-red-500 text-sm mt-1">{errors.inventory_quantity}</p>}
         </div>
 
         <div className="px-7 py-5 flex justify-end gap-3 bg-slate-50 border-t border-slate-200 shrink-0">
-          <button className="px-5 py-2.5 rounded-xl font-bold transition-all duration-200 bg-blue-600 text-white hover:bg-blue-700" onClick={handleConfirm}>Save Changes</button>
+          <button disabled={processing} className="px-5 py-2.5 rounded-xl font-bold transition-all duration-200 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50" onClick={handleConfirm}>{processing ? "Saving..." : "Save Changes"}</button>
           <button className="px-5 py-2.5 rounded-xl font-bold transition-all duration-200 bg-slate-100 text-slate-600 hover:bg-slate-200" onClick={onClose}>Cancel</button>
         </div>
       </div>
