@@ -17,7 +17,9 @@
         <meta name="twitter:card" content="summary_large_image">
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#8936FF">
-        <link rel="icon" href="{{ asset('imgs/icon.png') }}" type="image/png">
+        <link rel="icon" href="{{ asset('imgs/icon.png') }}?v=2" type="image/png">
+        <link rel="shortcut icon" href="{{ asset('imgs/icon.png') }}?v=2" type="image/png">
+        <link rel="apple-touch-icon" href="{{ asset('imgs/icon.png') }}?v=2">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

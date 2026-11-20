@@ -12,7 +12,8 @@ import OsraTimeBar from "@/Components/OsraTimeBar";
 
 const NavBar = ({ page_name, linkBase }) => {
     const { t, i18n } = useTranslation();
-    const { auth, cart_items_count, query } = usePage().props;
+    const { props, url } = usePage();
+    const { auth, cart_items_count, query } = props;
     const user = auth.user;
     const [open, setOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState(() => query ?? "");
@@ -20,6 +21,66 @@ const NavBar = ({ page_name, linkBase }) => {
     useEffect(() => {
         setSearchTerm(query ?? "");
     }, [query]);
+
+    useEffect(() => {
+        setOpen(false);
+    }, [url]);
+
+    useEffect(() => {
+        const mql = window.matchMedia("(max-width: 1000px)");
+        const root = document.documentElement;
+
+        const syncScrollLock = () => {
+            if (open && mql.matches) {
+                root.classList.add("nav-scroll-locked");
+            } else {
+                root.classList.remove("nav-scroll-locked");
+                if (!mql.matches && open) {
+                    setOpen(false);
+                }
+            }
+        };
+
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") {
+                setOpen(false);
+            }
+        };
+
+        const handleTouchMove = (e) => {
+            if (!open || !mql.matches) return;
+            const navMenu = document.getElementById("main-navigation");
+            if (!navMenu?.contains(e.target)) {
+                e.preventDefault();
+            }
+        };
+
+        syncScrollLock();
+
+        if (mql.addEventListener) {
+            mql.addEventListener("change", syncScrollLock);
+        } else {
+            mql.addListener(syncScrollLock);
+        }
+
+        if (open) {
+            window.addEventListener("keydown", handleKeyDown);
+            document.addEventListener("touchmove", handleTouchMove, {
+                passive: false,
+            });
+        }
+
+        return () => {
+            root.classList.remove("nav-scroll-locked");
+            if (mql.removeEventListener) {
+                mql.removeEventListener("change", syncScrollLock);
+            } else {
+                mql.removeListener(syncScrollLock);
+            }
+            window.removeEventListener("keydown", handleKeyDown);
+            document.removeEventListener("touchmove", handleTouchMove);
+        };
+    }, [open]);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -41,7 +102,7 @@ const NavBar = ({ page_name, linkBase }) => {
         <>
             {open && (
                 <div
-                    className="fixed inset-0 bg-slate-900/25 backdrop-blur-[1px] z-[790]"
+                    className="fixed inset-0 bg-slate-900/25 backdrop-blur-[1px] z-[790] touch-none"
                     onClick={() => setOpen(false)}
                     aria-hidden="true"
                 />
@@ -58,30 +119,9 @@ const NavBar = ({ page_name, linkBase }) => {
                         </Link>
 
                         <div className="nav-actions flex items-center gap-3">
-                            <div className="show-on-mobile-only">
-                                {/* Mobile Language Switcher */}
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        const nextLang =
-                                            i18n.language.startsWith("ar")
-                                                ? "en"
-                                                : "ar";
-                                        i18n.changeLanguage(nextLang);
-                                    }}
-                                    className="mobile-lang-btn flex items-center justify-center font-bold bg-transparent border border-[#6c757d] text-[#6c757d] rounded-full p-0 !w-[44px] !min-w-[44px] h-[44px] text-[13px] cursor-pointer hover:bg-[#6c757d] hover:text-white"
-                                    aria-label={
-                                        i18n.language.startsWith("ar")
-                                            ? "EN - Switch to English"
-                                            : "عر - التبديل إلى العربية"
-                                    }
-                                >
-                                    {i18n.language.startsWith("ar")
-                                        ? "EN"
-                                        : "عر"}
-                                </button>
-                                {/* Mobile Cart Icon */}
-                                {user && (
+                            {user && (
+                                <div className="show-on-mobile-only">
+                                    {/* Mobile Cart Icon */}
                                     <Link
                                         href={route("cart")}
                                         className={`nav-link position-relative flex items-center justify-center !w-[44px] !h-[44px] p-0 ${page_name === "cart" ? "active" : ""}`}
@@ -104,48 +144,8 @@ const NavBar = ({ page_name, linkBase }) => {
                                             </span>
                                         </span>
                                     </Link>
-                                )}
-                                {/* Mobile Profile Icon */}
-                                {user && (
-                                    <Link
-                                        href={route("profile")}
-                                        className={`mobile-profile-icon ${page_name === "profile" ? "active" : ""}`}
-                                        onClick={() => setOpen(false)}
-                                        aria-label={t("navbar.profile")}
-                                        title={t("navbar.profile")}
-                                    >
-                                        {user &&
-                                        user.user_photo &&
-                                        !imgError ? (
-                                            <img
-                                                src={imageSrc}
-                                                alt="user photo"
-                                                width="110"
-                                                height="110"
-                                                className="rounded-circle border"
-                                                onError={() =>
-                                                    setImgError(true)
-                                                }
-                                            />
-                                        ) : (
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="35"
-                                                height="35"
-                                                fill="currentColor"
-                                                className="bi bi-person-circle"
-                                                viewBox="0 0 16 16"
-                                            >
-                                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                                <path
-                                                    fillRule="evenodd"
-                                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
-                                                />
-                                            </svg>
-                                        )}
-                                    </Link>
-                                )}
-                            </div>
+                                </div>
+                            )}
                             <button
                                 className={`nav-toggle ${open ? "open" : ""}`}
                                 aria-controls="main-navigation"
@@ -262,6 +262,40 @@ const NavBar = ({ page_name, linkBase }) => {
                                     </>
                                 ) : null}
 
+                                {user ? (
+                                    <Link
+                                        href={route("profile")}
+                                        className={`mobile-drawer-only nav-link flex items-center gap-2.5 ${page_name === "profile" ? "active" : ""}`}
+                                        onClick={() => setOpen(false)}
+                                    >
+                                        {user.user_photo && !imgError ? (
+                                            <img
+                                                src={imageSrc}
+                                                alt="user photo"
+                                                className="rounded-circle border w-[26px] h-[26px] object-cover shrink-0"
+                                                onError={() => setImgError(true)}
+                                            />
+                                        ) : (
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                fill="currentColor"
+                                                className="bi bi-person-circle text-secondary shrink-0"
+                                                viewBox="0 0 16 16"
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                                                />
+                                            </svg>
+                                        )}
+                                        <span>{t("navbar.profile")}</span>
+                                    </Link>
+                                ) : null}
+
                                 <div className="flex items-center gap-4 mt-2">
                                     <form
                                         role="search"
@@ -375,6 +409,24 @@ const NavBar = ({ page_name, linkBase }) => {
                                             </span>
                                         </Link>
                                     ) : null}
+
+                                    {/* Mobile Hamburger Language Switcher */}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const nextLang =
+                                                i18n.language.startsWith("ar")
+                                                    ? "en"
+                                                    : "ar";
+                                            i18n.changeLanguage(nextLang);
+                                            setOpen(false);
+                                        }}
+                                        className="mobile-drawer-only btn btn-outline-secondary btn-sm col-span-2 w-full flex items-center justify-center gap-2 min-h-[44px]"
+                                    >
+                                        {i18n.language.startsWith("ar")
+                                            ? "EN — English"
+                                            : "عربي — Arabic"}
+                                    </button>
 
                                     {!user && (
                                         <>

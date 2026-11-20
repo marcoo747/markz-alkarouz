@@ -1,5 +1,10 @@
 /* NavBar.css */
 
+html.nav-scroll-locked {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+}
+
 /* Site header */
 .site-header {
     width: 100%;
@@ -57,7 +62,9 @@
     }
 
     .site-logo img {
-        height: 65px; /* Larger on mobile too */
+        height: 60px; /* Crisp and balanced on mobile */
+        width: auto;
+        object-fit: contain;
     }
 }
 
@@ -159,6 +166,12 @@
         transform: translateY(-10px);
         margin: 0;
         z-index: 810;
+        max-height: calc(100vh - 104px);
+        max-height: calc(100dvh - 104px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
     }
 
     [dir="rtl"] .nav-links {
@@ -340,7 +353,7 @@
 }
 
 /* Hide the button on desktop */
-@media (min-width: 1000px) {
+@media (min-width: 1001px) {
     .nav-toggle {
         display: none;
     }
@@ -394,27 +407,20 @@
         align-items: center;
         gap: 12px;
     }
-    .mobile-lang-btn {
-        background-color: transparent;
-        border: 1px solid #6c757d;
-        color: #6c757d;
-        border-radius: 50%;
-        padding: 0;
-        cursor: pointer;
+    .mobile-drawer-only {
+        display: flex !important;
     }
-    .mobile-lang-btn:hover {
-        background-color: #6c757d;
-        color: white;
-    }
-    .mobile-profile-icon {
-        color: #0f172a;
-        display: flex;
-        align-items: center;
+    .nav-links > div:last-child .mobile-drawer-only {
+        grid-column: 1 / -1;
+        width: 100%;
     }
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1001px) {
     .show-on-mobile-only {
+        display: none !important;
+    }
+    .mobile-drawer-only {
         display: none !important;
     }
 }
