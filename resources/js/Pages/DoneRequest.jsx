@@ -203,19 +203,8 @@ const DoneRequest = () => {
     const { t } = useTranslation();
     const { requestDetails } = usePage().props;
 
-    if (!requestDetails) {
-        return (
-            <>
-                <NavBar page_name="requests" />
-                <div className="container my-5 text-center">
-                    <div className="alert alert-warning">No request details found.</div>
-                </div>
-            </>
-        );
-    }
-
-    // Initialize products from db request
-    const initialProducts = (requestDetails.products || []).map((product) => {
+    // Initialize products from db request (hooks must run unconditionally before early return)
+    const initialProducts = (requestDetails?.products || []).map((product) => {
         const quantity_rented = product.pivot?.quantity || 0;
         const quantity_returned = product.pivot?.checked_qnty || 0;
         const comment = product.pivot?.comment || "";
@@ -243,6 +232,17 @@ const DoneRequest = () => {
     const [products, setProducts] = useState(initialProducts);
     const [activeFilter, setActiveFilter] = useState("all");
     const [modalProduct, setModalProduct] = useState(null);
+
+    if (!requestDetails) {
+        return (
+            <>
+                <NavBar page_name="requests" />
+                <div className="container my-5 text-center">
+                    <div className="alert alert-warning">No request details found.</div>
+                </div>
+            </>
+        );
+    }
 
     const updateProduct = (id, changes) =>
         setProducts((prev) =>
