@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Main_Category;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CategoriesController extends Controller
@@ -24,11 +25,16 @@ class CategoriesController extends Controller
 
         $cart_items_count = count($cartItems);
 
-        $perPage = request()->input('per_page', 12);
-        $categoriesPaginated = Category::paginate($perPage);
+        $perPage = $this->resolvePerPage(12);
+        $categoriesPaginated = Category::visibleTo($user)->paginate($perPage);
+        $mainCategories = Main_Category::visibleTo($user)
+            ->select('category_id', 'category_name')
+            ->orderBy('category_name')
+            ->get();
         
         return Inertia::render('Categories', [
             'categories' => $categoriesPaginated->items(),
+            'main_categories' => $mainCategories,
             'pagination'    => [
                 'current_page'  => $categoriesPaginated->currentPage(),
                 'last_page'     => $categoriesPaginated->lastPage(),
@@ -43,11 +49,16 @@ class CategoriesController extends Controller
 
     public function show(Category $category, $date = null, $time = null)
     {
+        if (!Category::visibleTo(Auth::user())->whereKey($category->getKey())->exists()) {
+            abort(404);
+        }
+
         $date = $date ?: request()->input('date', now()->format('Y-m-d'));
         $time = $time ?: request()->input('time', now()->format('H:i'));
-        $perPage = request()->input('per_page', 12);
+        $perPage = $this->resolvePerPage(12);
 
         $productsPaginated = $category->products()
+            ->visibleTo(Auth::user())
             ->withAvailableInWindow(request())
             ->with([
                 'images' => function ($q) {
@@ -91,14 +102,6 @@ class CategoriesController extends Controller
             ];
         });
 
-        $cartItems = [];
-
-        if ($user && $user->cart) {
-            $cartItems = $user->cart->products()
-                ->pluck('products.product_id')
-                ->toArray();
-        }
-
         $cart_items_count = count($cartItems);
 
         return Inertia::render('CategoryPage', [
@@ -123,7 +126,7 @@ class CategoriesController extends Controller
         $request->validate([
             'category_name' => 'required|string|max:100',
             'category_description' => 'required|string',
-            'main_category_id' => 'required',
+            'main_category_id' => 'required|integer|exists:main_categories,category_id',
             'category_photo' => 'required|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
         ]);
 
@@ -161,17 +164,28 @@ class CategoriesController extends Controller
 
     public function destroy(Category $category)
     {
+        $filesToDelete = [];
         if ($category->category_photo) {
-            Storage::disk('public')->delete($category->category_photo);
+            $filesToDelete[] = $category->category_photo;
         }
 
         foreach ($category->products as $product) {
             foreach ($product->images as $image) {
-                Storage::disk('public')->delete($image->photo);
+                if ($image->photo) {
+                    $filesToDelete[] = $image->photo;
+                }
             }
         }
 
-        $category->delete();
+        DB::transaction(function () use ($category) {
+            $category->delete();
+        });
+
+        foreach (array_unique($filesToDelete) as $filePath) {
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+        }
 
         return redirect()->back()->with('success', 'Category Deleted!');
     }
@@ -203,8 +217,8 @@ class CategoriesController extends Controller
 
     public function show_main()
     {
-        $perPage = request()->input('per_page', 12);
-        $main_categoriesPaginated = Main_Category::paginate($perPage);
+        $perPage = $this->resolvePerPage(12);
+        $main_categoriesPaginated = Main_Category::visibleTo(Auth::user())->paginate($perPage);
         
         $user = Auth::user();
         $cartItems = [];
@@ -231,8 +245,12 @@ class CategoriesController extends Controller
 
     public function show_one_main($main_category_id)
     {
-        $perPage = request()->input('per_page', 12);
-        $categoriesPaginated = Category::where('main_category_id', $main_category_id)->paginate($perPage);
+        $mainCategory = Main_Category::visibleTo(Auth::user())->findOrFail($main_category_id);
+
+        $perPage = $this->resolvePerPage(12);
+        $categoriesPaginated = Category::visibleTo(Auth::user())
+            ->where('main_category_id', $mainCategory->category_id)
+            ->paginate($perPage);
         
         $user = Auth::user();
         $cartItems = [];
@@ -283,30 +301,43 @@ class CategoriesController extends Controller
 
     public function destroy_main(Main_Category $category)
     {
+        $filesToDelete = [];
         if ($category->category_photo) {
-            Storage::disk('public')->delete($category->category_photo);
+            $filesToDelete[] = $category->category_photo;
         }
 
         foreach ($category->products as $product) {
             foreach ($product->images as $image) {
-                Storage::disk('public')->delete($image->photo);
-            }
-        }
-
-        $sub_categories = Category::where("main_category_id", $category->category_id)->get();
-        foreach($sub_categories as $sub_category){
-            if($sub_category->category_photo){
-                Storage::disk('public')->delete($sub_category->category_photo);
-            }
-
-            foreach ($sub_category->products as $product) {
-                foreach ($product->images as $image) {
-                    Storage::disk('public')->delete($image->photo);
+                if ($image->photo) {
+                    $filesToDelete[] = $image->photo;
                 }
             }
         }
 
-        $category->delete();
+        $sub_categories = Category::where('main_category_id', $category->category_id)->get();
+        foreach ($sub_categories as $sub_category) {
+            if ($sub_category->category_photo) {
+                $filesToDelete[] = $sub_category->category_photo;
+            }
+
+            foreach ($sub_category->products as $product) {
+                foreach ($product->images as $image) {
+                    if ($image->photo) {
+                        $filesToDelete[] = $image->photo;
+                    }
+                }
+            }
+        }
+
+        DB::transaction(function () use ($category) {
+            $category->delete();
+        });
+
+        foreach (array_unique($filesToDelete) as $filePath) {
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+        }
 
         return redirect()->back()->with('success', 'Main Category Deleted!');
     }

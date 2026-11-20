@@ -11,10 +11,11 @@ class Home_controller extends Controller
 {
     public function index()
     {
-        $perPage = request()->input('per_page', 12);
+        $perPage = $this->resolvePerPage(12);
 
 
-        $productsPaginated = Product::with(['images', 'colors', 'sizes'])
+        $productsPaginated = Product::visibleTo(Auth::user())
+            ->with(['images', 'colors', 'sizes'])
             ->withAvailableInWindow(request())
             ->latest()
             ->paginate($perPage);

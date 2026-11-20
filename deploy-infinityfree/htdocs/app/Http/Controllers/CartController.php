@@ -8,6 +8,7 @@ use App\Models\Osra;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class CartController extends Controller
@@ -90,13 +91,40 @@ class CartController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        $cart->products()->syncWithoutDetaching([
-            $request->product_id => [
+        $qtyToAdd = (int) ($request->quantity ?? 1);
+
+        $existingQuery = DB::table('cart_products')
+            ->where('cart_id', $cart->cart_id)
+            ->where('product_id', $request->product_id);
+
+        if ($request->filled('color_id')) {
+            $existingQuery->where('color_id', $request->color_id);
+        } else {
+            $existingQuery->whereNull('color_id');
+        }
+
+        if ($request->filled('size_id')) {
+            $existingQuery->where('size_id', $request->size_id);
+        } else {
+            $existingQuery->whereNull('size_id');
+        }
+
+        $existing = $existingQuery->first();
+
+        if ($existing) {
+            DB::table('cart_products')
+                ->where('cart_product_id', $existing->cart_product_id)
+                ->update([
+                    'quantity' => ((int) $existing->quantity) + $qtyToAdd,
+                    'updated_at' => now(),
+                ]);
+        } else {
+            $cart->products()->attach($request->product_id, [
                 'color_id'  => $request->color_id,
                 'size_id'   => $request->size_id,
-                'quantity'  => $request->quantity ?? 1,
-            ]
-        ]);
+                'quantity'  => $qtyToAdd,
+            ]);
+        }
 
         return back()->with('success', 'Product added to cart');
     }
@@ -105,7 +133,18 @@ class CartController extends Controller
     {
         $cart = Cart::where('user_id', Auth::id())->first();
 
-        $cart->products()->detach($request->product_id);
+        if (!$cart) {
+            return back();
+        }
+
+        if ($request->filled('cart_product_id')) {
+            DB::table('cart_products')
+                ->where('cart_id', $cart->cart_id)
+                ->where('cart_product_id', $request->input('cart_product_id'))
+                ->delete();
+        } elseif ($request->filled('product_id')) {
+            $cart->products()->detach($request->product_id);
+        }
 
         return back();
     }

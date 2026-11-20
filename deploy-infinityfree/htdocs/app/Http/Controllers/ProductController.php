@@ -112,11 +112,15 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::with(['images', 'materials', 'colors', 'sizes'])->findOrFail($id);
+        $product = Product::visibleTo(Auth::user())
+            ->withAvailableInWindow(request(), false)
+            ->with(['images', 'materials', 'colors', 'sizes'])
+            ->findOrFail($id);
 
-        $product->materials = $product->materials?->pluck('material_name')->toArray() ?? [];
-        $product->colors = $product->colors?->pluck('color_name')->toArray() ?? [];
-        $product->sizes = $product->sizes?->pluck('size')->toArray() ?? [];
+        $product->available_quantity = max(
+            0,
+            ((int) $product->inventory_quantity) - ((int) ($product->requested_quantity ?? 0))
+        );
 
         $user = Auth::user();
         $cartItems = [];
@@ -130,37 +134,35 @@ class ProductController extends Controller
 
         $flashMessage = session('success') ?? null;
 
-        $perPage = request()->input('per_page', 8);
-        $relatedProductsPaginated = Product::with(['images', 'colors', 'sizes'])
+        $perPage = $this->resolvePerPage(8);
+        $relatedProductsPaginated = Product::visibleTo(Auth::user())
+            ->withAvailableInWindow(request())
+            ->with(['images', 'colors', 'sizes'])
             ->where('category_id', $product->category_id)
             ->where('product_id', '!=', $product->product_id)
             ->latest()
             ->paginate($perPage);
 
-        $relatedProducts = $relatedProductsPaginated->map(function ($product) {
+        $relatedProducts = $relatedProductsPaginated->map(function ($related) {
                     return [
-                        'id' => $product->product_id,
-                        'title' => $product->pr_name,
-                        'description' => $product->pr_description,
-                        'inventory_quantity' => $product->inventory_quantity,
-                        'price' => $product->pr_price,
-                        'image' => ($product->images->first() && Storage::disk('public')->exists($product->images->first()->photo))
-                            ? asset('storage/' . $product->images->first()->photo)
+                        'id' => $related->product_id,
+                        'title' => $related->pr_name,
+                        'description' => $related->pr_description,
+                        'inventory_quantity' => max(
+                            0,
+                            ((int) $related->inventory_quantity) - ((int) ($related->requested_quantity ?? 0))
+                        ),
+                        'price' => $related->pr_price,
+                        'image' => ($related->images->first() && Storage::disk('public')->exists($related->images->first()->photo))
+                            ? asset('storage/' . $related->images->first()->photo)
                             : asset('imgs/shopping.webp'),
-                        'color_id' => optional($product->colors->first())->color_id,
-                        'color' => optional($product->colors->first())->color,
-                        'size_id' => optional($product->sizes->first())->size_id,
-                        'size' => optional($product->sizes->first())->size,
+                        'color_id' => optional($related->colors->first())->color_id,
+                        'color' => optional($related->colors->first())->color,
+                        'size_id' => optional($related->sizes->first())->size_id,
+                        'size' => optional($related->sizes->first())->size,
                     ];
                 }
             );
-        $cartItems = [];
-
-        if ($user && $user->cart) {
-            $cartItems = $user->cart->products()
-                ->pluck('products.product_id')
-                ->toArray();
-        }
 
         $cart_items_count = count($cartItems);
 
@@ -185,8 +187,8 @@ class ProductController extends Controller
     public function upload_image(Request $request)
     {
         $request->validate([
-            'photos' => 'required|array',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photos' => 'required|array|max:5',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'product_id' => 'required|exists:products,product_id',
         ]);
 
@@ -194,18 +196,31 @@ class ProductController extends Controller
         $incomingCount = count($request->file('photos'));
 
         if ($currentCount + $incomingCount > 5) {
-            return response()->json([
-                'message' => 'Maximum of 5 images allowed per product. You can only add ' . (5 - $currentCount) . ' more.',
-                'errors' => ['photos' => ['Exceeded maximum 5 images limit.']]
-            ], 422);
+            $message = 'Maximum of 5 images allowed per product. You can only add ' . max(0, 5 - $currentCount) . ' more.';
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => $message,
+                    'errors' => ['photos' => [$message]],
+                ], 422);
+            }
+
+            return back()->withErrors(['photos' => $message]);
         }
 
+        $created = [];
         foreach ($request->file('photos') as $photoFile) {
             $photoPath = $photoFile->store('products', 'public');
-            Product_photos::create([
+            $created[] = Product_photos::create([
                 'product_id' => $request->product_id,
                 'photo' => $photoPath,
             ]);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Photos added successfully!',
+                'photos' => $created,
+            ], 201);
         }
 
         return back()->with('success', 'Photos added successfully!');
@@ -261,9 +276,10 @@ class ProductController extends Controller
         $date = $date ?: $request->input('date', now()->format('Y-m-d'));
         $time = $time ?: $request->input('time', now()->format('H:i'));
         $query = $request->input('query');
-        $perPage = request()->input('per_page', 12);
+        $perPage = $this->resolvePerPage(12);
 
-        $resultsPaginated = Product::withAvailableInWindow($request)
+        $resultsPaginated = Product::visibleTo(Auth::user())
+            ->withAvailableInWindow($request)
             ->where(function ($q) use ($query) {
                 $q->where('pr_name', 'like', "%{$query}%")
                     ->orWhere('pr_description', 'like', "%{$query}%")
@@ -313,7 +329,8 @@ class ProductController extends Controller
         $categoryId  = $request->input('category_id');
         $searchQuery = $request->input('query');
 
-        $baseQuery = Product::with(['images', 'colors', 'sizes'])
+        $baseQuery = Product::visibleTo(Auth::user())
+            ->with(['images', 'colors', 'sizes'])
             ->withAvailableInWindow($request);
 
         if ($categoryId) {

@@ -21,7 +21,7 @@ class ProfileController extends Controller
 
         $osra = $user->osra;
 
-        $perPage = request()->input('per_page', 3);
+        $perPage = $this->resolvePerPage(3);
         $requestsPaginated = $user->requests()
             ->latest()
             ->with('osra')
@@ -57,9 +57,9 @@ class ProfileController extends Controller
                 'name' => $user->full_name,
                 'phone' => $user->mobile,
                 'email' => $user->email,
-                'profilePhoto' => $user->user_photo
+                'profilePhoto' => ($user->user_photo && Storage::disk('public')->exists($user->user_photo))
                     ? asset('storage/' . $user->user_photo)
-                    : 'imgs/AlkarouzCom.png',
+                    : asset('imgs/AlkaroozCom.png'),
                 'osra' => $osra ? [
                     'osra_id' => $osra->osra_id,
                     'osra_name' => $osra->osra_name,
@@ -96,15 +96,16 @@ class ProfileController extends Controller
         return Inertia::render('UsersPage', [
             'users' => User::select(
                 'user_id',
+                'osra_id',
                 'full_name',
                 'user_type',
                 'mobile',
                 'email',
                 'user_photo'
-            )->get()->map(fn ($user) => [
-                ...$user->toArray(),
-                'user_photo' => $user->user_photo
-                    ? asset('storage/' . $user->user_photo)
+            )->with('osra:osra_id,osra_code,osra_name')->get()->map(fn ($u) => [
+                ...$u->toArray(),
+                'user_photo' => ($u->user_photo && Storage::disk('public')->exists($u->user_photo))
+                    ? asset('storage/' . $u->user_photo)
                     : null,
             ]),
             'osras' => $osras,
@@ -137,14 +138,18 @@ class ProfileController extends Controller
     {
         $validated = $request->validate([
             'full_name'    => 'required|string|max:255',
-            'mobile'       => 'required|string|max:20',
+            'mobile'       => [
+                'required',
+                'digits:11',
+                Rule::unique('users', 'mobile')->ignore($user->user_id, 'user_id'),
+            ],
             'email'        => [
                 'required',
                 'email',
                 Rule::unique('users', 'email')->ignore($user->user_id, 'user_id'),
             ],
             'user_type'    => 'required|string|in:user,admin,manager',
-            'osra_code'    => 'nullable|string',
+            'osra_code'    => 'nullable|string|exists:osra,osra_code',
             'profilePhoto' => 'nullable|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
         ]);
 
@@ -160,36 +165,37 @@ class ProfileController extends Controller
             $osraId = DB::table('osra')
                 ->where('osra_code', $validated['osra_code'])
                 ->value('osra_id');
-
-            if (!$osraId) {
-                return back()->withErrors([
-                    'osra_code' => 'Osra code is invalid.',
-                ])->withInput();
-            }
         }
         $user->osra_id = $osraId;
 
+        $oldPhoto = $user->user_photo;
+        $newPhoto = null;
         if ($request->hasFile('profilePhoto')) {
-            if ($user->user_photo && Storage::disk('public')->exists($user->user_photo)) {
-                Storage::disk('public')->delete($user->user_photo);
-            }
-
-            $path = $request->file('profilePhoto')->store('user_photos', 'public');
-            $user->user_photo = $path;
+            $newPhoto = $request->file('profilePhoto')->store('user_photos', 'public');
+            $user->user_photo = $newPhoto;
         }
 
         $user->save();
+
+        if ($newPhoto && $oldPhoto && $oldPhoto !== $newPhoto && Storage::disk('public')->exists($oldPhoto)) {
+            Storage::disk('public')->delete($oldPhoto);
+        }
 
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
     public function destroy(User $user)
     {
-        if ($user->user_photo && Storage::disk('public')->exists($user->user_photo)) {
-            Storage::disk('public')->delete($user->user_photo);
+        if ((int) $user->user_id === (int) Auth::id()) {
+            abort(403, 'You cannot delete your own account.');
         }
 
+        $oldPhoto = $user->user_photo;
         $user->delete();
+
+        if ($oldPhoto && Storage::disk('public')->exists($oldPhoto)) {
+            Storage::disk('public')->delete($oldPhoto);
+        }
 
         return back()->with('success', 'User deleted successfully');
     }
@@ -204,37 +210,37 @@ class ProfileController extends Controller
                 'max:255',
                 'unique:users,email,' . Auth::id() . ',user_id',
             ],
-            'mobile'     => ['required', 'digits:11'],
-            'user_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
-            'osra_code'  => ['nullable', 'string'],
+            'mobile'     => [
+                'required',
+                'digits:11',
+                Rule::unique('users', 'mobile')->ignore(Auth::id(), 'user_id'),
+            ],
+            'user_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'osra_code'  => ['nullable', 'string', 'exists:osra,osra_code'],
         ]);
 
         $user = Auth::user();
-
-        if ($request->hasFile('user_photo')) {
-            if ($user->user_photo && Storage::disk('public')->exists($user->user_photo)) {
-                Storage::disk('public')->delete($user->user_photo);
-            }
-
-            $path = $request->file('user_photo')->store('profile_photos', 'public');
-            $validated['user_photo'] = $path;
-        }
 
         $osraId = null;
         if (!empty($validated['osra_code'])) {
             $osraId = DB::table('osra')
                 ->where('osra_code', $validated['osra_code'])
                 ->value('osra_id');
-
-            if (!$osraId) {
-                return back()->withErrors([
-                    'osra_code' => 'Osra code is invalid.',
-                ])->withInput();
-            }
         }
         $validated['osra_id'] = $osraId;
 
+        $oldPhoto = $user->user_photo;
+        $newPhoto = null;
+        if ($request->hasFile('user_photo')) {
+            $newPhoto = $request->file('user_photo')->store('user_photos', 'public');
+            $validated['user_photo'] = $newPhoto;
+        }
+
         $user->update($validated);
+
+        if ($newPhoto && $oldPhoto && $oldPhoto !== $newPhoto && Storage::disk('public')->exists($oldPhoto)) {
+            Storage::disk('public')->delete($oldPhoto);
+        }
 
         return back()->with('success', 'Profile updated successfully!');
     }
@@ -258,7 +264,9 @@ class ProfileController extends Controller
                 'full_name' => $user->full_name,
                 'mobile' => $user->mobile,
                 'email' => $user->email,
-                'user_photo' => $user->user_photo ? asset('storage/' . $user->user_photo) : null,
+                'user_photo' => ($user->user_photo && Storage::disk('public')->exists($user->user_photo))
+                    ? asset('storage/' . $user->user_photo)
+                    : null,
                 'osra_name' => $user->osra ? $user->osra->osra_name : 'N/A',
                 'created_at' => $user->created_at,
             ]);

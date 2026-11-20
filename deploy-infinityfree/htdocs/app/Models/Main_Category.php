@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Concerns\HasOutsideVisibility;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class Main_Category extends Model
 {
-    use HasFactory;
+    use HasFactory, HasOutsideVisibility;
 
     protected $table = 'main_categories';
     protected $primaryKey = 'category_id';
@@ -24,17 +25,22 @@ class Main_Category extends Model
     {
         return $this->hasMany(
             Product::class,
-            'category_id',
+            'main_category_id',
             'category_id'
         );
     }
 
     public function sub_category()
     {
-        return $this->belongsTo(
+        return $this->hasMany(
             Category::class,
             'main_category_id',
             'category_id'
         );
+    }
+
+    public function subCategories()
+    {
+        return $this->sub_category();
     }
 }

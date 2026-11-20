@@ -16,6 +16,7 @@ class RequestProduct extends Pivot
         'quantity',
         'checked_qnty',
         'unchecked_qnty',
+        'shortfall_reason',
         'comment',
         'created_at',
         'updated_at',

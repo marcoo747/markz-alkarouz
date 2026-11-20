@@ -26,15 +26,22 @@ class Carousel_photos_controller extends Controller
     public function upload_photo(Request $request)
     {
         $request->validate([
-            'photo' => 'required',
+            'photo' => ['required', 'array', 'max:10'],
+            'photo.*' => ['required', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
+        $created = [];
         foreach ($request->file('photo') as $photoFile) {
             $photoPath = $photoFile->store('carousel_photos', 'public');
-            Carousel_photos::create([
+            $created[] = Carousel_photos::create([
                 'photo' => $photoPath,
             ]);
         }
+
+        return response()->json([
+            'message' => 'Photos uploaded successfully',
+            'photos' => $created,
+        ], 201);
     }
 
     public function destroy($id)

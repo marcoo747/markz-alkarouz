@@ -9,13 +9,10 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\OsraController;
-use App\Http\Controllers\ImportController;
 use App\Http\Controllers\Carousel_photos_controller;
 use App\Http\Controllers\TermsAndPenaltiesController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 
 /*
@@ -24,11 +21,41 @@ use Symfony\Component\HttpFoundation\Response;
 |--------------------------------------------------------------------------
 */
 
-// temporarly untill i have the date and time from the front-end inputs
 Route::get('/', function () {
-    return redirect()->route('home');
+    return redirect()->route('home', [], 301);
 })->name('home.root');
 Route::get('/home', [Home_controller::class, 'index'])->name('home');
+
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        url('/home'),
+        url('/categories'),
+        url('/login'),
+        url('/sign_up'),
+    ];
+
+    foreach (\App\Models\Main_Category::visibleTo(null)->pluck('category_id') as $mainId) {
+        $urls[] = route('show_main_category', ['main_category_id' => $mainId]);
+    }
+
+    foreach (\App\Models\Category::visibleTo(null)->pluck('category_id') as $catId) {
+        $urls[] = route('categories.show', ['category' => $catId]);
+    }
+
+    foreach (\App\Models\Product::visibleTo(null)->pluck('product_id') as $prodId) {
+        $urls[] = route('items.show', ['id' => $prodId]);
+    }
+
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+    foreach (array_unique($urls) as $loc) {
+        $escaped = htmlspecialchars($loc, ENT_XML1 | ENT_COMPAT, 'UTF-8');
+        $xml .= "  <url><loc>{$escaped}</loc></url>\n";
+    }
+    $xml .= '</urlset>';
+
+    return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
+})->name('sitemap');
 
 
 // Carousel Photos (public access for home page)
@@ -182,8 +209,12 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::fallback(function () {
-    return Inertia::render('404')
-        ->toResponse(request())
+Route::fallback(function (\Illuminate\Http\Request $request) {
+    if ($request->expectsJson()) {
+        return response()->json(['message' => 'Not Found.'], Response::HTTP_NOT_FOUND);
+    }
+
+    return Inertia::render('Errors/404', ['status' => Response::HTTP_NOT_FOUND])
+        ->toResponse($request)
         ->setStatusCode(Response::HTTP_NOT_FOUND);
 });
