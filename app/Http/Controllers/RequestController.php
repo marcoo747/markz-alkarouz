@@ -10,6 +10,7 @@ use App\Models\Cart;
 use App\Models\Osra;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class RequestController extends Controller
 {
@@ -86,19 +87,35 @@ class RequestController extends Controller
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'start_time' => 'nullable|string',
             'end_time' => 'nullable|string',
-            'total_price' => 'nullable|numeric|min:0',
             'osra_date' => 'nullable',
             'osra_numeric_time' => 'nullable',
-            'expiry_time' => 'nullable'
+            'expiry_time' => 'nullable',
         ]);
 
         $userId = Auth::id();
 
-        $cart = Cart::where('user_id', $userId)->with('products')->first();
+        DB::transaction(function () use ($request, $userId) {
+            $cart = Cart::where('user_id', $userId)
+                ->with('products')
+                ->lockForUpdate()
+                ->first();
 
-        DB::transaction(function () use ($request, $userId, $cart) {
+            if (!$cart || $cart->products->isEmpty()) {
+                throw ValidationException::withMessages([
+                    'cart' => 'Your cart is empty.',
+                ]);
+            }
+
             $request_acceptance_time = 10; // 10 minutes
-            $totalPrice = $request->total_price ?? 0;
+            $totalPrice = round(
+                $cart->products->sum(function ($product) {
+                    $unitPrice = (float) ($product->pr_price ?? 0);
+                    $quantity = max(0, (int) ($product->pivot->quantity ?? 0));
+
+                    return $unitPrice * $quantity;
+                }),
+                2
+            );
 
             $userRequest = UserRequest::create([
                 'user_id' => $userId,

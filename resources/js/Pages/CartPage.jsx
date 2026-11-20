@@ -14,7 +14,16 @@ const CartPage = () => {
     const { cart, user } = usePage().props;
     const products = cart?.products ?? [];
 
-    const total = products.reduce((acc, p) => acc + Number(p.pr_price), 0);
+    const total = Number(
+        products
+            .reduce(
+                (acc, p) =>
+                    acc +
+                    Number(p.pr_price || 0) * Number(p.pivot?.quantity ?? 1),
+                0
+            )
+            .toFixed(2)
+    );
 
     const {
         openCheckout,
@@ -36,7 +45,6 @@ const CartPage = () => {
 
         let postPayload = {
             full_name: user?.full_name || "",
-            total_price: total,
         };
 
         if (timeType === "customTime") {

@@ -45,7 +45,16 @@ const GlobalCheckoutModal = () => {
     if (!isCheckoutOpen) return null;
 
     const cartProducts = cart?.products ?? [];
-    const cartTotal = cartProducts.reduce((acc, p) => acc + Number(p.pr_price), 0);
+    const cartTotal = Number(
+        cartProducts
+            .reduce(
+                (acc, p) =>
+                    acc +
+                    Number(p.pr_price || 0) * Number(p.pivot?.quantity ?? 1),
+                0
+            )
+            .toFixed(2)
+    );
     const hasCartItems = (cart_items_count > 0) && (cartProducts.length > 0);
 
     const validateCustomTime = () => {
@@ -93,14 +102,12 @@ const GlobalCheckoutModal = () => {
                 start_time: startTime,
                 end_date: endDate,
                 end_time: endTime,
-                total_price: cartTotal,
             } : {
                 full_name: user?.full_name || "",
                 osra_code: idCode.trim() || osraCode || null,
                 osra_time: osraTime || "",
                 osra_date: selectedOsraDate || nextSameDay || "",
                 osra_numeric_time: osraNumericTime || "",
-                total_price: cartTotal,
             };
 
             router.post(route("requests.createFromCart", timeParams), payload, {
