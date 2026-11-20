@@ -103,7 +103,11 @@ const ProfilePage = () => {
                 <img
                   src={user.profilePhoto}
                   alt="user photo"
-                  className="rounded-circle mx-auto w-32 h-32 object-cover"
+                  className={`rounded-circle mx-auto w-32 h-32 ${
+                    String(user.profilePhoto).includes("AlkaroozCom.png")
+                      ? "object-contain p-2 bg-white border"
+                      : "object-cover"
+                  }`}
                   onError={() => setImgError(true)}
                 />
               ) : (

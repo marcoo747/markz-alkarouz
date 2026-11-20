@@ -97,7 +97,7 @@ const NavBar = ({ page_name, linkBase }) => {
                                         >
                                             <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
                                         </svg>
-                                        <span className="badge position-absolute rounded-circle bg-primary top-0 end-0 translate-x-[25%] -translate-y-[25%] text-[0.65rem] px-[0.38rem] py-[0.22rem]">
+                                        <span className="badge position-absolute rounded-pill bg-primary -top-1 -end-1 text-[10px] leading-none px-1.5 py-0.5">
                                             {cart_items_count ?? 0}
                                             <span className="visually-hidden">
                                                 {cart_items_count === 1 ? "item in cart" : "items in cart"}
@@ -269,7 +269,10 @@ const NavBar = ({ page_name, linkBase }) => {
                                         className="flex w-full max-w-[400px]"
                                     >
                                         <input
+                                            id="navbar-search-input"
+                                            name="query"
                                             type="search"
+                                            aria-label={t("navbar.search")}
                                             placeholder={t("navbar.search")}
                                             value={searchTerm}
                                             onChange={(e) =>

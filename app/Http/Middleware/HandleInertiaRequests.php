@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
 use App\Models\Osra;
 use Carbon\Carbon;
@@ -39,6 +40,10 @@ class HandleInertiaRequests extends Middleware
         $canGoOutside = 1;
 
         if ($user) {
+            if ($user->user_photo && ! Storage::disk('public')->exists($user->user_photo)) {
+                $user->setAttribute('user_photo', null);
+            }
+
             if ($user->osra_id) {
                 $osra = Osra::find($user->osra_id);
             } elseif (isset($user->osra_code) && $user->osra_code) {

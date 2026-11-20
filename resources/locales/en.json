@@ -50,6 +50,7 @@
   },
   "cart": {
     "title": "Your Cart",
+    "review_subtitle": "Review your items before proceeding to checkout",
     "empty": "Your cart is empty.",
     "price_egp": "Price: EGP",
     "total_egp": "Total: EGP",
