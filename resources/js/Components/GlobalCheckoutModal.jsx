@@ -298,7 +298,7 @@ const GlobalCheckoutModal = () => {
                     )}
 
                     {hasCartItems && (
-                        <div className="mt-4 text-lg font-bold text-[#10b981] bg-[#ecfdf5] border border-[#10b981]/20 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
+                        <div className="mt-4 text-lg font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
                             <span>{t("checkout_modal.total_amount") || "Total Amount"}</span>
                             <span>{t("terms.currency") || "EGP"} {cartTotal}</span>
                         </div>

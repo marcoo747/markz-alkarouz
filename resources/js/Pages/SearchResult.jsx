@@ -83,8 +83,9 @@ const SearchResult = () => {
       {/* Floating checkout button when cart has items */}
       {user && cart_items_count > 0 && (
         <button
+          type="button"
           onClick={() => router.visit(route("cart"))}
-          className="fixed bottom-6 end-6 bg-[#10b981] hover:bg-[#059669] text-white font-bold rounded-full px-6 py-3.5 shadow-[0_8px_20px_rgba(16,185,129,0.4)] hover:shadow-[0_12px_25px_rgba(16,185,129,0.5)] z-30 flex items-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0"
+          className="fixed bottom-6 end-6 bg-[#047857] hover:bg-[#065f46] text-white font-bold rounded-full px-6 py-3.5 shadow-[0_8px_20px_rgba(4,120,87,0.4)] hover:shadow-[0_12px_25px_rgba(4,120,87,0.5)] z-30 flex items-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0"
           aria-label="Go to cart and checkout"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

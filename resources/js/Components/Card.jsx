@@ -92,7 +92,7 @@ const ProductCard = ({
                     
                     <div className="mt-auto flex flex-col gap-3">
                         <div className="flex items-center justify-between">
-                            <span className="text-lg font-extrabold text-green-600">{t("terms.currency") || "EGP"} {price}</span>
+                            <span className="text-lg font-extrabold text-green-700">{t("terms.currency") || "EGP"} {price}</span>
                             
                             <div className="flex items-center gap-2">
                             {color && getSafeColorCss(color) && (
@@ -132,7 +132,8 @@ const ProductCard = ({
                                             </div>
                                         </div>
                                         <button
-                                            className="w-full bg-green-600 hover:bg-green-700 text-white text-sm font-bold h-10 rounded-lg transition-all duration-200 active:scale-95 shadow-md flex justify-center items-center"
+                                            type="button"
+                                            className="w-full bg-green-700 hover:bg-green-800 text-white text-sm font-bold h-10 rounded-lg transition-all duration-200 active:scale-95 shadow-md flex justify-center items-center"
                                             onClick={handleAddToCart}
                                             disabled={isOutOfStock}
                                         >

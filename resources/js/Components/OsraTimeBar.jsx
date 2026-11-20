@@ -11,14 +11,14 @@ const formatTime = (time24) => {
     return `${h12}:${String(m).padStart(2, "0")} ${period}`;
 };
 
-const CalendarIcon = () => (
+const CalendarIcon = ({ className = "text-emerald-700 shrink-0" }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="18"
         height="18"
         fill="currentColor"
         viewBox="0 0 16 16"
-        className="text-emerald-600 shrink-0"
+        className={className}
     >
         <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
     </svg>
@@ -80,10 +80,10 @@ const OsraTimeBar = () => {
                 <button
                     type="button"
                     onClick={openCheckout}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-4 py-2 rounded-xl transition-all shadow-sm hover:shadow active:scale-95 flex items-center gap-2"
+                    className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm px-4 py-2 rounded-xl transition-all shadow-sm hover:shadow active:scale-95 flex items-center gap-2"
                     aria-label={t("booking_bar.select_dates") || "Select booking dates and time"}
                 >
-                    <CalendarIcon />
+                    <CalendarIcon className="text-white shrink-0" />
                     <span>{t("booking_bar.select_dates") || "Select Booking Dates"}</span>
                 </button>
             </div>

@@ -268,7 +268,7 @@ export default function ProductDetail({ product }) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <div className="flex gap-1 items-baseline text-green-600">
+                        <div className="flex gap-1 items-baseline text-green-700">
                             <span className="font-bold text-xl">{t("terms.currency") || "EGP"}</span>
                             <span className="text-4xl font-extrabold tracking-tight">
                                 {Math.floor(Number(product?.pr_price || 0))}

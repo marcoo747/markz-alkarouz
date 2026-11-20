@@ -83,7 +83,7 @@ const ProductCard = ({
           {/* Show Quantity */}
           {quantity !== undefined && (
             <p className="text-sm text-slate-500 flex items-center justify-between">
-              {t("cart.quantity")} <span className="bg-[#10b981]/10 text-[#10b981] font-bold px-2 py-0.5 rounded-md">{quantity}</span>
+              {t("cart.quantity")} <span className="bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded-md">{quantity}</span>
             </p>
           )}
         </div>

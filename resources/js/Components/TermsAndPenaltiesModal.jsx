@@ -214,7 +214,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
                   onClick={() => setActiveTab('terms')}
                   className={`px-6 py-4 font-medium text-sm transition-colors ${
                     activeTab === 'terms'
-                      ? 'border-b-2 border-green-600 text-green-600 bg-white'
+                      ? 'border-b-2 border-green-700 text-green-700 bg-white'
                       : 'text-gray-600 hover:text-gray-800'
                   }`}
                 >
@@ -410,7 +410,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded-lg transition-colors flex items-center gap-2"
+                  className="px-4 py-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white rounded-lg transition-colors flex items-center gap-2"
                 >
                   {saving && (
                     <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -423,7 +423,7 @@ const TermsAndPenaltiesModal = ({ isOpen, onClose }) => {
             ) : (
               <button
                 onClick={onClose}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                className="px-4 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg transition-colors"
               >
                 {t("terms.close_button")}
               </button>

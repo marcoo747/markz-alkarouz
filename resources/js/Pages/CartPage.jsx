@@ -240,8 +240,9 @@ const CartPage = () => {
                                 </h4>
                             </div>
                             <button
+                                type="button"
                                 disabled={submitting}
-                                className="bg-[#10b981] hover:bg-[#059669] text-white font-bold flex items-center gap-2 rounded-xl px-7 py-3.5 transition-all shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_12px_25px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50"
+                                className="bg-[#047857] hover:bg-[#065f46] text-white font-bold flex items-center gap-2 rounded-xl px-7 py-3.5 transition-all shadow-[0_8px_20px_rgba(4,120,87,0.3)] hover:shadow-[0_12px_25px_rgba(4,120,87,0.4)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50"
                                 onClick={handleDirectCheckout}
                             >
                                 {submitting ? "Processing..." : t("cart.checkout")}
