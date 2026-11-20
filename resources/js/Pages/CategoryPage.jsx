@@ -159,7 +159,7 @@ const CategoryPage = () => {
 
         {showDeleteItemModal && selectedItem && (
           <DeleteItemModal
-            itemName={selectedItem.pr_name}
+            itemName={selectedItem.title || selectedItem.pr_name || ""}
             onClose={closeDeleteModal}
             onConfirm={handleDeleteItemConfirm}
           />

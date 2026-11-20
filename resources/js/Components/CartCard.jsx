@@ -1,7 +1,7 @@
 import React from "react";
 import { router } from "@inertiajs/react";
-import namer from "color-namer";
 import { useTranslation } from "react-i18next";
+import { getSafeColorCss, getSafeColorName } from "@/utils/colorName";
 
 const ProductCard = ({
   id,
@@ -56,7 +56,7 @@ const ProductCard = ({
         <div className="mt-auto space-y-2 mb-4">
 
           {/* Show Color */}
-          {color && (
+          {color && getSafeColorCss(color) && (
             <p className="d-flex align-items-center mb-1">
               <span
                 style={{
@@ -64,12 +64,12 @@ const ProductCard = ({
                   width: 16,
                   height: 16,
                   borderRadius: "50%",
-                  backgroundColor: color.color,
+                  backgroundColor: getSafeColorCss(color),
                   marginRight: 8,
                   border: "1px solid #ccc",
                 }}
               ></span>
-              <span>{namer(color).basic[0].name}</span>
+              <span>{getSafeColorName(color, "basic")}</span>
             </p>
           )}
 

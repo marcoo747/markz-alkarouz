@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link, usePage, Head, router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import NavBar from "@/Components/NavBar";
-import namer from "color-namer";
 import shopping_image from "../../imgs/shopping.webp";
 import { useTranslation } from "react-i18next";
+import { getSafeColorCss, getSafeColorName } from "@/utils/colorName";
 
 const RequestShow = () => {
     const { t } = useTranslation();
@@ -237,20 +237,15 @@ const RequestShow = () => {
                                             <strong>{t('request_show.brand')}</strong> {p.brand}
                                             <br />
                                             <strong>{t('request_show.color')}</strong>{" "}
-                                            {p.pivot?.color ? (
+                                            {p.pivot?.color && getSafeColorCss(p.pivot.color) ? (
                                                 <span className="d-inline-flex align-items-center">
                                                     <span
                                                         className="inline-block w-4 h-4 rounded-full mr-1.5 border border-[#ccc]"
                                                         style={{
-                                                            backgroundColor:
-                                                                p.pivot.color.hex_code ||
-                                                                p.pivot.color.color,
+                                                            backgroundColor: getSafeColorCss(p.pivot.color),
                                                         }}
                                                     />
-                                                    {namer(
-                                                        p.pivot.color.hex_code ||
-                                                        p.pivot.color.color
-                                                    ).ntc[0].name}
+                                                    {getSafeColorName(p.pivot.color, "ntc")}
                                                 </span>
                                             ) : (
                                                 "—"

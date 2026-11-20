@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { usePage, router, Link } from "@inertiajs/react";
 import TopAlert from "./TopAlert";
-import namer from "color-namer";
 import { useTranslation } from "react-i18next";
+import { getSafeColorCss, getSafeColorName } from "@/utils/colorName";
 
 const ProductCard = ({
   id,
@@ -106,7 +106,7 @@ const ProductCard = ({
             <p className="text-muted">{description}</p>
             <p className="price fw-bold mt-auto">EGP {price}</p>
 
-            {color && (
+            {color && getSafeColorCss(color) && (
               <p className="d-flex align-items-center">
                 <span
                   style={{
@@ -114,12 +114,12 @@ const ProductCard = ({
                     width: 16,
                     height: 16,
                     borderRadius: "50%",
-                    backgroundColor: color,
+                    backgroundColor: getSafeColorCss(color),
                     marginLeft: 8,
                     border: "1px solid #ccc",
                   }}
                 ></span>
-                <span className="ms-2">{namer(color).basic[0].name}, etc...</span>
+                <span className="ms-2">{getSafeColorName(color, "basic")}, etc...</span>
               </p>
             )}
 

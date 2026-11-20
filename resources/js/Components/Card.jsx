@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { usePage, router } from "@inertiajs/react";
-import namer from "color-namer";
 import { useTranslation } from "react-i18next";
+import { getSafeColorCss, getSafeColorName } from "@/utils/colorName";
 
 const ProductCard = ({
     id,
@@ -47,8 +47,10 @@ const ProductCard = ({
                 preserveScroll: true,
                 onSuccess: () => {
                     setInCart(true);
-                    setAlertMessage(`"${title}" added to cart!`);
-                    setTimeout(() => setAlertMessage(""), 3000);
+                    if (typeof setAlertMessage === "function") {
+                        setAlertMessage(`"${title}" added to cart!`);
+                        setTimeout(() => setAlertMessage(""), 3000);
+                    }
                 },
             }
         );
@@ -93,11 +95,11 @@ const ProductCard = ({
                             <span className="text-lg font-extrabold text-green-600">EGP {price}</span>
                             
                             <div className="flex items-center gap-2">
-                            {color && (
+                            {color && getSafeColorCss(color) && (
                                 <span
                                     className="w-4 h-4 rounded-full border border-gray-300 shadow-sm"
-                                    style={{ backgroundColor: color }}
-                                    title={namer(color)?.basic?.[0]?.name || color}
+                                    style={{ backgroundColor: getSafeColorCss(color) }}
+                                    title={getSafeColorName(color, "basic")}
                                 ></span>
                             )}
                             {size && <span className="text-xs font-bold text-gray-600 bg-gray-100 px-2 py-1 rounded-md border border-gray-200">{size}</span>}

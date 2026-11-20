@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { usePage, Head, Link, router } from "@inertiajs/react";
 import NavBar from "@/Components/NavBar";
 import Container from "@/Components/Container";
 import ItemPack from "@/Components/Item-pack";
 import PaginationControls from "@/Components/PaginationControls";
+import TopAlert from "@/Components/TopAlert";
 import { useTranslation } from "react-i18next";
 import useTimeFilteredProducts from "@/Components/useTimeFilteredProducts";
 import { useBooking } from "@/Components/BookingContext";
 
 const SearchResult = () => {
   const { t } = useTranslation();
+  const [alertMessage, setAlertMessage] = useState("");
   const { props } = usePage();
   const query = props.query ?? "";
   const initialResults = Array.isArray(props.results) ? props.results : [];
@@ -42,6 +44,7 @@ const SearchResult = () => {
     <div className="min-h-screen bg-gray-50 pb-12">
       <Head title={t('home.page_title')} />
       <NavBar page_name="search" />
+      <TopAlert message={alertMessage} onClose={() => setAlertMessage("")} />
 
       <Container>
         {/* Top heading */}
@@ -66,6 +69,7 @@ const SearchResult = () => {
                   products={[p]}
                   onEdit={() => {}}
                   onDelete={() => {}}
+                  setAlertMessage={setAlertMessage}
                 />
               ))}
             </div>

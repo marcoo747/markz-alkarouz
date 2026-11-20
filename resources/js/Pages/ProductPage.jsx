@@ -8,6 +8,7 @@ import ProductDetail from "@/Components/ProductDetail";
 import EditItemModal from "@/Components/EditItemModal";
 import DeleteItemModal from "@/Components/DeleteItemModal";
 import PaginationControls from "@/Components/PaginationControls";
+import TopAlert from "@/Components/TopAlert";
 
 const ProductPage = () => {
     const { t } = useTranslation();
@@ -16,6 +17,7 @@ const ProductPage = () => {
     const [showEditItemModal, setShowEditItemModal] = useState(false);
     const [showDeleteItemModal, setShowDeleteItemModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [alertMessage, setAlertMessage] = useState("");
 
     // Delete confirmation handler
     const handleDeleteItem = () => {
@@ -38,6 +40,7 @@ const ProductPage = () => {
         <>
             <Head title={t("product.page_title")} />
             <NavBar page_name="categories" />
+            <TopAlert message={alertMessage} onClose={() => setAlertMessage("")} />
 
             <Container>
                 {manager ? (
@@ -72,6 +75,7 @@ const ProductPage = () => {
                 <ItemPack
                     category_name={t("product.you_might_also_like")}
                     products={relatedProducts}
+                    setAlertMessage={setAlertMessage}
                 />
 
                 <PaginationControls pagination={pagination} />
