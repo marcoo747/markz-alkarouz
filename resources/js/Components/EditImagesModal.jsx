@@ -59,6 +59,7 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
           const response = await fetch(route('carousel.photos.destroy', { id: imageInfo.id }), {
             method: 'DELETE',
             headers: {
+              'Accept': 'application/json',
               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             },
           });
@@ -94,6 +95,7 @@ const EditImagesModal = ({ initialImages, onClose, onSave }) => {
           method: 'POST',
           body: formData,
           headers: {
+            'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
           },
         });
