@@ -105,11 +105,11 @@ const CategoryPage = () => {
             <span className="text-slate-500">Updating products...</span>
           </div>
         ) : (
-          <div className="row">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-6">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="col-6 col-md-4 col-lg-3 mb-4 mt-6"
+                className="h-full"
               >
                 <ProductCard
                   key={product.id}

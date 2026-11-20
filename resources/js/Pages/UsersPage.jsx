@@ -118,7 +118,7 @@ const UsersPage = () => {
 
       <div className="container py-5">
         {/* ================= HEADER ================= */}
-        <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
           <div className="flex-grow-1">
             <h2 className="fw-bold mb-1 text-dark">{t('users.title')}</h2>
             <small className="text-muted">
@@ -126,9 +126,9 @@ const UsersPage = () => {
             </small>
           </div>
 
-          <div>
+          <div className="w-full sm:w-auto">
             <button
-              className="btn btn-success px-4 py-2 rounded-pill shadow-sm hover:shadow transition-all w-auto"
+              className="btn btn-success px-4 py-2.5 rounded-pill shadow-sm hover:shadow transition-all w-full sm:w-auto"
               onClick={() => router.visit(route("register"))}
             >
               <i className="bi bi-person-plus-fill me-2"></i>
@@ -137,7 +137,7 @@ const UsersPage = () => {
           </div>
         </div>
 
-        {/* ================= TABLE ================= */}
+        {/* ================= TABLE & MOBILE CARDS ================= */}
         <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
           <div className="card-body p-0">
             {!users.length ? (
@@ -148,42 +148,100 @@ const UsersPage = () => {
                 </p>
               </div>
             ) : (
-              <div className="table-responsive">
-                <table className="table table-hover align-middle mb-0 users-table">
-                  <thead className="table-light">
-                    <tr>
-                      <th className="px-4 py-3 text-secondary">{t('users.hash')}</th>
-                      <th className="py-3 text-secondary">{t('users.user_col')}</th>
-                      <th className="py-3 text-secondary">{t('users.role')}</th>
-                      <th className="py-3 text-secondary">{t('users.mobile')}</th>
-                      <th className="py-3 text-secondary">{t('users.email')}</th>
-                      <th className="text-center py-3 text-secondary">{t('users.actions')}</th>
-                    </tr>
-                  </thead>
+              <>
+                {/* Mobile Stacked Cards (< md) */}
+                <div className="md:hidden divide-y divide-slate-200">
+                  {users.map((user, index) => (
+                    <div key={user.user_id} className="p-4 flex flex-col gap-3 bg-white">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 min-w-0">
+                          {user.user_photo && !failedAvatars[user.user_id] ? (
+                            <img
+                              src={user.user_photo}
+                              alt={user.full_name}
+                              onError={() =>
+                                setFailedAvatars((prev) => ({ ...prev, [user.user_id]: true }))
+                              }
+                              className="user-avatar rounded-circle border shadow-sm w-[45px] h-[45px] shrink-0 object-cover"
+                            />
+                          ) : (
+                            <div className="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary w-[45px] h-[45px] shrink-0">
+                              <i className="bi bi-person-fill fs-4"></i>
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <span className="fw-bold text-dark block truncate">
+                              #{index + 1} • {user.full_name}
+                            </span>
+                            <span className={`badge rounded-pill px-2.5 py-1 mt-1 ${getRoleBadgeColor(user.user_type)}`}>
+                              {user.user_type}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
 
-                  <tbody>
-                    {users.map((user, index) => (
-                      <tr key={user.user_id} className="transition-all hover:bg-light">
-                        <td className="fw-semibold px-4">
-                          {index + 1}
-                        </td>
+                      <div className="text-sm text-slate-600 flex flex-col gap-1">
+                        <div><strong>{t('users.mobile')}:</strong> {user.mobile || "—"}</div>
+                        <div className="break-all"><strong>{t('users.email')}:</strong> {user.email || "—"}</div>
+                      </div>
 
-                        <td>
-                          <div className="d-flex align-items-center gap-3 py-2">
-                            {user.user_photo && !failedAvatars[user.user_id] ? (
-                              <img
-                                src={user.user_photo}
-                                alt={user.full_name}
-                                onError={() =>
-                                  setFailedAvatars((prev) => ({ ...prev, [user.user_id]: true }))
-                                }
-                                className="user-avatar rounded-circle border shadow-sm w-[45px] h-[45px] object-cover"
-                              />
-                            ) : (
-                              <div className="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary w-[45px] h-[45px]">
-                                <i className="bi bi-person-fill fs-4"></i>
-                              </div>
-                            )}
+                      <div className="flex items-center gap-2 pt-1">
+                        <button
+                          className="btn btn-sm btn-outline-primary px-3 py-2 rounded-pill transition-colors flex-1"
+                          onClick={() => openEditModal(user)}
+                        >
+                          <i className="bi bi-pencil-fill me-1"></i> {t('users.edit')}
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-danger px-3 py-2 rounded-pill transition-colors disabled:opacity-50 flex-1"
+                          onClick={() => deleteUser(user)}
+                          disabled={Number(user.user_id) === Number(currentUserId)}
+                          title={Number(user.user_id) === Number(currentUserId) ? "Cannot delete your own active account" : undefined}
+                        >
+                          <i className="bi bi-trash-fill me-1"></i> {t('users.delete')}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop Table (>= md) */}
+                <div className="hidden md:block table-responsive">
+                  <table className="table table-hover align-middle mb-0 users-table">
+                    <thead className="table-light">
+                      <tr>
+                        <th className="px-4 py-3 text-secondary">{t('users.hash')}</th>
+                        <th className="py-3 text-secondary">{t('users.user_col')}</th>
+                        <th className="py-3 text-secondary">{t('users.role')}</th>
+                        <th className="py-3 text-secondary">{t('users.mobile')}</th>
+                        <th className="py-3 text-secondary">{t('users.email')}</th>
+                        <th className="text-center py-3 text-secondary">{t('users.actions')}</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {users.map((user, index) => (
+                        <tr key={user.user_id} className="transition-all hover:bg-light">
+                          <td className="fw-semibold px-4">
+                            {index + 1}
+                          </td>
+
+                          <td>
+                            <div className="d-flex align-items-center gap-3 py-2">
+                              {user.user_photo && !failedAvatars[user.user_id] ? (
+                                <img
+                                  src={user.user_photo}
+                                  alt={user.full_name}
+                                  onError={() =>
+                                    setFailedAvatars((prev) => ({ ...prev, [user.user_id]: true }))
+                                  }
+                                  className="user-avatar rounded-circle border shadow-sm w-[45px] h-[45px] shrink-0 object-cover"
+                                />
+                              ) : (
+                                <div className="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary w-[45px] h-[45px] shrink-0">
+                                  <i className="bi bi-person-fill fs-4"></i>
+                                </div>
+                              )}
 
                             <div>
                               <span className="fw-bold text-dark d-block">
@@ -223,9 +281,10 @@ const UsersPage = () => {
                         </td>
                       </tr>
                     ))}
-                  </tbody>
-                </table>
-              </div>
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         </div>

@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+    max-width: 100%;
+    overflow-x: clip;
+}
+
 .link-no-style {
     text-decoration: none;
     color: inherit;
