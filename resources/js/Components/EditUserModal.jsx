@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const EditUserModal = ({ editData, editErrors, osras = [], onChange, onSubmit, onClose }) => {
   const availableOsras = osras.length > 0 ? osras : (editData?.osras || []);
+  const [previewUrl, setPreviewUrl] = useState(null);
+
+  useEffect(() => {
+    if (!editData?.profilePhoto) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(editData.profilePhoto);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [editData?.profilePhoto]);
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-[9999] p-5 box-border">
@@ -87,9 +98,9 @@ const EditUserModal = ({ editData, editErrors, osras = [], onChange, onSubmit, o
             </label>
             {editData.profilePhoto && <span className="text-[0.9rem] text-slate-500 font-medium">{editData.profilePhoto.name}</span>}
           </div>
-          {editData.profilePhoto && (
+          {previewUrl && (
             <img
-              src={URL.createObjectURL(editData.profilePhoto)}
+              src={previewUrl}
               className="w-20 rounded-xl mt-3 object-cover shadow-sm border border-slate-200 aspect-square"
               alt="Profile preview"
             />
